@@ -89,4 +89,199 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// ========================================
+// FINANCIAL PROFILE QUERIES
+// ========================================
+
+import { avoidedBets, crisisMessages, financialProfiles, goals, InsertFinancialProfile, InsertAvoidedBet, InsertGoal, InsertCrisisMessage } from "../drizzle/schema";
+import { desc, sql, and, gte } from "drizzle-orm";
+
+export async function getFinancialProfile(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(financialProfiles).where(eq(financialProfiles.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function upsertFinancialProfile(userId: number, data: { monthlyIncome: number; fixedExpenses: number }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const leisureBudget = Math.floor(data.monthlyIncome * 0.3); // 30% para lazer
+  
+  const values: InsertFinancialProfile = {
+    userId,
+    monthlyIncome: data.monthlyIncome,
+    fixedExpenses: data.fixedExpenses,
+    leisureBudget,
+  };
+  
+  await db.insert(financialProfiles).values(values).onDuplicateKeyUpdate({
+    set: {
+      monthlyIncome: data.monthlyIncome,
+      fixedExpenses: data.fixedExpenses,
+      leisureBudget,
+      updatedAt: new Date(),
+    },
+  });
+  
+  return getFinancialProfile(userId);
+}
+
+// ========================================
+// AVOIDED BETS QUERIES
+// ========================================
+
+export async function createAvoidedBet(userId: number, data: { amount: number; emotionalContext?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const values: InsertAvoidedBet = {
+    userId,
+    amount: data.amount,
+    emotionalContext: data.emotionalContext,
+  };
+  
+  const result = await db.insert(avoidedBets).values(values);
+  return result;
+}
+
+export async function getAvoidedBets(userId: number, limit = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(avoidedBets).where(eq(avoidedBets.userId, userId)).orderBy(desc(avoidedBets.createdAt)).limit(limit);
+}
+
+export async function getTotalPreservedMoney(userId: number) {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  const result = await db.select({ total: sql<number>`COALESCE(SUM(${avoidedBets.amount}), 0)` })
+    .from(avoidedBets)
+    .where(eq(avoidedBets.userId, userId));
+  
+  return result[0]?.total || 0;
+}
+
+export async function getDaysWithoutBetting(userId: number) {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  const result = await db.select().from(avoidedBets)
+    .where(eq(avoidedBets.userId, userId))
+    .orderBy(desc(avoidedBets.createdAt))
+    .limit(1);
+  
+  if (result.length === 0) return 0;
+  
+  const lastBet = result[0];
+  const daysDiff = Math.floor((Date.now() - lastBet.createdAt.getTime()) / (1000 * 60 * 60 * 24));
+  return daysDiff;
+}
+
+// ========================================
+// GOALS QUERIES
+// ========================================
+
+export async function createGoal(userId: number, data: { title: string; targetAmount: number; imageUrl?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const values: InsertGoal = {
+    userId,
+    title: data.title,
+    targetAmount: data.targetAmount,
+    imageUrl: data.imageUrl,
+  };
+  
+  const result = await db.insert(goals).values(values);
+  return result;
+}
+
+export async function getGoals(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(goals).where(eq(goals.userId, userId)).orderBy(desc(goals.createdAt));
+}
+
+export async function updateGoal(goalId: number, userId: number, data: Partial<{ title: string; targetAmount: number; imageUrl: string; isCompleted: number }>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(goals)
+    .set({ ...data, updatedAt: new Date() })
+    .where(and(eq(goals.id, goalId), eq(goals.userId, userId)));
+}
+
+export async function deleteGoal(goalId: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(goals).where(and(eq(goals.id, goalId), eq(goals.userId, userId)));
+}
+
+// ========================================
+// CRISIS MESSAGES QUERIES
+// ========================================
+
+export async function createCrisisMessage(userId: number, message: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const values: InsertCrisisMessage = {
+    userId,
+    message,
+  };
+  
+  const result = await db.insert(crisisMessages).values(values);
+  return result;
+}
+
+export async function getCrisisMessages(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(crisisMessages)
+    .where(and(eq(crisisMessages.userId, userId), eq(crisisMessages.isActive, 1)))
+    .orderBy(desc(crisisMessages.createdAt));
+}
+
+export async function updateCrisisMessage(messageId: number, userId: number, data: { message?: string; isActive?: number }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(crisisMessages)
+    .set({ ...data, updatedAt: new Date() })
+    .where(and(eq(crisisMessages.id, messageId), eq(crisisMessages.userId, userId)));
+}
+
+export async function deleteCrisisMessage(messageId: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(crisisMessages).where(and(eq(crisisMessages.id, messageId), eq(crisisMessages.userId, userId)));
+}
+
+// ========================================
+// STATISTICS QUERIES
+// ========================================
+
+export async function getStatistics(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const totalPreserved = await getTotalPreservedMoney(userId);
+  const daysWithoutBetting = await getDaysWithoutBetting(userId);
+  const betsCount = await db.select({ count: sql<number>`COUNT(*)` })
+    .from(avoidedBets)
+    .where(eq(avoidedBets.userId, userId));
+  
+  return {
+    totalPreserved,
+    daysWithoutBetting,
+    totalBetsAvoided: betsCount[0]?.count || 0,
+  };
+}

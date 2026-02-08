@@ -1,0 +1,277 @@
+import { useAuth } from "@/_core/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { getLoginUrl } from "@/const";
+import { trpc } from "@/lib/trpc";
+import { AlertCircle, Calendar, DollarSign, Target, TrendingUp } from "lucide-react";
+import { Link } from "wouter";
+
+export default function Dashboard() {
+  const { user, loading: authLoading } = useAuth();
+  
+  const { data: stats, isLoading: statsLoading } = trpc.statistics.get.useQuery(undefined, {
+    enabled: !!user,
+  });
+  
+  const { data: goals, isLoading: goalsLoading } = trpc.goals.list.useQuery(undefined, {
+    enabled: !!user,
+  });
+  
+  const { data: totalPreserved } = trpc.avoidedBets.totalPreserved.useQuery(undefined, {
+    enabled: !!user,
+  });
+
+  if (authLoading || statsLoading || goalsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    window.location.href = getLoginUrl();
+    return null;
+  }
+
+  const formatCurrency = (cents: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(cents / 100);
+  };
+
+  const activeGoal = goals?.find(g => g.isCompleted === 0);
+  const goalProgress = activeGoal && totalPreserved 
+    ? Math.min((totalPreserved / activeGoal.targetAmount) * 100, 100)
+    : 0;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
+      {/* Header */}
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+        <div className="container py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Target className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-foreground">HelpGames</h1>
+                <p className="text-sm text-muted-foreground">Olá, {user.name || 'Usuário'}!</p>
+              </div>
+            </div>
+            <nav className="flex items-center gap-4">
+              <Link href="/dashboard">
+                <Button variant="ghost">Dashboard</Button>
+              </Link>
+              <Link href="/perfil-financeiro">
+                <Button variant="ghost">Perfil Financeiro</Button>
+              </Link>
+              <Link href="/metas">
+                <Button variant="ghost">Metas</Button>
+              </Link>
+              <Link href="/modo-crise">
+                <Button variant="destructive">Modo Crise</Button>
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <main className="container py-8 space-y-8">
+        {/* Stats Cards */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="border-2 border-primary/20">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Dinheiro Preservado</CardTitle>
+              <DollarSign className="h-4 w-4 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-primary">
+                {formatCurrency(totalPreserved || 0)}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Total economizado
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Dias sem Apostar</CardTitle>
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">{stats?.daysWithoutBetting || 0}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Continue assim! 🎉
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Apostas Evitadas</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">{stats?.totalBetsAvoided || 0}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Vitórias conquistadas
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Meta Ativa</CardTitle>
+              <Target className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">{goalProgress.toFixed(0)}%</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {activeGoal ? activeGoal.title : 'Nenhuma meta ativa'}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Meta Ativa */}
+        {activeGoal && (
+          <Card className="border-2 border-primary/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5 text-primary" />
+                Meta Ativa: {activeGoal.title}
+              </CardTitle>
+              <CardDescription>
+                Você está {goalProgress.toFixed(0)}% mais perto do seu objetivo!
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-muted-foreground">Progresso</span>
+                  <span className="font-medium">
+                    {formatCurrency(totalPreserved || 0)} / {formatCurrency(activeGoal.targetAmount)}
+                  </span>
+                </div>
+                <Progress value={goalProgress} className="h-3" />
+              </div>
+              
+              {activeGoal.imageUrl && (
+                <div className="rounded-lg overflow-hidden">
+                  <img 
+                    src={activeGoal.imageUrl} 
+                    alt={activeGoal.title}
+                    className="w-full h-48 object-cover"
+                  />
+                </div>
+              )}
+              
+              <div className="flex gap-4">
+                <Button asChild className="flex-1">
+                  <Link href="/registrar-aposta">Registrar Aposta Evitada</Link>
+                </Button>
+                <Button variant="outline" asChild className="flex-1">
+                  <Link href="/metas">Ver Todas as Metas</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Ações Rápidas */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card className="hover:border-primary/50 transition-colors cursor-pointer">
+            <Link href="/registrar-aposta">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  Registrar Aposta Evitada
+                </CardTitle>
+                <CardDescription>
+                  Celebre mais uma vitória sobre o impulso de apostar
+                </CardDescription>
+              </CardHeader>
+            </Link>
+          </Card>
+
+          <Card className="hover:border-destructive/50 transition-colors cursor-pointer border-destructive/20">
+            <Link href="/modo-crise">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 text-destructive" />
+                  Modo Crise
+                </CardTitle>
+                <CardDescription>
+                  Precisa de apoio imediato? Clique aqui
+                </CardDescription>
+              </CardHeader>
+            </Link>
+          </Card>
+        </div>
+
+        {/* Primeira vez? */}
+        {!stats || stats.totalBetsAvoided === 0 ? (
+          <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+            <CardHeader>
+              <CardTitle>Bem-vindo ao HelpGames! 🎉</CardTitle>
+              <CardDescription className="text-base">
+                Comece sua jornada de recuperação seguindo estes passos:
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  1
+                </div>
+                <div>
+                  <p className="font-medium">Configure seu perfil financeiro</p>
+                  <p className="text-sm text-muted-foreground">
+                    Informe sua renda e despesas para calcular sua verba de lazer segura
+                  </p>
+                  <Button variant="link" asChild className="px-0">
+                    <Link href="/perfil-financeiro">Configurar agora →</Link>
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  2
+                </div>
+                <div>
+                  <p className="font-medium">Crie sua primeira meta</p>
+                  <p className="text-sm text-muted-foreground">
+                    Escolha algo que você realmente deseja e veja seu progresso crescer
+                  </p>
+                  <Button variant="link" asChild className="px-0">
+                    <Link href="/metas">Criar meta →</Link>
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  3
+                </div>
+                <div>
+                  <p className="font-medium">Registre sua primeira vitória</p>
+                  <p className="text-sm text-muted-foreground">
+                    Sempre que evitar uma aposta, registre aqui e celebre!
+                  </p>
+                  <Button variant="link" asChild className="px-0">
+                    <Link href="/registrar-aposta">Registrar →</Link>
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
+      </main>
+    </div>
+  );
+}
