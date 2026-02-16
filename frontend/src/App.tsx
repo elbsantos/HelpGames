@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import PerfilFinanceiro from "./pages/PerfilFinanceiro";
 import RegistrarAposta from "./pages/RegistrarAposta";
+import RegistrarTentativaAposta from "./pages/RegistrarTentativaAposta";
 import Metas from "./pages/Metas";
 import ModoCrise from "./pages/ModoCrise";
 
@@ -19,6 +20,7 @@ function Router() {
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/perfil-financeiro"} component={PerfilFinanceiro} />
       <Route path={"/registrar-aposta"} component={RegistrarAposta} />
+      <Route path={"/registrar-tentativa-aposta"} component={RegistrarTentativaAposta} />
       <Route path={"/metas"} component={Metas} />
       <Route path={"/modo-crise"} component={ModoCrise} />
       <Route path={"/404"} component={NotFound} />

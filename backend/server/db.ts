@@ -285,3 +285,60 @@ export async function getStatistics(userId: number) {
     totalBetsAvoided: betsCount[0]?.count || 0,
   };
 }
+
+
+// ========================================
+// GAMBLING WEBSITES QUERIES
+// ========================================
+
+import { gambling_websites, access_attempts, user_hobbies, InsertAccessAttempt, InsertUserHobby } from "../drizzle/schema";
+import { like } from "drizzle-orm";
+
+export async function searchGamblingWebsites(search: string, limit = 20) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(gambling_websites)
+    .where(like(gambling_websites.nome_site, `%${search}%`))
+    .limit(limit);
+}
+
+export async function registerAccessAttempt(userId: number, data: { dominio: string; valor: number; odds?: number; contexto_emocional: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const values: InsertAccessAttempt = {
+    usuario_id: userId,
+    dominio: data.dominio,
+    valor: data.valor,
+    odds: data.odds?.toString(),
+    contexto_emocional: data.contexto_emocional,
+  };
+  
+  const result = await db.insert(access_attempts).values(values);
+  return result;
+}
+
+// ========================================
+// USER HOBBIES QUERIES
+// ========================================
+
+export async function getUserHobbies(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(user_hobbies).where(eq(user_hobbies.usuario_id, userId));
+}
+
+export async function addUserHobby(userId: number, nome: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const values: InsertUserHobby = {
+    usuario_id: userId,
+    nome,
+  };
+  
+  const result = await db.insert(user_hobbies).values(values);
+  return result;
+}

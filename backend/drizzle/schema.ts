@@ -91,3 +91,69 @@ export const crisisMessages = mysqlTable("crisis_messages", {
 
 export type CrisisMessage = typeof crisisMessages.$inferSelect;
 export type InsertCrisisMessage = typeof crisisMessages.$inferInsert;
+
+/**
+ * Sites de apostas - Base de dados com ~2.500 domínios
+ */
+export const gambling_websites = mysqlTable("gambling_websites", {
+  id: int("id").autoincrement().primaryKey(),
+  dominio: varchar("dominio", { length: 255 }).notNull().unique(),
+  nome_site: varchar("nome_site", { length: 255 }),
+  categoria: varchar("categoria", { length: 50 }),
+  pais: varchar("pais", { length: 50 }),
+  ativo: int("ativo").default(1).notNull(),
+  data_adicao: timestamp("data_adicao").defaultNow().notNull(),
+});
+
+export type GamblingWebsite = typeof gambling_websites.$inferSelect;
+export type InsertGamblingWebsite = typeof gambling_websites.$inferInsert;
+
+/**
+ * Tentativas de acesso a sites de apostas
+ * Registra quando o usuário tenta acessar um site
+ */
+export const access_attempts = mysqlTable("access_attempts", {
+  id: int("id").autoincrement().primaryKey(),
+  usuario_id: int("usuario_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  dominio: varchar("dominio", { length: 255 }).notNull(),
+  valor: int("valor"), // valor que tentaria apostar (em centavos)
+  odds: varchar("odds", { length: 50 }),
+  contexto_emocional: varchar("contexto_emocional", { length: 255 }),
+  usuario_aceitou_redirecionamento: int("usuario_aceitou_redirecionamento").default(0),
+  hobby_sugerido: varchar("hobby_sugerido", { length: 255 }),
+  resultado: varchar("resultado", { length: 50 }), // 'bloqueado', 'redirecionado', 'apostou'
+  data_hora: timestamp("data_hora").defaultNow().notNull(),
+});
+
+export type AccessAttempt = typeof access_attempts.$inferSelect;
+export type InsertAccessAttempt = typeof access_attempts.$inferInsert;
+
+/**
+ * Hobbies do usuário
+ * Atividades alternativas para redirecionar quando há impulso de apostar
+ */
+export const user_hobbies = mysqlTable("user_hobbies", {
+  id: int("id").autoincrement().primaryKey(),
+  usuario_id: int("usuario_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  nome: varchar("nome", { length: 255 }).notNull(),
+  data_criacao: timestamp("data_criacao").defaultNow().notNull(),
+});
+
+export type UserHobby = typeof user_hobbies.$inferSelect;
+export type InsertUserHobby = typeof user_hobbies.$inferInsert;
+
+/**
+ * Assinatura Premium do usuário
+ */
+export const premium_subscriptions = mysqlTable("premium_subscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  usuario_id: int("usuario_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+  status: varchar("status", { length: 50 }).default("ativo").notNull(), // 'ativo', 'cancelado', 'expirado'
+  data_inicio: timestamp("data_inicio").defaultNow().notNull(),
+  data_expiracao: timestamp("data_expiracao"),
+  stripe_subscription_id: varchar("stripe_subscription_id", { length: 255 }),
+  data_atualizacao: timestamp("data_atualizacao").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PremiumSubscription = typeof premium_subscriptions.$inferSelect;
+export type InsertPremiumSubscription = typeof premium_subscriptions.$inferInsert;

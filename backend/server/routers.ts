@@ -1,5 +1,5 @@
-import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
+import { COOKIE_NAME } from "../shared/const";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
@@ -130,6 +130,49 @@ export const appRouter = router({
       const { getStatistics } = await import("./db");
       return getStatistics(ctx.user.id);
     }),
+  }),
+
+  // Gambling Websites
+  gambling: router({
+    searchSites: publicProcedure
+      .input(z.object({ search: z.string().min(1) }))
+      .query(async ({ input }) => {
+        const { searchGamblingWebsites } = await import("./db");
+        return searchGamblingWebsites(input.search);
+      }),
+    registerAccessAttempt: protectedProcedure
+      .input(z.object({
+        dominio: z.string(),
+        valor: z.number().min(0),
+        odds: z.number().optional(),
+        contexto_emocional: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { registerAccessAttempt } = await import("./db");
+        return registerAccessAttempt(ctx.user.id, input);
+      }),
+  }),
+
+  // Profile
+  profile: router({
+    getProfile: protectedProcedure.query(async ({ ctx }) => {
+      const { getFinancialProfile } = await import("./db");
+      return getFinancialProfile(ctx.user.id);
+    }),
+  }),
+
+  // Hobbies
+  hobbies: router({
+    listHobbies: protectedProcedure.query(async ({ ctx }) => {
+      const { getUserHobbies } = await import("./db");
+      return getUserHobbies(ctx.user.id);
+    }),
+    addHobby: protectedProcedure
+      .input(z.object({ nome: z.string().min(1) }))
+      .mutation(async ({ ctx, input }) => {
+        const { addUserHobby } = await import("./db");
+        return addUserHobby(ctx.user.id, input.nome);
+      }),
   }),
 });
 
