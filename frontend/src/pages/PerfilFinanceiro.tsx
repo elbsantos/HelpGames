@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { DollarSign, Info, Target } from "lucide-react";
@@ -30,6 +31,11 @@ export default function PerfilFinanceiro() {
 
   const [monthlyIncome, setMonthlyIncome] = useState("");
   const [fixedExpenses, setFixedExpenses] = useState("");
+  const [bettingPercentage, setBettingPercentage] = useState(10);
+  const [cinemaPercentage, setCinemaPercentage] = useState(20);
+  const [hobbiesPercentage, setHobbiesPercentage] = useState(30);
+  const [travelPercentage, setTravelPercentage] = useState(20);
+  const [otherPercentage, setOtherPercentage] = useState(20);
 
   useEffect(() => {
     if (profile) {
@@ -69,6 +75,12 @@ export default function PerfilFinanceiro() {
     
     if (expensesInCents > incomeInCents) {
       toast.error("As despesas não podem ser maiores que a renda");
+      return;
+    }
+
+    const totalAllocation = bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage;
+    if (totalAllocation !== 100) {
+      toast.error(`A soma dos percentuais deve ser 100% (atual: ${totalAllocation}%)`);
       return;
     }
     
@@ -237,38 +249,141 @@ export default function PerfilFinanceiro() {
                 </div>
 
                 {incomeInCents > 0 && (
-                  <Card className="bg-secondary/50">
-                    <CardHeader>
-                      <CardTitle className="text-lg">Distribuição Recomendada</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Necessidades (50%)</span>
-                        <span className="font-semibold">{formatCurrency(necessitiesBudget)}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Lazer (30%)</span>
-                        <span className="font-semibold text-primary">{formatCurrency(leisureBudget)}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Poupança (20%)</span>
-                        <span className="font-semibold">{formatCurrency(savingsBudget)}</span>
-                      </div>
-                      <div className="pt-3 border-t">
+                  <>
+                    <Card className="bg-secondary/50">
+                      <CardHeader>
+                        <CardTitle className="text-lg">Distribuição Recomendada</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="font-semibold">Verba de Lazer Segura</span>
-                          <span className="text-xl font-bold text-primary">{formatCurrency(leisureBudget)}</span>
+                          <span className="text-sm text-muted-foreground">Necessidades (50%)</span>
+                          <span className="font-semibold">{formatCurrency(necessitiesBudget)}</span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Este é o valor que você pode gastar com lazer sem comprometer suas finanças
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Lazer (30%)</span>
+                          <span className="font-semibold text-primary">{formatCurrency(leisureBudget)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Poupança (20%)</span>
+                          <span className="font-semibold">{formatCurrency(savingsBudget)}</span>
+                        </div>
+                        <div className="pt-3 border-t">
+                          <div className="flex justify-between items-center">
+                            <span className="font-semibold">Verba de Lazer Segura</span>
+                            <span className="text-xl font-bold text-primary">{formatCurrency(leisureBudget)}</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Este é o valor que você pode gastar com lazer sem comprometer suas finanças
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Alocação de Lazer em Subcategorias */}
+                    <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+                      <CardHeader>
+                        <CardTitle className="text-lg">Como Você Quer Distribuir Seus {formatCurrency(leisureBudget)} de Lazer?</CardTitle>
+                        <CardDescription>
+                          Customize como dividir seus 30% entre apostas, cinema, hobbies, viagens e outros
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <Label>Apostas Online: {bettingPercentage}%</Label>
+                            <span className="font-semibold text-destructive">{formatCurrency(Math.floor(leisureBudget * (bettingPercentage / 100)))}</span>
+                          </div>
+                          <Slider
+                            value={[bettingPercentage]}
+                            onValueChange={(value) => setBettingPercentage(value[0])}
+                            min={0}
+                            max={100}
+                            step={5}
+                            className="w-full"
+                          />
+                          <p className="text-xs text-muted-foreground">Limite mensal para apostas online</p>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <Label>Cinema/Séries: {cinemaPercentage}%</Label>
+                            <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (cinemaPercentage / 100)))}</span>
+                          </div>
+                          <Slider
+                            value={[cinemaPercentage]}
+                            onValueChange={(value) => setCinemaPercentage(value[0])}
+                            min={0}
+                            max={100}
+                            step={5}
+                            className="w-full"
+                          />
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <Label>Hobbies/Atividades: {hobbiesPercentage}%</Label>
+                            <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (hobbiesPercentage / 100)))}</span>
+                          </div>
+                          <Slider
+                            value={[hobbiesPercentage]}
+                            onValueChange={(value) => setHobbiesPercentage(value[0])}
+                            min={0}
+                            max={100}
+                            step={5}
+                            className="w-full"
+                          />
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <Label>Viagens/Passeios: {travelPercentage}%</Label>
+                            <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (travelPercentage / 100)))}</span>
+                          </div>
+                          <Slider
+                            value={[travelPercentage]}
+                            onValueChange={(value) => setTravelPercentage(value[0])}
+                            min={0}
+                            max={100}
+                            step={5}
+                            className="w-full"
+                          />
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <Label>Outros: {otherPercentage}%</Label>
+                            <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (otherPercentage / 100)))}</span>
+                          </div>
+                          <Slider
+                            value={[otherPercentage]}
+                            onValueChange={(value) => setOtherPercentage(value[0])}
+                            min={0}
+                            max={100}
+                            step={5}
+                            className="w-full"
+                          />
+                        </div>
+
+                        <div className="pt-3 border-t">
+                          <div className="flex justify-between items-center font-semibold">
+                            <span>Total Alocado:</span>
+                            <span className={bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage === 100 ? "text-green-600" : "text-destructive"}>
+                              {bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage}%
+                            </span>
+                          </div>
+                          {bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage !== 100 && (
+                            <p className="text-xs text-destructive mt-1">
+                              ⚠️ A soma deve ser 100%
+                            </p>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </>
                 )}
 
                 <div className="flex gap-4">
-                  <Button type="submit" className="flex-1" disabled={upsertProfile.isPending}>
+                  <Button type="submit" className="flex-1" disabled={upsertProfile.isPending || (incomeInCents > 0 && (bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage !== 100))}>
                     {upsertProfile.isPending ? "Salvando..." : "Salvar Perfil"}
                   </Button>
                   <Button type="button" variant="outline" asChild>

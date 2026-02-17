@@ -342,3 +342,75 @@ export async function addUserHobby(userId: number, nome: string) {
   const result = await db.insert(user_hobbies).values(values);
   return result;
 }
+
+// ========================================
+// LEISURE ALLOCATION QUERIES
+// ========================================
+
+import { leisureAllocation, InsertLeisureAllocation } from "../drizzle/schema";
+
+export async function getLeisureAllocation(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(leisureAllocation).where(eq(leisureAllocation.userId, userId));
+  return result[0] || null;
+}
+
+export async function createOrUpdateLeisureAllocation(userId: number, data: Partial<InsertLeisureAllocation>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const existing = await getLeisureAllocation(userId);
+  
+  if (existing) {
+    await db.update(leisureAllocation)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(leisureAllocation.userId, userId));
+  } else {
+    const values: InsertLeisureAllocation = {
+      userId,
+      bettingPercentage: data.bettingPercentage || 10,
+      cinemaPercentage: data.cinemaPercentage || 20,
+      hobbiesPercentage: data.hobbiesPercentage || 30,
+      travelPercentage: data.travelPercentage || 20,
+      otherPercentage: data.otherPercentage || 20,
+    };
+    
+    await db.insert(leisureAllocation).values(values);
+  }
+}
+
+export async function calculateBettingLimit(userId: number) {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  const profile = await getFinancialProfile(userId);
+  const allocation = await getLeisureAllocation(userId);
+  
+  if (!profile || !allocation) return 0;
+  
+  // leisureBudget é 30% da renda
+  // bettingPercentage é % dos 30%
+  // Então: limite de apostas = leisureBudget * (bettingPercentage / 100)
+  const bettingLimit = Math.floor(profile.leisureBudget * (allocation.bettingPercentage / 100));
+  
+  return bettingLimit;
+}
+
+export async function getBettingSpentThisMonth(userId: number) {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  
+  const result = await db.select({ total: sql<number>`COALESCE(SUM(${access_attempts.valor}), 0)` })
+    .from(access_attempts)
+    .where(and(
+      eq(access_attempts.usuario_id, userId),
+      sql`${access_attempts.data_hora} >= ${firstDayOfMonth}`
+    ));
+  
+  return result[0]?.total || 0;
+}

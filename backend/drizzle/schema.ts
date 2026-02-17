@@ -39,8 +39,27 @@ export const financialProfiles = mysqlTable("financial_profiles", {
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
+/**
+ * Alocação de lazer em subcategorias
+ * Divide os 30% de lazer em: apostas (10%), cinema (20%), hobbies (30%), viagens (20%), outros (20%)
+ */
+export const leisureAllocation = mysqlTable("leisure_allocation", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  bettingPercentage: int("betting_percentage").default(10).notNull(), // % dos 30%
+  cinemaPercentage: int("cinema_percentage").default(20).notNull(),
+  hobbiesPercentage: int("hobbies_percentage").default(30).notNull(),
+  travelPercentage: int("travel_percentage").default(20).notNull(),
+  otherPercentage: int("other_percentage").default(20).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
 export type FinancialProfile = typeof financialProfiles.$inferSelect;
 export type InsertFinancialProfile = typeof financialProfiles.$inferInsert;
+
+export type LeisureAllocation = typeof leisureAllocation.$inferSelect;
+export type InsertLeisureAllocation = typeof leisureAllocation.$inferInsert;
 
 /**
  * Apostas evitadas registradas pelo usuário
