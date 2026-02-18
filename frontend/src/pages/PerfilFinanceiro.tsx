@@ -99,9 +99,17 @@ export default function PerfilFinanceiro() {
 
   const incomeInCents = Math.round(parseFloat(monthlyIncome || "0") * 100);
   const expensesInCents = Math.round(parseFloat(fixedExpenses || "0") * 100);
-  const leisureBudget = Math.floor(incomeInCents * 0.3);
-  const savingsBudget = Math.floor(incomeInCents * 0.2);
-  const necessitiesBudget = Math.floor(incomeInCents * 0.5);
+  
+  // Calcular o orçamento disponível após despesas reais
+  const availableBudget = Math.max(0, incomeInCents - expensesInCents);
+  
+  // Distribuir o orçamento disponível: 30% lazer, 20% poupança, 50% outros/emergência
+  const leisureBudget = Math.floor(availableBudget * 0.3);
+  const savingsBudget = Math.floor(availableBudget * 0.2);
+  const otherBudget = Math.floor(availableBudget * 0.5);
+  
+  // Necessidades são as despesas reais preenchidas pelo usuário
+  const necessitiesBudget = expensesInCents;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">

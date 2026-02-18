@@ -108,7 +108,11 @@ export async function upsertFinancialProfile(userId: number, data: { monthlyInco
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  const leisureBudget = Math.floor(data.monthlyIncome * 0.3); // 30% para lazer
+  // Calcular orcamento disponivel: Renda - Despesas Reais
+  const availableBudget = Math.max(0, data.monthlyIncome - data.fixedExpenses);
+  
+  // 30% do orcamento disponivel para lazer (nao 30% da renda total)
+  const leisureBudget = Math.floor(availableBudget * 0.3);
   
   const values: InsertFinancialProfile = {
     userId,
