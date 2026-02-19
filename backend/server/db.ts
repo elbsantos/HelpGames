@@ -111,8 +111,9 @@ export async function upsertFinancialProfile(userId: number, data: { monthlyInco
   // Saldo restante apos despesas
   const remainingBudget = Math.max(0, data.monthlyIncome - data.fixedExpenses);
   
-  // 30% do saldo restante para lazer
-  const leisureBudget = Math.floor(remainingBudget * 0.3);
+  // Proporção 3:2 (lazer:poupança) do saldo restante
+  // Lazer = 60% do saldo (3/5)
+  const leisureBudget = Math.floor(remainingBudget * 0.6);
   
   const values: InsertFinancialProfile = {
     userId,

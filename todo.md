@@ -10,6 +10,10 @@
 - [x] Formulário de cadastro/edição de perfil financeiro
 - [x] Cálculo automático de verba de lazer segura (regra 50-30-20)
 - [x] Exibição de resumo financeiro no dashboard
+- [x] CORREÇÃO: Distribuição 3:2 (Lazer:Poupança) em TODOS os cenários
+- [x] CORREÇÃO: Eliminar categoria "Outros" - usar apenas Necessidades, Lazer, Poupança
+- [x] CORREÇÃO: Alerta quando Despesas Fixas > 50% da Renda
+- [x] CORREÇÃO: Validar soma = 100% da Renda em todos os cenários
 
 ## Registro de Apostas Evitadas
 - [x] Modelo de dados para apostas evitadas (data, valor, contexto emocional)

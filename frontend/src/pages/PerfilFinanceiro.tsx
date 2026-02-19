@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { DollarSign, Info, Target } from "lucide-react";
+import { AlertCircle, DollarSign, Info, Target } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
@@ -100,16 +100,21 @@ export default function PerfilFinanceiro() {
   const incomeInCents = Math.round(parseFloat(monthlyIncome || "0") * 100);
   const expensesInCents = Math.round(parseFloat(fixedExpenses || "0") * 100);
   
-  // Necessidades sao as despesas reais preenchidas pelo usuario
+  // Necessidades são as despesas reais preenchidas pelo usuário
   const necessitiesBudget = expensesInCents;
   
-  // Calcular o saldo restante apos despesas
+  // Calcular o saldo restante após despesas
   const remainingBudget = Math.max(0, incomeInCents - expensesInCents);
   
-  // Distribuir o saldo restante: 30% lazer, 20% poupanca, 50% outros/emergencia
-  const leisureBudget = Math.floor(remainingBudget * 0.3);
-  const savingsBudget = Math.floor(remainingBudget * 0.2);
-  const otherBudget = remainingBudget - leisureBudget - savingsBudget; // Resto para fechar em 100%
+  // Proporção 3:2 (lazer:poupança) do saldo restante
+  // Lazer = 60% do saldo (3/5)
+  // Poupança = 40% do saldo (2/5)
+  const leisureBudget = Math.floor(remainingBudget * 0.6);
+  const savingsBudget = remainingBudget - leisureBudget; // Resto para fechar em 100%
+
+  // Verificar saúde financeira
+  const expensesPercentage = incomeInCents > 0 ? (expensesInCents / incomeInCents) * 100 : 0;
+  const hasFinancialHealthWarning = expensesPercentage > 50;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
@@ -159,45 +164,45 @@ export default function PerfilFinanceiro() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Info className="h-5 w-5 text-primary" />
-                Regra 50-30-20
+                Distribuição Inteligente de Renda
               </CardTitle>
               <CardDescription className="text-base">
-                Método comprovado de gestão financeira que divide sua renda em três categorias:
+                Seu saldo após despesas é distribuído em proporção 3:2 entre lazer e poupança:
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-lg bg-chart-1/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-chart-1">50%</span>
+                  <span className="text-2xl font-bold text-chart-1">100%</span>
                 </div>
                 <div>
                   <p className="font-semibold">Necessidades Básicas</p>
                   <p className="text-sm text-muted-foreground">
-                    Moradia, alimentação, transporte, contas essenciais
+                    Suas despesas fixas reais (moradia, alimentação, transporte, contas)
                   </p>
                 </div>
               </div>
               
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-lg bg-chart-3/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-chart-3">30%</span>
+                  <span className="text-2xl font-bold text-chart-3">60%</span>
                 </div>
                 <div>
                   <p className="font-semibold">Lazer e Desejos</p>
                   <p className="text-sm text-muted-foreground">
-                    Entretenimento, hobbies, restaurantes - sua verba de lazer segura
+                    60% do seu saldo restante (entretenimento, hobbies, restaurantes)
                   </p>
                 </div>
               </div>
               
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-lg bg-chart-2/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-chart-2">20%</span>
+                  <span className="text-2xl font-bold text-chart-2">40%</span>
                 </div>
                 <div>
                   <p className="font-semibold">Poupança e Investimentos</p>
                   <p className="text-sm text-muted-foreground">
-                    Reserva de emergência, investimentos, objetivos futuros
+                    40% do seu saldo restante (reserva de emergência, investimentos, objetivos)
                   </p>
                 </div>
               </div>
@@ -258,30 +263,50 @@ export default function PerfilFinanceiro() {
 
                 {incomeInCents > 0 && (
                   <>
+                    {/* Alerta de Saúde Financeira */}
+                    {hasFinancialHealthWarning && (
+                      <Card className="border-yellow-500/50 bg-yellow-50 dark:bg-yellow-950/30">
+                        <CardContent className="pt-6">
+                          <div className="flex items-start gap-3">
+                            <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-500 flex-shrink-0 mt-0.5" />
+                            <div>
+                              <p className="font-semibold text-yellow-900 dark:text-yellow-100">
+                                ⚠️ Saúde Financeira em Risco
+                              </p>
+                              <p className="text-sm text-yellow-800 dark:text-yellow-200 mt-1">
+                                Suas despesas fixas representam {expensesPercentage.toFixed(1)}% da sua renda. 
+                                O recomendado é manter em até 50%. Considere reduzir despesas ou aumentar renda para melhorar sua situação.
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
                     <Card className="bg-secondary/50">
                       <CardHeader>
-                        <CardTitle className="text-lg">Distribuição Recomendada</CardTitle>
+                        <CardTitle className="text-lg">Distribuição de Sua Renda</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Necessidades (50%)</span>
+                          <span className="text-sm text-muted-foreground">Necessidades (Despesas Fixas)</span>
                           <span className="font-semibold">{formatCurrency(necessitiesBudget)}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Lazer (30%)</span>
+                          <span className="text-sm text-muted-foreground">Lazer (60% do saldo)</span>
                           <span className="font-semibold text-primary">{formatCurrency(leisureBudget)}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Poupança (20%)</span>
+                          <span className="text-sm text-muted-foreground">Poupança (40% do saldo)</span>
                           <span className="font-semibold">{formatCurrency(savingsBudget)}</span>
                         </div>
                         <div className="pt-3 border-t">
                           <div className="flex justify-between items-center">
-                            <span className="font-semibold">Verba de Lazer Segura</span>
-                            <span className="text-xl font-bold text-primary">{formatCurrency(leisureBudget)}</span>
+                            <span className="font-semibold">Total</span>
+                            <span className="text-xl font-bold text-primary">{formatCurrency(incomeInCents)}</span>
                           </div>
                           <p className="text-xs text-muted-foreground mt-1">
-                            Este é o valor que você pode gastar com lazer sem comprometer suas finanças
+                            Necessidades + Lazer + Poupança = 100% da sua renda
                           </p>
                         </div>
                       </CardContent>
@@ -292,7 +317,7 @@ export default function PerfilFinanceiro() {
                       <CardHeader>
                         <CardTitle className="text-lg">Como Você Quer Distribuir Seus {formatCurrency(leisureBudget)} de Lazer?</CardTitle>
                         <CardDescription>
-                          Customize como dividir seus 30% entre apostas, cinema, hobbies, viagens e outros
+                          Customize como dividir seus 60% do saldo entre apostas, cinema, hobbies, viagens e outros
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-6">
@@ -309,7 +334,9 @@ export default function PerfilFinanceiro() {
                             step={5}
                             className="w-full"
                           />
-                          <p className="text-xs text-muted-foreground">Limite mensal para apostas online</p>
+                          <p className="text-xs text-muted-foreground">
+                            Limite mensal para apostas online (máximo 10% dos 60% de lazer é recomendado)
+                          </p>
                         </div>
 
                         <div className="space-y-3">
@@ -373,31 +400,28 @@ export default function PerfilFinanceiro() {
                         </div>
 
                         <div className="pt-3 border-t">
-                          <div className="flex justify-between items-center font-semibold">
-                            <span>Total Alocado:</span>
-                            <span className={bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage === 100 ? "text-green-600" : "text-destructive"}>
-                              {bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage}%
+                          <div className="flex justify-between items-center">
+                            <span className="font-semibold">Total de Lazer Alocado</span>
+                            <span className="text-lg font-bold text-primary">
+                              {formatCurrency(Math.floor(leisureBudget * ((bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage) / 100)))}
                             </span>
                           </div>
-                          {bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage !== 100 && (
-                            <p className="text-xs text-destructive mt-1">
-                              ⚠️ A soma deve ser 100%
-                            </p>
-                          )}
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Soma dos percentuais: {bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage}%
+                          </p>
                         </div>
                       </CardContent>
                     </Card>
                   </>
                 )}
 
-                <div className="flex gap-4">
-                  <Button type="submit" className="flex-1" disabled={upsertProfile.isPending || (incomeInCents > 0 && (bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage !== 100))}>
-                    {upsertProfile.isPending ? "Salvando..." : "Salvar Perfil"}
-                  </Button>
-                  <Button type="button" variant="outline" asChild>
-                    <Link href="/dashboard">Cancelar</Link>
-                  </Button>
-                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-primary hover:bg-primary/90"
+                  disabled={upsertProfile.isPending}
+                >
+                  {upsertProfile.isPending ? "Salvando..." : "Salvar Perfil Financeiro"}
+                </Button>
               </form>
             </CardContent>
           </Card>
