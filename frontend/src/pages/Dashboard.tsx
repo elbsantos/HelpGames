@@ -113,6 +113,15 @@ export default function Dashboard() {
               <Link href="/metas">
                 <Button variant="ghost">Metas</Button>
               </Link>
+              <Button 
+                onClick={() => activateBlockage.mutate()}
+                disabled={blockageStatus?.isBlocked || activateBlockage.isPending}
+                variant="destructive"
+                className="gap-2"
+              >
+                <Lock className="h-4 w-4" />
+                {blockageStatus?.isBlocked ? `Bloqueado ${blockageStatus.remainingMinutes}min` : 'Bloquear Bets'}
+              </Button>
               <Link href="/modo-crise">
                 <Button variant="destructive">Modo Crise</Button>
               </Link>
@@ -225,7 +234,7 @@ export default function Dashboard() {
         )}
 
         {/* Ações Rápidas */}
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2">
           <Card className="hover:border-primary/50 transition-colors cursor-pointer">
             <Link href="/registrar-aposta">
               <CardHeader>
@@ -238,34 +247,6 @@ export default function Dashboard() {
                 </CardDescription>
               </CardHeader>
             </Link>
-          </Card>
-
-          <Card className={`transition-colors ${
-            blockageStatus?.isBlocked 
-              ? 'border-blue-500/50 bg-blue-50/50 dark:bg-blue-950/20' 
-              : 'hover:border-blue-500/50'
-          }`}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Lock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                Bloquear Bets
-              </CardTitle>
-              <CardDescription>
-                {blockageStatus?.isBlocked 
-                  ? `Bloqueado por ${blockageStatus.remainingMinutes} min` 
-                  : 'Bloqueie por 30 minutos'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                onClick={() => activateBlockage.mutate()}
-                disabled={blockageStatus?.isBlocked || activateBlockage.isPending}
-                className={blockageStatus?.isBlocked ? 'w-full' : 'w-full'}
-                variant={blockageStatus?.isBlocked ? 'outline' : 'default'}
-              >
-                {activateBlockage.isPending ? 'Ativando...' : blockageStatus?.isBlocked ? `${blockageTimer}s` : 'Ativar Bloqueio'}
-              </Button>
-            </CardContent>
           </Card>
 
           <Card className="hover:border-destructive/50 transition-colors cursor-pointer border-destructive/20">

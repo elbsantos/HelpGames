@@ -91,3 +91,8 @@
 - [x] Mensagem de sucesso ao ativar bloqueio
 - [x] Timer visual mostrando tempo restante do bloqueio
 - [x] Integração com banco de dados
+
+## Ajustes de UI
+- [x] Mover botão "Bloquear Bets" para header ao lado do "Modo Crise"
+- [x] Aplicar cor vermelha (destructive) ao botão "Bloquear Bets"
+- [x] Remover botão de bloqueio da seção "Ações Rápidas" do Dashboard
