@@ -64,7 +64,7 @@ export default function RegistrarTentativaAposta() {
       setSearchTerm("");
       setShowImpactAlert(false);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error(`❌ Erro ao registrar: ${error.message}`);
     },
   });
@@ -142,7 +142,7 @@ export default function RegistrarTentativaAposta() {
               />
               {searchTerm && gamblingWebsites.length > 0 && (
                 <div className="mt-2 border rounded-lg max-h-48 overflow-y-auto">
-                  {gamblingWebsites.map((site) => (
+                  {gamblingWebsites.map((site: any) => (
                     <button
                       key={site.id}
                       onClick={() => {
@@ -280,7 +280,7 @@ export default function RegistrarTentativaAposta() {
                     <div className="mt-3 pt-3 border-t border-green-300">
                       <p className="text-green-900 font-semibold text-sm mb-2">💡 Que tal fazer isso em vez disso?</p>
                       <div className="space-y-1">
-                        {hobbies.slice(0, 2).map((hobby) => (
+                        {hobbies.slice(0, 2).map((hobby: any) => (
                           <p key={hobby.id} className="text-green-800 text-sm">
                             • {hobby.nome}
                           </p>

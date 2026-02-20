@@ -96,3 +96,6 @@
 - [x] Mover botão "Bloquear Bets" para header ao lado do "Modo Crise"
 - [x] Aplicar cor vermelha (destructive) ao botão "Bloquear Bets"
 - [x] Remover botão de bloqueio da seção "Ações Rápidas" do Dashboard
+
+## Correção de TypeScript
+- [x] Corrigir erros de type annotations em RegistrarTentativaAposta.tsx (error, site, hobby)
