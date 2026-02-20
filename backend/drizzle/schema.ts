@@ -34,7 +34,9 @@ export const financialProfiles = mysqlTable("financial_profiles", {
   userId: int("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   monthlyIncome: int("monthly_income").notNull(), // em centavos
   fixedExpenses: int("fixed_expenses").notNull(), // em centavos
-  leisureBudget: int("leisure_budget").notNull(), // calculado: 30% da renda
+  leisureBudget: int("leisure_budget").notNull(), // calculado: 60% do saldo
+  bettingSpentThisMonth: int("betting_spent_this_month").default(0).notNull(), // em centavos
+  lastResetDate: timestamp("last_reset_date").defaultNow().notNull(), // ultima data de reset mensal
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });

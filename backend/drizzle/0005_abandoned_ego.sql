@@ -1,0 +1,2 @@
+ALTER TABLE `financial_profiles` ADD `betting_spent_this_month` int DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE `financial_profiles` ADD `last_reset_date` timestamp DEFAULT (now()) NOT NULL;

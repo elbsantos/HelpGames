@@ -105,3 +105,8 @@
 - [x] Corrigir nomes de propriedades em RegistrarTentativaAposta.tsx
 - [x] Corrigir caminho de import em imageGeneration.ts
 - [x] Eliminar todos os erros de TypeScript (48 → 0 erros)
+
+## Campo de Apostas do Mês Atual
+- [x] Adicionar coluna gasto_apostas_mes_atual ao schema (bettingSpentThisMonth + lastResetDate)
+- [x] Atualizar funções de banco de dados (addBettingSpending, getBettingSpentThisMonth, resetBettingSpendingIfNeeded)
+- [x] Atualizar frontend para usar novo campo (RegistrarTentativaAposta.tsx)

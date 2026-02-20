@@ -38,7 +38,7 @@ export default function RegistrarTentativaAposta() {
 
     const amount = parseFloat(bettingAmount);
     const leisureLimit = profile.leisureBudget;
-    const alreadySpent = 0; // TODO: Adicionar campo de apostas do mês atual ao schema
+    const alreadySpent = profile.bettingSpentThisMonth || 0;
     const remaining = leisureLimit - alreadySpent;
     const percentageOfRemaining = (amount / remaining) * 100;
     const percentageOfTotal = (amount / leisureLimit) * 100;
@@ -253,7 +253,7 @@ export default function RegistrarTentativaAposta() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Já gasto este mês:</span>
-                  <span className="font-semibold">R$ 0.00</span>
+                  <span className="font-semibold">R$ {(profile?.bettingSpentThisMonth || 0).toFixed(2)}</span>
                 </div>
                 <div className="border-t pt-2 flex justify-between">
                   <span className="text-slate-600">Restante:</span>

@@ -403,22 +403,7 @@ export async function calculateBettingLimit(userId: number) {
   return bettingLimit;
 }
 
-export async function getBettingSpentThisMonth(userId: number) {
-  const db = await getDb();
-  if (!db) return 0;
-  
-  const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  
-  const result = await db.select({ total: sql<number>`COALESCE(SUM(${access_attempts.valor}), 0)` })
-    .from(access_attempts)
-    .where(and(
-      eq(access_attempts.usuario_id, userId),
-      sql`${access_attempts.data_hora} >= ${firstDayOfMonth}`
-    ));
-  
-  return result[0]?.total || 0;
-}
+// getBettingSpentThisMonth moved to betting spending tracking section below
 
 // ========================================
 // BETS BLOCKAGE QUERIES
@@ -473,4 +458,87 @@ export async function getRemainingBlockageTime(userId: number) {
 export async function isUserBetsBlocked(userId: number) {
   const blockage = await getActiveBetsBlockage(userId);
   return blockage !== null;
+}
+
+
+// ========================================
+// BETTING SPENDING TRACKING
+// ========================================
+
+export async function addBettingSpending(userId: number, amount: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const profile = await getFinancialProfile(userId);
+  if (!profile) throw new Error("Financial profile not found");
+  
+  // Verificar se precisa fazer reset mensal
+  const now = new Date();
+  const lastReset = new Date(profile.lastResetDate);
+  const needsReset = now.getMonth() !== lastReset.getMonth() || now.getFullYear() !== lastReset.getFullYear();
+  
+  const newSpent = needsReset ? amount : (profile.bettingSpentThisMonth || 0) + amount;
+  
+  await db.update(financialProfiles)
+    .set({
+      bettingSpentThisMonth: newSpent,
+      lastResetDate: needsReset ? now : profile.lastResetDate,
+      updatedAt: new Date(),
+    })
+    .where(eq(financialProfiles.userId, userId));
+  
+  return getFinancialProfile(userId);
+}
+
+export async function getBettingSpentThisMonth(userId: number) {
+  const profile = await getFinancialProfile(userId);
+  if (!profile) return 0;
+  
+  // Verificar se precisa fazer reset mensal
+  const now = new Date();
+  const lastReset = new Date(profile.lastResetDate);
+  const needsReset = now.getMonth() !== lastReset.getMonth() || now.getFullYear() !== lastReset.getFullYear();
+  
+  if (needsReset) {
+    // Reset automático
+    const db = await getDb();
+    if (db) {
+      await db.update(financialProfiles)
+        .set({
+          bettingSpentThisMonth: 0,
+          lastResetDate: now,
+          updatedAt: new Date(),
+        })
+        .where(eq(financialProfiles.userId, userId));
+    }
+    return 0;
+  }
+  
+  return profile.bettingSpentThisMonth || 0;
+}
+
+export async function resetBettingSpendingIfNeeded(userId: number) {
+  const profile = await getFinancialProfile(userId);
+  if (!profile) return null;
+  
+  const now = new Date();
+  const lastReset = new Date(profile.lastResetDate);
+  const needsReset = now.getMonth() !== lastReset.getMonth() || now.getFullYear() !== lastReset.getFullYear();
+  
+  if (needsReset) {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    await db.update(financialProfiles)
+      .set({
+        bettingSpentThisMonth: 0,
+        lastResetDate: now,
+        updatedAt: new Date(),
+      })
+      .where(eq(financialProfiles.userId, userId));
+    
+    return getFinancialProfile(userId);
+  }
+  
+  return profile;
 }
