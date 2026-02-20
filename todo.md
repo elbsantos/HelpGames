@@ -99,3 +99,9 @@
 
 ## Correção de TypeScript
 - [x] Corrigir erros de type annotations em RegistrarTentativaAposta.tsx (error, site, hobby)
+
+## Correção de Colisão tRPC
+- [x] Corrigir caminho de import em frontend/src/lib/trpc.ts
+- [x] Corrigir nomes de propriedades em RegistrarTentativaAposta.tsx
+- [x] Corrigir caminho de import em imageGeneration.ts
+- [x] Eliminar todos os erros de TypeScript (48 → 0 erros)

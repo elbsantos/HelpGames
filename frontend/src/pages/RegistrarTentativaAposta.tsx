@@ -37,8 +37,8 @@ export default function RegistrarTentativaAposta() {
     if (!bettingAmount || !profile) return null;
 
     const amount = parseFloat(bettingAmount);
-    const leisureLimit = profile.verba_lazer_mensal;
-    const alreadySpent = profile.gasto_apostas_mes_atual || 0;
+    const leisureLimit = profile.leisureBudget;
+    const alreadySpent = 0; // TODO: Adicionar campo de apostas do mês atual ao schema
     const remaining = leisureLimit - alreadySpent;
     const percentageOfRemaining = (amount / remaining) * 100;
     const percentageOfTotal = (amount / leisureLimit) * 100;
@@ -249,11 +249,11 @@ export default function RegistrarTentativaAposta() {
               <div className="bg-white rounded-lg p-3 space-y-2">
                 <div className="flex justify-between">
                   <span className="text-slate-600">Limite mensal:</span>
-                  <span className="font-semibold">R$ {profile?.verba_lazer_mensal.toFixed(2)}</span>
+                  <span className="font-semibold">R$ {profile?.leisureBudget.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Já gasto este mês:</span>
-                  <span className="font-semibold">R$ {(profile?.gasto_apostas_mes_atual || 0).toFixed(2)}</span>
+                  <span className="font-semibold">R$ 0.00</span>
                 </div>
                 <div className="border-t pt-2 flex justify-between">
                   <span className="text-slate-600">Restante:</span>
