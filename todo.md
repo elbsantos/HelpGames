@@ -82,3 +82,12 @@
 - [ ] README atualizado com instruções de uso
 - [ ] Checkpoint final criado
 - [ ] Apresentação ao usuário com guia de funcionalidades
+
+## Bloqueio de Bets (Novo)
+- [x] Modelo de dados para bloqueio temporário (tabela bets_blockages)
+- [x] Procedimento tRPC para ativar bloqueio (30 minutos)
+- [x] Procedimento tRPC para verificar status de bloqueio
+- [x] Botão "Bloquear Bets" no Dashboard (ao lado do "Modo Crise")
+- [x] Mensagem de sucesso ao ativar bloqueio
+- [x] Timer visual mostrando tempo restante do bloqueio
+- [x] Integração com banco de dados

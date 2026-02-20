@@ -176,3 +176,18 @@ export const premium_subscriptions = mysqlTable("premium_subscriptions", {
 
 export type PremiumSubscription = typeof premium_subscriptions.$inferSelect;
 export type InsertPremiumSubscription = typeof premium_subscriptions.$inferInsert;
+
+/**
+ * Bloqueio temporário de bets
+ * Registra quando o usuário ativa o bloqueio de 30 minutos
+ */
+export const betsBlockages = mysqlTable("bets_blockages", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  blockedUntil: timestamp("blocked_until").notNull(), // até quando está bloqueado
+  reason: text("reason"), // motivo do bloqueio (ex: "Bloqueio manual de 30 minutos")
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type BetsBlockage = typeof betsBlockages.$inferSelect;
+export type InsertBetsBlockage = typeof betsBlockages.$inferInsert;

@@ -419,3 +419,58 @@ export async function getBettingSpentThisMonth(userId: number) {
   
   return result[0]?.total || 0;
 }
+
+// ========================================
+// BETS BLOCKAGE QUERIES
+// ========================================
+
+import { betsBlockages, InsertBetsBlockage } from "../drizzle/schema";
+
+export async function createBetsBlockage(userId: number, durationMinutes: number = 30) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Calcular até quando o bloqueio deve durar
+  const now = new Date();
+  const blockedUntil = new Date(now.getTime() + durationMinutes * 60 * 1000);
+  
+  const values: InsertBetsBlockage = {
+    userId,
+    blockedUntil,
+    reason: `Bloqueio manual de ${durationMinutes} minutos`,
+  };
+  
+  const result = await db.insert(betsBlockages).values(values);
+  return result;
+}
+
+export async function getActiveBetsBlockage(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const now = new Date();
+  const result = await db.select()
+    .from(betsBlockages)
+    .where(and(
+      eq(betsBlockages.userId, userId),
+      sql`${betsBlockages.blockedUntil} > ${now}`
+    ))
+    .orderBy(desc(betsBlockages.createdAt))
+    .limit(1);
+  
+  return result[0] || null;
+}
+
+export async function getRemainingBlockageTime(userId: number) {
+  const blockage = await getActiveBetsBlockage(userId);
+  if (!blockage) return 0;
+  
+  const now = new Date();
+  const remainingMs = blockage.blockedUntil.getTime() - now.getTime();
+  return Math.max(0, Math.ceil(remainingMs / 1000)); // retorna em segundos
+}
+
+export async function isUserBetsBlocked(userId: number) {
+  const blockage = await getActiveBetsBlockage(userId);
+  return blockage !== null;
+}

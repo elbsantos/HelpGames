@@ -174,6 +174,36 @@ export const appRouter = router({
         return addUserHobby(ctx.user.id, input.nome);
       }),
   }),
+
+  // Bloqueio de Bets
+  betsBlockage: router({
+    activate: protectedProcedure
+      .input(z.object({
+        durationMinutes: z.number().min(1).default(30),
+      }).optional())
+      .mutation(async ({ ctx, input }) => {
+        const { createBetsBlockage } = await import("./db");
+        const duration = input?.durationMinutes || 30;
+        await createBetsBlockage(ctx.user.id, duration);
+        return {
+          success: true,
+          message: `Bloqueio de apostas ativado por ${duration} minutos`,
+          blockedUntil: new Date(Date.now() + duration * 60 * 1000),
+        };
+      }),
+    getStatus: protectedProcedure.query(async ({ ctx }) => {
+      const { getActiveBetsBlockage, getRemainingBlockageTime } = await import("./db");
+      const blockage = await getActiveBetsBlockage(ctx.user.id);
+      const remainingSeconds = await getRemainingBlockageTime(ctx.user.id);
+      
+      return {
+        isBlocked: blockage !== null,
+        blockage,
+        remainingSeconds,
+        remainingMinutes: Math.ceil(remainingSeconds / 60),
+      };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

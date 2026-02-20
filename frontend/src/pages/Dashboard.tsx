@@ -1,14 +1,17 @@
-import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { AlertCircle, Calendar, DollarSign, Target, TrendingUp } from "lucide-react";
+import { AlertCircle, Calendar, DollarSign, Lock, Target, TrendingUp } from "lucide-react";
 import { Link } from "wouter";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
+  const [blockageTimer, setBlockageTimer] = useState<number>(0);
   
   const { data: stats, isLoading: statsLoading } = trpc.statistics.get.useQuery(undefined, {
     enabled: !!user,
@@ -21,6 +24,38 @@ export default function Dashboard() {
   const { data: totalPreserved } = trpc.avoidedBets.totalPreserved.useQuery(undefined, {
     enabled: !!user,
   });
+  
+  const { data: blockageStatus } = trpc.betsBlockage.getStatus.useQuery(undefined, {
+    enabled: !!user,
+    refetchInterval: 1000, // Atualizar a cada segundo
+  });
+  
+  const activateBlockage = trpc.betsBlockage.activate.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setBlockageTimer(30 * 60); // 30 minutos em segundos
+    },
+    onError: (error) => {
+      toast.error(`Erro ao ativar bloqueio: ${error.message}`);
+    },
+  });
+  
+  // Timer para atualizar o contador
+  useEffect(() => {
+    if (blockageStatus?.remainingSeconds) {
+      setBlockageTimer(blockageStatus.remainingSeconds);
+    }
+  }, [blockageStatus?.remainingSeconds]);
+  
+  useEffect(() => {
+    if (blockageTimer <= 0) return;
+    
+    const interval = setInterval(() => {
+      setBlockageTimer(prev => Math.max(0, prev - 1));
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [blockageTimer]);
 
   if (authLoading || statsLoading || goalsLoading) {
     return (
@@ -40,6 +75,12 @@ export default function Dashboard() {
       style: 'currency',
       currency: 'BRL',
     }).format(cents / 100);
+  };
+  
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const activeGoal = goals?.find(g => g.isCompleted === 0);
@@ -184,7 +225,7 @@ export default function Dashboard() {
         )}
 
         {/* Ações Rápidas */}
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-3">
           <Card className="hover:border-primary/50 transition-colors cursor-pointer">
             <Link href="/registrar-aposta">
               <CardHeader>
@@ -197,6 +238,34 @@ export default function Dashboard() {
                 </CardDescription>
               </CardHeader>
             </Link>
+          </Card>
+
+          <Card className={`transition-colors ${
+            blockageStatus?.isBlocked 
+              ? 'border-blue-500/50 bg-blue-50/50 dark:bg-blue-950/20' 
+              : 'hover:border-blue-500/50'
+          }`}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Lock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                Bloquear Bets
+              </CardTitle>
+              <CardDescription>
+                {blockageStatus?.isBlocked 
+                  ? `Bloqueado por ${blockageStatus.remainingMinutes} min` 
+                  : 'Bloqueie por 30 minutos'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button 
+                onClick={() => activateBlockage.mutate()}
+                disabled={blockageStatus?.isBlocked || activateBlockage.isPending}
+                className={blockageStatus?.isBlocked ? 'w-full' : 'w-full'}
+                variant={blockageStatus?.isBlocked ? 'outline' : 'default'}
+              >
+                {activateBlockage.isPending ? 'Ativando...' : blockageStatus?.isBlocked ? `${blockageTimer}s` : 'Ativar Bloqueio'}
+              </Button>
+            </CardContent>
           </Card>
 
           <Card className="hover:border-destructive/50 transition-colors cursor-pointer border-destructive/20">

@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `bets_blockages` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `user_id` int NOT NULL,\n  `blocked_until` timestamp NOT NULL,\n  `reason` text,\n  `created_at` timestamp NOT NULL DEFAULT (now()),\n  CONSTRAINT `bets_blockages_id` PRIMARY KEY(`id`),\n  CONSTRAINT `bets_blockages_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE cascade\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user hdyLMsoyEsXdGrx.root --database 8Anvx7YrSTGCQYVCEabf8q --execute CREATE TABLE IF NOT EXISTS `bets_blockages` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `user_id` int NOT NULL,\n  `blocked_until` timestamp NOT NULL,\n  `reason` text,\n  `created_at` timestamp NOT NULL DEFAULT (now()),\n  CONSTRAINT `bets_blockages_id` PRIMARY KEY(`id`),\n  CONSTRAINT `bets_blockages_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE cascade\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 512
+}
