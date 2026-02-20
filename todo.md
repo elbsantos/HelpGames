@@ -110,3 +110,8 @@
 - [x] Adicionar coluna gasto_apostas_mes_atual ao schema (bettingSpentThisMonth + lastResetDate)
 - [x] Atualizar funções de banco de dados (addBettingSpending, getBettingSpentThisMonth, resetBettingSpendingIfNeeded)
 - [x] Atualizar frontend para usar novo campo (RegistrarTentativaAposta.tsx)
+
+## Integração de Rastreamento de Gastos
+- [x] Atualizar procedimento tRPC gambling.registerAccessAttempt para chamar addBettingSpending
+- [x] Atualizar frontend para invalidar cache e exibir gastos atualizados
+- [x] Testar fluxo completo de registro e rastreamento

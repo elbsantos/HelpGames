@@ -12,6 +12,7 @@ import { toast } from "sonner";
 
 export default function RegistrarTentativaAposta() {
   const { user } = useAuth();
+  const utils = trpc.useUtils();
   const [selectedSite, setSelectedSite] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [bettingAmount, setBettingAmount] = useState("");
@@ -54,9 +55,10 @@ export default function RegistrarTentativaAposta() {
 
   // Registrar tentativa de aposta
   const registerAttempt = trpc.gambling.registerAccessAttempt.useMutation({
-    onSuccess: () => {
-      toast.success("✅ Tentativa registrada com sucesso!");
-      // Limpar formulário
+    onSuccess: (data) => {
+      toast.success("✅ Tentativa registrada e gasto rastreado!");
+      utils.financialProfile.get.invalidate();
+      utils.profile.getProfile.invalidate();
       setSelectedSite("");
       setBettingAmount("");
       setOdds("");

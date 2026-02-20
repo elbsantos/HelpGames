@@ -148,8 +148,16 @@ export const appRouter = router({
         contexto_emocional: z.string(),
       }))
       .mutation(async ({ ctx, input }) => {
-        const { registerAccessAttempt } = await import("./db");
-        return registerAccessAttempt(ctx.user.id, input);
+        const { registerAccessAttempt, addBettingSpending } = await import("./db");
+        // Registrar tentativa de acesso
+        await registerAccessAttempt(ctx.user.id, input);
+        // Rastrear gasto em apostas
+        const updatedProfile = await addBettingSpending(ctx.user.id, input.valor);
+        return {
+          success: true,
+          message: "Tentativa registrada e gasto rastreado",
+          updatedProfile,
+        };
       }),
   }),
 
