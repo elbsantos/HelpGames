@@ -53,6 +53,16 @@ export default function RegistrarTentativaAposta() {
     };
   }, [bettingAmount, profile]);
 
+  const limitUsagePercentage = useMemo(() => {
+    if (!profile) return 0;
+    const alreadySpent = profile.bettingSpentThisMonth || 0;
+    const leisureLimit = profile.leisureBudget;
+    return leisureLimit > 0 ? (alreadySpent / leisureLimit) * 100 : 0;
+  }, [profile]);
+
+  const isLimitNear = limitUsagePercentage >= 80;
+  const isLimitCritical = limitUsagePercentage >= 95;
+
   // Registrar tentativa de aposta
   const registerAttempt = trpc.gambling.registerAccessAttempt.useMutation({
     onSuccess: (data) => {
@@ -232,6 +242,39 @@ export default function RegistrarTentativaAposta() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Alerta de Limite Próximo */}
+        {isLimitNear && (
+          <Card className={`mb-6 border-2 ${isLimitCritical ? "border-red-300 bg-red-50" : "border-orange-300 bg-orange-50"}`}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertCircle className={`w-5 h-5 ${isLimitCritical ? "text-red-600" : "text-orange-600"}`} />
+                {isLimitCritical ? "⚠️ Limite Crítico!" : "⚠️ Limite Próximo"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-700 font-medium">Uso do limite mensal:</span>
+                  <span className={`text-lg font-bold ${isLimitCritical ? "text-red-600" : "text-orange-600"}`}>
+                    {limitUsagePercentage.toFixed(1)}%
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div
+                    className={`h-3 rounded-full transition-all ${isLimitCritical ? "bg-red-600" : "bg-orange-500"}`}
+                    style={{ width: `${Math.min(limitUsagePercentage, 100)}%` }}
+                  />
+                </div>
+                <p className={`text-sm ${isLimitCritical ? "text-red-800" : "text-orange-800"}`}>
+                  {isLimitCritical
+                    ? "Você está muito próximo do limite! Considere parar de apostar este mês."
+                    : "Você já usou 80% do seu limite mensal. Cuidado com próximas apostas!"}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Alerta de Impacto Financeiro */}
         {impact && (

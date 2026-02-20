@@ -115,3 +115,8 @@
 - [x] Atualizar procedimento tRPC gambling.registerAccessAttempt para chamar addBettingSpending
 - [x] Atualizar frontend para invalidar cache e exibir gastos atualizados
 - [x] Testar fluxo completo de registro e rastreamento
+
+## Alertas de Limite Mensal
+- [x] Criar componente de alerta para limite próximo
+- [x] Adicionar lógica de cálculo de percentual de uso (80%+ amarelo, 95%+ vermelho)
+- [x] Integrar alerta em RegistrarTentativaAposta com barra de progresso
