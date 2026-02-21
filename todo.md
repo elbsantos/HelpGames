@@ -135,3 +135,8 @@
 - [x] Criar procedimento tRPC para obter dados de evolução (getTemporalEvolutionData)
 - [x] Criar componente de gráfico com Recharts (TemporalEvolutionChart)
 - [x] Integrar gráfico no Dashboard com dados em tempo real
+
+## Página Informativa sobre Sites de Apostas
+- [x] Criar dados de 6 categorias de sites de apostas (Esportes, Cassino, Pôquer, Loterias, Bingo, Fantasy Sports)
+- [x] Criar página SitesApostas.tsx com cards informativos (riscos, sinais de alerta)
+- [x] Adicionar rota /sites-apostas e link no Dashboard

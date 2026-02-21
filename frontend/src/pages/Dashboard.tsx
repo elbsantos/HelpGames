@@ -281,6 +281,20 @@ export default function Dashboard() {
               </CardHeader>
             </Link>
           </Card>
+
+          <Card className="hover:border-purple/50 transition-colors cursor-pointer border-purple/20">
+            <Link href="/sites-apostas">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 text-purple-600" />
+                  Saiba Mais sobre Apostas
+                </CardTitle>
+                <CardDescription>
+                  Entenda os riscos e categorias de sites
+                </CardDescription>
+              </CardHeader>
+            </Link>
+          </Card>
         </div>
 
         {/* Gráfico de Evolução Temporal */}
