@@ -479,6 +479,10 @@ export async function addBettingSpending(userId: number, amount: number) {
   
   const newSpent = needsReset ? amount : (profile.bettingSpentThisMonth || 0) + amount;
   
+  if (needsReset) {
+    await resetMonthlyNotifications(userId);
+  }
+  
   await db.update(financialProfiles)
     .set({
       bettingSpentThisMonth: newSpent,
@@ -487,7 +491,16 @@ export async function addBettingSpending(userId: number, amount: number) {
     })
     .where(eq(financialProfiles.userId, userId));
   
-  return getFinancialProfile(userId);
+  const updatedProfile = await getFinancialProfile(userId);
+  
+  if (updatedProfile) {
+    const percentageUsed = (updatedProfile.bettingSpentThisMonth / updatedProfile.leisureBudget) * 100;
+    if (percentageUsed >= 80) {
+      await sendLimitAlertEmail(userId, percentageUsed);
+    }
+  }
+  
+  return updatedProfile;
 }
 
 export async function getBettingSpentThisMonth(userId: number) {
@@ -583,4 +596,95 @@ export async function getBlockageStats(userId: number) {
     successfulBlockages: successfulBlockages.length,
     totalMinutesBlocked,
   };
+}
+
+
+export async function sendLimitAlertEmail(userId: number, percentageUsed: number) {
+  const db = await getDb();
+  if (!db) return false;
+  
+  try {
+    // Obter dados do usuário e perfil financeiro
+    const user = await db.select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    
+    if (!user || user.length === 0) return false;
+    
+    const profile = await db.select()
+      .from(financialProfiles)
+      .where(eq(financialProfiles.userId, userId))
+      .limit(1);
+    
+    if (!profile || profile.length === 0) return false;
+    
+    const userData = user[0];
+    const profileData = profile[0];
+    
+    // Verificar se já foi notificado neste nível
+    const isAt80 = percentageUsed >= 80 && percentageUsed < 95;
+    const isAt95 = percentageUsed >= 95;
+    
+    if (isAt80 && profileData.notifiedAt80Percent) {
+      // Já foi notificado em 80%, não notificar novamente
+      return false;
+    }
+    
+    if (isAt95 && profileData.notifiedAt95Percent) {
+      // Já foi notificado em 95%, não notificar novamente
+      return false;
+    }
+    
+    // Preparar dados do email
+    const subject = isAt95 
+      ? "🚨 ALERTA CRÍTICO: Você atingiu 95% do seu limite mensal de apostas!"
+      : "⚠️ ALERTA: Você atingiu 80% do seu limite mensal de apostas";
+    
+    const message = isAt95
+      ? `Olá ${userData.name},\n\nVocê atingiu 95% do seu limite mensal de apostas (R$ ${(profileData.leisureBudget / 100).toFixed(2)}).\n\nEste é um alerta crítico. Considere parar de apostar este mês para manter seu controle financeiro.\n\nVocê pode ativar o Bloqueio de Bets por 30 minutos para se proteger do impulso.\n\nAtenciosamente,\nEquipe HelpGames`
+      : `Olá ${userData.name},\n\nVocê atingiu 80% do seu limite mensal de apostas (R$ ${(profileData.leisureBudget / 100).toFixed(2)}).\n\nCuidado! Você tem apenas 20% do seu limite restante.\n\nConsidere usar o Bloqueio de Bets ou ativar o Modo Crise se precisar de apoio.\n\nAtenciosamente,\nEquipe HelpGames`;
+    
+    // Usar notifyOwner para enviar notificação (pode ser adaptado para enviar email real)
+    const { notifyOwner } = await import("./_core/notification");
+    await notifyOwner({
+      title: subject,
+      content: `${userData.email}: ${message}`,
+    });
+    
+    // Atualizar timestamp de notificação
+    if (isAt80) {
+      await db.update(financialProfiles)
+        .set({ notifiedAt80Percent: new Date() })
+        .where(eq(financialProfiles.userId, userId));
+    } else if (isAt95) {
+      await db.update(financialProfiles)
+        .set({ notifiedAt95Percent: new Date() })
+        .where(eq(financialProfiles.userId, userId));
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("Erro ao enviar email de alerta:", error);
+    return false;
+  }
+}
+
+export async function resetMonthlyNotifications(userId: number) {
+  const db = await getDb();
+  if (!db) return false;
+  
+  try {
+    await db.update(financialProfiles)
+      .set({ 
+        notifiedAt80Percent: null,
+        notifiedAt95Percent: null,
+      })
+      .where(eq(financialProfiles.userId, userId));
+    
+    return true;
+  } catch (error) {
+    console.error("Erro ao resetar notificações:", error);
+    return false;
+  }
 }

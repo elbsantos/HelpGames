@@ -125,3 +125,8 @@
 - [x] Criar procedimento tRPC para obter histórico de bloqueios (getHistory, getStats)
 - [x] Criar página HistoricoBloqueios.tsx com estatísticas e lista
 - [x] Adicionar rota e navegação no App.tsx e Dashboard
+
+## Notificações por Email
+- [x] Adicionar coluna de email notificado ao schema (notifiedAt80Percent, notifiedAt95Percent)
+- [x] Criar função para enviar email de alerta (sendLimitAlertEmail, resetMonthlyNotifications)
+- [x] Integrar envio de email ao registrar apostas (addBettingSpending)

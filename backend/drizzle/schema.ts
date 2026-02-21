@@ -37,6 +37,8 @@ export const financialProfiles = mysqlTable("financial_profiles", {
   leisureBudget: int("leisure_budget").notNull(), // calculado: 60% do saldo
   bettingSpentThisMonth: int("betting_spent_this_month").default(0).notNull(), // em centavos
   lastResetDate: timestamp("last_reset_date").defaultNow().notNull(), // ultima data de reset mensal
+  notifiedAt80Percent: timestamp("notified_at_80_percent"), // quando foi notificado em 80%
+  notifiedAt95Percent: timestamp("notified_at_95_percent"), // quando foi notificado em 95%
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });

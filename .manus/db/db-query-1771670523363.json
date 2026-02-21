@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE financial_profiles ADD COLUMN notified_at_80_percent TIMESTAMP NULL, ADD COLUMN notified_at_95_percent TIMESTAMP NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user hdyLMsoyEsXdGrx.root --database 8Anvx7YrSTGCQYVCEabf8q --execute ALTER TABLE financial_profiles ADD COLUMN notified_at_80_percent TIMESTAMP NULL, ADD COLUMN notified_at_95_percent TIMESTAMP NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1421
+}
