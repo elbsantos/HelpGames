@@ -130,6 +130,10 @@ export const appRouter = router({
       const { getStatistics } = await import("./db");
       return getStatistics(ctx.user.id);
     }),
+    temporalEvolution: protectedProcedure.query(async ({ ctx }) => {
+      const { getTemporalEvolutionData } = await import("./db");
+      return getTemporalEvolutionData(ctx.user.id);
+    }),
   }),
 
   // Gambling Websites

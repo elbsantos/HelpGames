@@ -8,6 +8,7 @@ import { AlertCircle, Calendar, DollarSign, Lock, Target, TrendingUp } from "luc
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { TemporalEvolutionChart } from "@/components/TemporalEvolutionChart";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -28,6 +29,10 @@ export default function Dashboard() {
   const { data: blockageStatus } = trpc.betsBlockage.getStatus.useQuery(undefined, {
     enabled: !!user,
     refetchInterval: 1000, // Atualizar a cada segundo
+  });
+  
+  const { data: temporalData, isLoading: temporalLoading } = trpc.statistics.temporalEvolution.useQuery(undefined, {
+    enabled: !!user,
   });
   
   const activateBlockage = trpc.betsBlockage.activate.useMutation({
@@ -277,6 +282,11 @@ export default function Dashboard() {
             </Link>
           </Card>
         </div>
+
+        {/* Gráfico de Evolução Temporal */}
+        {stats && stats.totalBetsAvoided > 0 && (
+          <TemporalEvolutionChart data={temporalData || []} isLoading={temporalLoading} />
+        )}
 
         {/* Primeira vez? */}
         {!stats || stats.totalBetsAvoided === 0 ? (

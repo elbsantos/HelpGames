@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -686,5 +686,80 @@ export async function resetMonthlyNotifications(userId: number) {
   } catch (error) {
     console.error("Erro ao resetar notificações:", error);
     return false;
+  }
+}
+
+
+// ========================================
+// TEMPORAL EVOLUTION DATA
+// ========================================
+
+export async function getTemporalEvolutionData(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  try {
+    // Obter apostas evitadas do mês atual
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    const avoidedBetsData = await db.select()
+      .from(avoidedBets)
+      .where(
+        and(
+          eq(avoidedBets.userId, userId),
+          gte(avoidedBets.createdAt, monthStart)
+        )
+      )
+      .orderBy(asc(avoidedBets.createdAt));
+    
+    // Agrupar por dia e calcular economia acumulada
+    const dailyData: Record<string, { date: string; economySaved: number; totalAvoided: number }> = {};
+    let accumulatedEconomy = 0;
+    
+    type EvolutionData = { date: string; economySaved: number; totalAvoided: number };
+    const result: EvolutionData[] = [];
+    
+    for (const bet of avoidedBetsData) {
+      const dateKey = bet.createdAt.toISOString().split('T')[0];
+      
+      if (!dailyData[dateKey]) {
+        dailyData[dateKey] = {
+          date: dateKey,
+          economySaved: 0,
+          totalAvoided: 0,
+        };
+      }
+      
+      accumulatedEconomy += bet.amount;
+      dailyData[dateKey].economySaved = accumulatedEconomy;
+      dailyData[dateKey].totalAvoided += 1;
+    }
+    
+    // Converter para array e preencher dias sem dados
+    for (let day = 1; day <= now.getDate(); day++) {
+      const date = new Date(now.getFullYear(), now.getMonth(), day);
+      const dateKey = date.toISOString().split('T')[0];
+      
+      if (dailyData[dateKey]) {
+        result.push({
+          date: dateKey,
+          economySaved: Math.round(dailyData[dateKey].economySaved / 100 * 100) / 100, // em reais
+          totalAvoided: dailyData[dateKey].totalAvoided,
+        });
+      } else if (result.length > 0) {
+        const lastEntry = result[result.length - 1] as typeof result[0];
+        result.push({
+          date: dateKey,
+          economySaved: lastEntry.economySaved,
+          totalAvoided: lastEntry.totalAvoided,
+        });
+      }
+    }
+    
+    return result;
+  } catch (error) {
+    console.error("Erro ao obter dados de evolução temporal:", error);
+    return [];
   }
 }
