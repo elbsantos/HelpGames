@@ -150,3 +150,8 @@
 - [x] Criar página QuizAutoavaliacao.tsx com 10 perguntas
 - [x] Implementar lógica de cálculo de score e 4 níveis de risco (baixo, leve, moderado, severo)
 - [x] Adicionar rota /quiz-autoavaliacao e card no Dashboard
+
+## Página de Recursos de Ajuda
+- [x] Criar página RecursosAjuda.tsx com 6 organizações internacionais e brasileiras
+- [x] Adicionar cards com informações de contato, horários e links diretos
+- [x] Adicionar rota /recursos-ajuda e card rosa no Dashboard

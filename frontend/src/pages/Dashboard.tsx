@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { AlertCircle, Calendar, DollarSign, Lock, Target, TrendingUp } from "lucide-react";
+import { AlertCircle, Calendar, DollarSign, Lock, Target, TrendingUp, Heart } from "lucide-react";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -315,6 +315,20 @@ export default function Dashboard() {
                 </CardTitle>
                 <CardDescription>
                   Avalie seu risco de comportamento de apostas
+                </CardDescription>
+              </CardHeader>
+            </Link>
+          </Card>
+
+          <Card className="hover:border-pink/50 transition-colors cursor-pointer border-pink/20">
+            <Link href="/recursos-ajuda">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Heart className="h-5 w-5 text-pink-600" />
+                  Recursos de Ajuda
+                </CardTitle>
+                <CardDescription>
+                  Encontre organizações e ferramentas de suporte
                 </CardDescription>
               </CardHeader>
             </Link>
