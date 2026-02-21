@@ -234,7 +234,7 @@ export default function Dashboard() {
         )}
 
         {/* Ações Rápidas */}
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-3">
           <Card className="hover:border-primary/50 transition-colors cursor-pointer">
             <Link href="/registrar-aposta">
               <CardHeader>
@@ -244,6 +244,20 @@ export default function Dashboard() {
                 </CardTitle>
                 <CardDescription>
                   Celebre mais uma vitória sobre o impulso de apostar
+                </CardDescription>
+              </CardHeader>
+            </Link>
+          </Card>
+
+          <Card className="hover:border-blue/50 transition-colors cursor-pointer border-blue/20">
+            <Link href="/historico-bloqueios">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Lock className="h-5 w-5 text-blue-600" />
+                  Histórico de Bloqueios
+                </CardTitle>
+                <CardDescription>
+                  Veja seus períodos de proteção
                 </CardDescription>
               </CardHeader>
             </Link>

@@ -120,3 +120,8 @@
 - [x] Criar componente de alerta para limite próximo
 - [x] Adicionar lógica de cálculo de percentual de uso (80%+ amarelo, 95%+ vermelho)
 - [x] Integrar alerta em RegistrarTentativaAposta com barra de progresso
+
+## Histórico de Bloqueios
+- [x] Criar procedimento tRPC para obter histórico de bloqueios (getHistory, getStats)
+- [x] Criar página HistoricoBloqueios.tsx com estatísticas e lista
+- [x] Adicionar rota e navegação no App.tsx e Dashboard

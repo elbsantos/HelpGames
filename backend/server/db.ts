@@ -542,3 +542,45 @@ export async function resetBettingSpendingIfNeeded(userId: number) {
   
   return profile;
 }
+
+
+export async function getBlockageHistory(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const blockages = await db.select()
+    .from(betsBlockages)
+    .where(eq(betsBlockages.userId, userId))
+    .orderBy(desc(betsBlockages.createdAt));
+  
+  return blockages.map(blockage => ({
+    id: blockage.id,
+    createdAt: blockage.createdAt,
+    blockedUntil: blockage.blockedUntil,
+    reason: blockage.reason,
+    wasSuccessful: blockage.blockedUntil <= new Date(), // Se já passou do horário, foi bem-sucedido
+    durationMinutes: Math.ceil((blockage.blockedUntil.getTime() - blockage.createdAt.getTime()) / (1000 * 60)),
+  }));
+}
+
+export async function getBlockageStats(userId: number) {
+  const db = await getDb();
+  if (!db) return { totalBlockages: 0, successfulBlockages: 0, totalMinutesBlocked: 0 };
+  
+  const blockages = await db.select()
+    .from(betsBlockages)
+    .where(eq(betsBlockages.userId, userId));
+  
+  const now = new Date();
+  const successfulBlockages = blockages.filter(b => b.blockedUntil <= now);
+  const totalMinutesBlocked = blockages.reduce((sum, b) => {
+    const minutes = Math.ceil((b.blockedUntil.getTime() - b.createdAt.getTime()) / (1000 * 60));
+    return sum + minutes;
+  }, 0);
+  
+  return {
+    totalBlockages: blockages.length,
+    successfulBlockages: successfulBlockages.length,
+    totalMinutesBlocked,
+  };
+}

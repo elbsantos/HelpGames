@@ -11,6 +11,7 @@ import RegistrarAposta from "./pages/RegistrarAposta";
 import RegistrarTentativaAposta from "./pages/RegistrarTentativaAposta";
 import Metas from "./pages/Metas";
 import ModoCrise from "./pages/ModoCrise";
+import HistoricoBloqueios from "./pages/HistoricoBloqueios";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -23,6 +24,7 @@ function Router() {
       <Route path={"/registrar-tentativa-aposta"} component={RegistrarTentativaAposta} />
       <Route path={"/metas"} component={Metas} />
       <Route path={"/modo-crise"} component={ModoCrise} />
+      <Route path={"/historico-bloqueios"} component={HistoricoBloqueios} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

@@ -211,6 +211,14 @@ export const appRouter = router({
         remainingMinutes: Math.ceil(remainingSeconds / 60),
       };
     }),
+    getHistory: protectedProcedure.query(async ({ ctx }) => {
+      const { getBlockageHistory } = await import("./db");
+      return getBlockageHistory(ctx.user.id);
+    }),
+    getStats: protectedProcedure.query(async ({ ctx }) => {
+      const { getBlockageStats } = await import("./db");
+      return getBlockageStats(ctx.user.id);
+    }),
   }),
 });
 
