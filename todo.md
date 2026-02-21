@@ -145,3 +145,8 @@
 - [x] Criar hook customizado para notificações push (usePushNotification)
 - [x] Integrar notificações ao registrar apostas (80% e 95%)
 - [x] Integrar notificações ao bloquear bets
+
+## Quiz de Autoavaliação
+- [x] Criar página QuizAutoavaliacao.tsx com 10 perguntas
+- [x] Implementar lógica de cálculo de score e 4 níveis de risco (baixo, leve, moderado, severo)
+- [x] Adicionar rota /quiz-autoavaliacao e card no Dashboard

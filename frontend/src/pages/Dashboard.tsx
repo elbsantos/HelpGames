@@ -305,6 +305,20 @@ export default function Dashboard() {
               </CardHeader>
             </Link>
           </Card>
+
+          <Card className="hover:border-indigo/50 transition-colors cursor-pointer border-indigo/20">
+            <Link href="/quiz-autoavaliacao">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 text-indigo-600" />
+                  Quiz de Autoavaliação
+                </CardTitle>
+                <CardDescription>
+                  Avalie seu risco de comportamento de apostas
+                </CardDescription>
+              </CardHeader>
+            </Link>
+          </Card>
         </div>
 
         {/* Gráfico de Evolução Temporal */}
