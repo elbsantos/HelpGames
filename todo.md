@@ -140,3 +140,8 @@
 - [x] Criar dados de 6 categorias de sites de apostas (Esportes, Cassino, Pôquer, Loterias, Bingo, Fantasy Sports)
 - [x] Criar página SitesApostas.tsx com cards informativos (riscos, sinais de alerta)
 - [x] Adicionar rota /sites-apostas e link no Dashboard
+
+## Notificações Push no Navegador
+- [x] Criar hook customizado para notificações push (usePushNotification)
+- [x] Integrar notificações ao registrar apostas (80% e 95%)
+- [x] Integrar notificações ao bloquear bets

@@ -9,9 +9,11 @@ import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { TemporalEvolutionChart } from "@/components/TemporalEvolutionChart";
+import { usePushNotification } from "@/hooks/usePushNotification";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
+  const { sendNotification } = usePushNotification();
   const [blockageTimer, setBlockageTimer] = useState<number>(0);
   
   const { data: stats, isLoading: statsLoading } = trpc.statistics.get.useQuery(undefined, {
@@ -39,6 +41,14 @@ export default function Dashboard() {
     onSuccess: (data) => {
       toast.success(data.message);
       setBlockageTimer(30 * 60); // 30 minutos em segundos
+      
+      // Enviar notificação push
+      sendNotification({
+        title: "🔐 Bloqueio Ativado!",
+        body: "Seus acessos a sites de apostas foram bloqueados por 30 minutos. Você consegue resistir!",
+        tag: "blockage-active",
+        requireInteraction: false,
+      });
     },
     onError: (error) => {
       toast.error(`Erro ao ativar bloqueio: ${error.message}`);

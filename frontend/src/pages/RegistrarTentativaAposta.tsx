@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,10 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { AlertCircle, CheckCircle2, TrendingDown } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { usePushNotification } from "@/hooks/usePushNotification";
 
 export default function RegistrarTentativaAposta() {
   const { user } = useAuth();
   const utils = trpc.useUtils();
+  const { sendNotification } = usePushNotification();
   const [selectedSite, setSelectedSite] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [bettingAmount, setBettingAmount] = useState("");
@@ -67,6 +69,23 @@ export default function RegistrarTentativaAposta() {
   const registerAttempt = trpc.gambling.registerAccessAttempt.useMutation({
     onSuccess: (data) => {
       toast.success("✅ Tentativa registrada e gasto rastreado!");
+      
+      // Enviar notificação push se limite está próximo
+      if (limitUsagePercentage >= 95) {
+        sendNotification({
+          title: "⚠️ Limite Crítico Atingido!",
+          body: "Você atingiu 95% do seu limite mensal de apostas. Procure ajuda se necessário.",
+          tag: "limit-critical",
+          requireInteraction: true,
+        });
+      } else if (limitUsagePercentage >= 80) {
+        sendNotification({
+          title: "⚠️ Limite Próximo",
+          body: "Você atingiu 80% do seu limite mensal de apostas. Cuidado!",
+          tag: "limit-warning",
+        });
+      }
+      
       utils.financialProfile.get.invalidate();
       utils.profile.getProfile.invalidate();
       setSelectedSite("");
