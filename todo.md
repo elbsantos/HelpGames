@@ -155,3 +155,8 @@
 - [x] Criar página RecursosAjuda.tsx com 6 organizações internacionais e brasileiras
 - [x] Adicionar cards com informações de contato, horários e links diretos
 - [x] Adicionar rota /recursos-ajuda e card rosa no Dashboard
+
+## Integração com Bloqueadores de Sites
+- [x] Criar página BloqueadoresSites.tsx com guias de instalação
+- [x] Adicionar instruções para Chrome, Firefox, Safari e Edge (7 passos cada)
+- [x] Adicionar rota /bloqueadores-sites e link em Recursos de Ajuda

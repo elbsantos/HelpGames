@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import { Phone, Globe, Clock, MapPin, MessageCircle, Heart } from "lucide-react";
 
 interface Organization {
@@ -281,6 +282,29 @@ export default function RecursosAjuda() {
               <strong>✓ Múltiplas opções:</strong> Diferentes abordagens funcionam para diferentes pessoas - terapia,
               grupos de suporte, ferramentas tecnológicas.
             </p>
+          </CardContent>
+        </Card>
+
+        {/* Blockers Section */}
+        <Card className="bg-indigo-50 border-2 border-indigo-200">
+          <CardHeader>
+            <CardTitle>Ferramentas Tecnológicas de Proteção</CardTitle>
+            <CardDescription>
+              Bloqueadores de sites que ajudam a reduzir o acesso a plataformas de apostas
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p>
+              Além do suporte emocional e profissional, ferramentas tecnológicas como Betfilter, Gamban e
+              GamCare Filter podem ajudar a bloquear automaticamente o acesso a sites de apostas.
+            </p>
+            <p>
+              <strong>Como funcionam:</strong> Bloqueadores instalam-se no seu navegador e impedem o acesso
+              a sites de apostas conhecidos, criando uma camada adicional de proteção.
+            </p>
+            <Button asChild className="w-full">
+              <a href="/bloqueadores-sites">Ver Guia de Instalação</a>
+            </Button>
           </CardContent>
         </Card>
       </div>
