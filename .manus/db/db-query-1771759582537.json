@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `blockage_history` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `user_id` int NOT NULL,\n  `blockage_type` enum('helpgames_30min','betblocker_permanent','both') NOT NULL,\n  `status` enum('active','completed','cancelled') NOT NULL DEFAULT 'active',\n  `started_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `ended_at` timestamp,\n  `duration_minutes` int,\n  `notes` text,\n  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`),\n  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user hdyLMsoyEsXdGrx.root --database 8Anvx7YrSTGCQYVCEabf8q --execute CREATE TABLE `blockage_history` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `user_id` int NOT NULL,\n  `blockage_type` enum('helpgames_30min','betblocker_permanent','both') NOT NULL,\n  `status` enum('active','completed','cancelled') NOT NULL DEFAULT 'active',\n  `started_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `ended_at` timestamp,\n  `duration_minutes` int,\n  `notes` text,\n  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`),\n  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 803
+}

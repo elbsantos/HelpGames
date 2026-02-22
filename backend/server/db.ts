@@ -1,6 +1,6 @@
 import { eq, asc, and, gte, lte, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, financialProfiles, betsBlockages } from "../drizzle/schema";
+import { InsertUser, users, financialProfiles, betsBlockages, betblockerActivations, blockageHistory, InsertBetblockerActivation, InsertBlockageHistory } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { notifyOwner } from './_core/notification';
 
@@ -932,7 +932,7 @@ export async function sendMonthlyReportsToAllUsers() {
 // BETBLOCKER INTEGRATION
 // ========================================
 
-import { betblockerActivations, blockageHistory, InsertBetblockerActivation, InsertBlockageHistory } from "../drizzle/schema";
+
 
 export async function recordBetBlockerActivation(
   userId: number,

@@ -227,3 +227,11 @@
 - [x] Adicionar notificação de sucesso quando BetBlocker é ativado
 - [x] Criar guia passo-a-passo de instalação dentro do Modo Crise
 - [x] Criar testes para BetBlockerCrisisMode (BetBlockerCrisisMode.test.ts)
+
+
+## BUG: Erro na Query de BetBlocker (RESOLVIDO)
+- [x] Corrigir erro na tabela betblocker_activations
+- [x] Verificar schema do Drizzle
+- [x] Criar tabelas manualmente (betblocker_activations e blockage_history)
+- [x] Testar query de getBetBlockerStatus
+- [x] Reiniciar servidor

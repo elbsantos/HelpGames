@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `betblocker_activations` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `user_id` int NOT NULL,\n  `platform` enum('windows','macos','ios','android') NOT NULL,\n  `activated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `notes` text,\n  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`),\n  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user hdyLMsoyEsXdGrx.root --database 8Anvx7YrSTGCQYVCEabf8q --execute CREATE TABLE `betblocker_activations` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `user_id` int NOT NULL,\n  `platform` enum('windows','macos','ios','android') NOT NULL,\n  `activated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `notes` text,\n  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`),\n  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 712
+}
