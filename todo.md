@@ -166,3 +166,53 @@
 - [x] Criar função para gerar relatório mensal (generateMonthlyReport, sendMonthlyReport)
 - [x] Criar procedimentos tRPC para enviar relatório (monthlyReport.send, monthlyReport.toggleEmail)
 - [x] Adicionar página RelatorioMensal.tsx com opção de envio manual e gerenciamento
+
+
+## Integração com BetBlocker (NOVA FASE)
+- [x] Pesquisar BetBlocker (alternativa gratuita e open source)
+- [x] Implementar schema com tabelas betblocker_activations e blockage_history
+- [x] Criar funções de banco de dados
+- [x] Criar procedimentos tRPC para BetBlocker
+- [x] Criar componente BetBlockerIntegration.tsx
+- [x] Integrar BetBlockerIntegration no Dashboard
+- [x] Criar testes unitários (betblocker.test.ts)
+- [ ] Integrar BetBlocker no Modo Crise
+- [ ] Criar página de Proteção Técnica Avançada
+- [ ] Criar sistema de sincronização com BetBlocker
+
+## Comunidade Online (NOVA FASE)
+- [ ] Criar integração com Discord (webhook + bot)
+- [ ] Criar integração com Telegram (bot)
+- [ ] Adicionar seção de comunidade no Dashboard
+- [ ] Implementar sistema de histórias de sucesso
+- [ ] Criar canal de suporte comunitário
+- [ ] Adicionar notificações de eventos da comunidade
+
+## Gamificação e Badges (NOVA FASE)
+- [ ] Criar sistema de badges (7 dias, 30 dias, 100 dias, etc.)
+- [ ] Implementar leaderboard de economia
+- [ ] Adicionar desafios semanais
+- [ ] Criar sistema de pontos e recompensas
+- [ ] Adicionar página de conquistas
+- [ ] Integrar badges no perfil do usuário
+
+## Modo Crise Avançado (NOVA FASE)
+- [ ] Integrar bloqueio Betfilter no Modo Crise
+- [ ] Adicionar contato direto com suporte
+- [ ] Implementar exercícios de respiração avançados
+- [ ] Adicionar recursos de emergência (números de telefone)
+- [ ] Criar plano de ação para crises
+
+## Mobile App (NOVA FASE - Futuro)
+- [ ] Criar estrutura React Native
+- [ ] Implementar autenticação
+- [ ] Sincronizar dados com backend
+- [ ] Notificações push nativas
+- [ ] Publicar em App Store e Google Play
+
+## Integração Bancária (NOVA FASE - Futuro)
+- [ ] Pesquisar APIs de bancos brasileiros
+- [ ] Implementar integração com Open Banking
+- [ ] Criar bloqueio de transações para apostas
+- [ ] Análise de gastos em tempo real
+- [ ] Parcerias com bancos

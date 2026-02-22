@@ -43,6 +43,13 @@
       "when": 1771594988138,
       "tag": "0005_abandoned_ego",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1771758973111,
+      "tag": "0006_misty_moon_knight",
+      "breakpoints": true
     }
   ]
 }

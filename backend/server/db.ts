@@ -926,3 +926,97 @@ export async function sendMonthlyReportsToAllUsers() {
   );
   return successCount;
 }
+
+
+// ========================================
+// BETBLOCKER INTEGRATION
+// ========================================
+
+import { betblockerActivations, blockageHistory, InsertBetblockerActivation, InsertBlockageHistory } from "../drizzle/schema";
+
+export async function recordBetBlockerActivation(
+  userId: number,
+  platform: 'windows' | 'macos' | 'ios' | 'android',
+  notes?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const values: InsertBetblockerActivation = {
+    userId,
+    platform,
+    activatedAt: new Date(),
+    notes: notes || null,
+  };
+  
+  const result = await db.insert(betblockerActivations).values(values);
+  return result;
+}
+
+export async function getBetBlockerStatus(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select()
+    .from(betblockerActivations)
+    .where(eq(betblockerActivations.userId, userId))
+    .orderBy(desc(betblockerActivations.activatedAt))
+    .limit(1);
+  
+  return result[0] || null;
+}
+
+export async function recordBlockageHistory(
+  userId: number,
+  blockageType: 'helpgames_30min' | 'betblocker_permanent' | 'both',
+  durationMinutes?: number,
+  notes?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const values: InsertBlockageHistory = {
+    userId,
+    blockageType,
+    status: 'active',
+    startedAt: new Date(),
+    durationMinutes: durationMinutes || null,
+    notes: notes || null,
+  };
+  
+  const result = await db.insert(blockageHistory).values(values);
+  return result;
+}
+
+export async function getBlockageHistoryByType(userId: number) {
+  const db = await getDb();
+  if (!db) return { helpgamesOnly: 0, betblockerOnly: 0, combined: 0, total: 0 };
+  
+  const blockages = await db.select()
+    .from(blockageHistory)
+    .where(eq(blockageHistory.userId, userId));
+  
+  const helpgamesOnly = blockages.filter(b => b.blockageType === 'helpgames_30min').length;
+  const betblockerOnly = blockages.filter(b => b.blockageType === 'betblocker_permanent').length;
+  const combined = blockages.filter(b => b.blockageType === 'both').length;
+  
+  return {
+    helpgamesOnly,
+    betblockerOnly,
+    combined,
+    total: blockages.length,
+    hasBetBlocker: betblockerOnly > 0 || combined > 0,
+  };
+}
+
+export async function completeBlockage(blockageId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(blockageHistory)
+    .set({
+      status: 'completed',
+      endedAt: new Date(),
+    })
+    .where(eq(blockageHistory.id, blockageId));
+}

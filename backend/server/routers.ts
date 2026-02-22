@@ -250,6 +250,27 @@ export const appRouter = router({
       return { success: true, message: input.enabled ? "Relatórios mensais ativados" : "Relatórios mensais desativados" };
     }),
   }),
+
+  betblocker: router({
+    recordActivation: protectedProcedure
+      .input(z.object({
+        platform: z.enum(['windows', 'macos', 'ios', 'android']),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { recordBetBlockerActivation } = await import("./db");
+        await recordBetBlockerActivation(ctx.user.id, input.platform, input.notes);
+        return { success: true, message: 'BetBlocker ativado com sucesso!' };
+      }),
+    getStatus: protectedProcedure.query(async ({ ctx }) => {
+      const { getBetBlockerStatus } = await import("./db");
+      return getBetBlockerStatus(ctx.user.id);
+    }),
+    getHistoryByType: protectedProcedure.query(async ({ ctx }) => {
+      const { getBlockageHistoryByType } = await import("./db");
+      return getBlockageHistoryByType(ctx.user.id);
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

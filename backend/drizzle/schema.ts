@@ -197,3 +197,38 @@ export const betsBlockages = mysqlTable("bets_blockages", {
 
 export type BetsBlockage = typeof betsBlockages.$inferSelect;
 export type InsertBetsBlockage = typeof betsBlockages.$inferInsert;
+
+/**
+ * Ativações de BetBlocker
+ * Registra quando o usuário instala e ativa o BetBlocker
+ */
+export const betblockerActivations = mysqlTable("betblocker_activations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  platform: mysqlEnum("platform", ["windows", "macos", "ios", "android"]).notNull(),
+  activatedAt: timestamp("activated_at").defaultNow().notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type BetblockerActivation = typeof betblockerActivations.$inferSelect;
+export type InsertBetblockerActivation = typeof betblockerActivations.$inferInsert;
+
+/**
+ * Histórico de bloqueios com tipos
+ * Registra bloqueios HelpGames, BetBlocker ou ambos
+ */
+export const blockageHistory = mysqlTable("blockage_history", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  blockageType: mysqlEnum("blockage_type", ["helpgames_30min", "betblocker_permanent", "both"]).notNull(),
+  status: mysqlEnum("status", ["active", "completed", "cancelled"]).default("active").notNull(),
+  startedAt: timestamp("started_at").defaultNow().notNull(),
+  endedAt: timestamp("ended_at"),
+  durationMinutes: int("duration_minutes"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type BlockageHistory = typeof blockageHistory.$inferSelect;
+export type InsertBlockageHistory = typeof blockageHistory.$inferInsert;
