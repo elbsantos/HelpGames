@@ -216,3 +216,14 @@
 - [ ] Criar bloqueio de transações para apostas
 - [ ] Análise de gastos em tempo real
 - [ ] Parcerias com bancos
+
+
+## Integração de BetBlocker no Modo Crise (COMPLETO)
+- [x] Adicionar recomendação de BetBlocker no modal de Modo Crise
+- [x] Criar seção "Proteção Técnica" no Modo Crise
+- [x] Adicionar botão de instalação rápida de BetBlocker
+- [x] Criar componente especializado BetBlockerCrisisMode
+- [x] Integrar BetBlockerCrisisMode no modal de Modo Crise
+- [x] Adicionar notificação de sucesso quando BetBlocker é ativado
+- [x] Criar guia passo-a-passo de instalação dentro do Modo Crise
+- [x] Criar testes para BetBlockerCrisisMode (BetBlockerCrisisMode.test.ts)

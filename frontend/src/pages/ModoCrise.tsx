@@ -17,6 +17,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import BreathingExercise from "@/components/BreathingExercise";
+import { BetBlockerCrisisMode } from "@/components/BetBlockerCrisisMode";
 
 export default function ModoCrise() {
   const { user, loading: authLoading } = useAuth();
@@ -314,7 +315,10 @@ export default function ModoCrise() {
               )}
             </div>
 
-            {/* Ações Alternativas */}
+            {/* Proteção Técnica com BetBlocker */}
+            <BetBlockerCrisisMode />
+
+            {/* Au00e7ões Alternativas */}
             <Card className="bg-secondary/30">
               <CardHeader>
                 <CardTitle className="text-lg">O que você pode fazer agora:</CardTitle>
@@ -334,7 +338,6 @@ export default function ModoCrise() {
                 </Button>
               </CardContent>
             </Card>
-
             <div className="flex gap-4">
               <Button onClick={() => setShowCrisisMode(false)} className="flex-1">
                 Estou Melhor Agora
