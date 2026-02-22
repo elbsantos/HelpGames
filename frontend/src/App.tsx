@@ -16,6 +16,7 @@ import SitesApostas from "./pages/SitesApostas";
 import QuizAutoavaliacao from "./pages/QuizAutoavaliacao";
 import RecursosAjuda from "./pages/RecursosAjuda";
 import BloqueadoresSites from "./pages/BloqueadoresSites";
+import RelatorioMensal from "./pages/RelatorioMensal";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -33,6 +34,7 @@ function Router() {
       <Route path={"/quiz-autoavaliacao"} component={QuizAutoavaliacao} />
       <Route path={"/recursos-ajuda"} component={RecursosAjuda} />
       <Route path={"/bloqueadores-sites"} component={BloqueadoresSites} />
+      <Route path={"/relatorio-mensal"} component={RelatorioMensal} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

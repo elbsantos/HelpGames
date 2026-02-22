@@ -160,3 +160,9 @@
 - [x] Criar página BloqueadoresSites.tsx com guias de instalação
 - [x] Adicionar instruções para Chrome, Firefox, Safari e Edge (7 passos cada)
 - [x] Adicionar rota /bloqueadores-sites e link em Recursos de Ajuda
+
+## Relatório Mensal por Email
+- [x] Adicionar coluna de email de relatório ao schema (monthlyReportEnabled, lastReportSent)
+- [x] Criar função para gerar relatório mensal (generateMonthlyReport, sendMonthlyReport)
+- [x] Criar procedimentos tRPC para enviar relatório (monthlyReport.send, monthlyReport.toggleEmail)
+- [x] Adicionar página RelatorioMensal.tsx com opção de envio manual e gerenciamento

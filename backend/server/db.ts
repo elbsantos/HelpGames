@@ -1,7 +1,8 @@
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, and, gte, lte, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, financialProfiles, betsBlockages } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { notifyOwner } from './_core/notification';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -93,8 +94,8 @@ export async function getUserByOpenId(openId: string) {
 // FINANCIAL PROFILE QUERIES
 // ========================================
 
-import { avoidedBets, crisisMessages, financialProfiles, goals, InsertFinancialProfile, InsertAvoidedBet, InsertGoal, InsertCrisisMessage } from "../drizzle/schema";
-import { desc, sql, and, gte } from "drizzle-orm";
+import { avoidedBets, crisisMessages, goals, InsertAvoidedBet, InsertGoal, InsertCrisisMessage, InsertFinancialProfile } from "../drizzle/schema";
+import { desc, sql } from "drizzle-orm";
 
 export async function getFinancialProfile(userId: number) {
   const db = await getDb();
@@ -409,7 +410,7 @@ export async function calculateBettingLimit(userId: number) {
 // BETS BLOCKAGE QUERIES
 // ========================================
 
-import { betsBlockages, InsertBetsBlockage } from "../drizzle/schema";
+import { InsertBetsBlockage } from "../drizzle/schema";
 
 export async function createBetsBlockage(userId: number, durationMinutes: number = 30) {
   const db = await getDb();
@@ -762,4 +763,166 @@ export async function getTemporalEvolutionData(userId: number) {
     console.error("Erro ao obter dados de evolução temporal:", error);
     return [];
   }
+}
+
+
+/**
+ * Gera relatório mensal com estatísticas de economia, bloqueios e progresso
+ */
+export async function generateMonthlyReport(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const userResult = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  const user = userResult[0];
+
+  if (!user) return null;
+
+  const profileResult = await db.select().from(financialProfiles).where(eq(financialProfiles.userId, userId)).limit(1);
+  const profile = profileResult[0];
+
+  if (!profile) return null;
+
+  // Obter dados do mês atual
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  // Contar bloqueios do mês
+  const blockages = await db
+    .select({ count: count() })
+    .from(betsBlockages)
+    .where(
+      and(
+        eq(betsBlockages.userId, userId),
+        gte(betsBlockages.createdAt, monthStart),
+        lte(betsBlockages.createdAt, monthEnd)
+      )
+    );
+
+  const blockageCount = blockages[0]?.count || 0;
+
+  // Contar tentativas evitadas (usando access_attempts table)
+  const attempts = await db
+    .select({ count: count() })
+    .from(betsBlockages)
+    .where(
+      and(
+        eq(betsBlockages.userId, userId),
+        gte(betsBlockages.createdAt, monthStart),
+        lte(betsBlockages.createdAt, monthEnd)
+      )
+    );
+
+  const attemptCount = attempts[0]?.count || 0;
+
+  // Calcular economia estimada
+  // Assumindo média de R$ 50 por tentativa de aposta evitada
+  const estimatedSavings = attemptCount * 5000; // em centavos
+
+  // Calcular gasto em apostas
+  const bettingSpent = profile.bettingSpentThisMonth;
+
+  // Calcular verba restante
+  const remainingBudget = Math.max(0, profile.leisureBudget - bettingSpent);
+
+  return {
+    userName: user.name || "Usuário",
+    email: user.email,
+    month: now.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }),
+    blockageCount,
+    attemptCount,
+    estimatedSavings,
+    bettingSpent,
+    remainingBudget,
+    leisureBudget: profile.leisureBudget,
+    monthlyIncome: profile.monthlyIncome,
+  };
+}
+
+/**
+ * Envia relatório mensal por email
+ */
+export async function sendMonthlyReport(userId: number) {
+  const db = await getDb();
+  if (!db) return false;
+  const report = await generateMonthlyReport(userId);
+
+  if (!report) return false;
+
+  const emailContent = `
+    <h2>Seu Relatório Mensal - HelpGames</h2>
+    <p>Olá ${report.userName},</p>
+    
+    <p>Aqui está seu relatório de progresso para ${report.month}:</p>
+    
+    <h3>📊 Estatísticas</h3>
+    <ul>
+      <li><strong>Bloqueios ativados:</strong> ${report.blockageCount}</li>
+      <li><strong>Tentativas de aposta evitadas:</strong> ${report.attemptCount}</li>
+      <li><strong>Economia estimada:</strong> R$ ${(report.estimatedSavings / 100).toFixed(2)}</li>
+    </ul>
+    
+    <h3>💰 Gastos em Apostas</h3>
+    <ul>
+      <li><strong>Gasto do mês:</strong> R$ ${(report.bettingSpent / 100).toFixed(2)}</li>
+      <li><strong>Verba de lazer:</strong> R$ ${(report.leisureBudget / 100).toFixed(2)}</li>
+      <li><strong>Saldo restante:</strong> R$ ${(report.remainingBudget / 100).toFixed(2)}</li>
+    </ul>
+    
+    <h3>🎯 Próximos Passos</h3>
+    <p>Continue usando o HelpGames para manter seu controle financeiro:</p>
+    <ul>
+      <li>Registre suas tentativas de aposta evitadas</li>
+      <li>Use o bloqueio de 30 minutos quando sentir impulso</li>
+      <li>Acompanhe seu progresso no dashboard</li>
+      <li>Procure ajuda profissional se necessário</li>
+    </ul>
+    
+    <p>Você está fazendo um ótimo trabalho! 🎉</p>
+    <p>Equipe HelpGames</p>
+  `;
+
+  try {
+    await notifyOwner({
+      title: `Relatório Mensal: ${report.userName}`,
+      content: emailContent,
+    });
+
+    // Atualizar data do último relatório enviado
+    await db
+      .update(financialProfiles)
+      .set({ lastMonthlyReportSent: new Date() })
+      .where(eq(financialProfiles.userId, userId));
+
+    return true;
+  } catch (error) {
+    console.error("Erro ao enviar relatório mensal:", error);
+    return false;
+  }
+}
+
+/**
+ * Envia relatórios mensais para todos os usuários que têm a opção habilitada
+ * Deve ser chamado no primeiro dia de cada mês
+ */
+export async function sendMonthlyReportsToAllUsers() {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  const profiles = await db
+    .select({ userId: financialProfiles.userId })
+    .from(financialProfiles)
+    .where(eq(financialProfiles.monthlyReportEnabled, 1));
+
+  let successCount = 0;
+  for (const profile of profiles) {
+    const sent = await sendMonthlyReport(profile.userId);
+    if (sent) successCount++;
+  }
+
+  console.log(
+    `Relatórios mensais enviados: ${successCount}/${profiles.length}`
+  );
+  return successCount;
 }

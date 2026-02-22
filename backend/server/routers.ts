@@ -3,6 +3,7 @@ import { COOKIE_NAME } from "../shared/const";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -222,6 +223,31 @@ export const appRouter = router({
     getStats: protectedProcedure.query(async ({ ctx }) => {
       const { getBlockageStats } = await import("./db");
       return getBlockageStats(ctx.user.id);
+    }),
+  }),
+  
+  // Relatório Mensal
+  monthlyReport: router({
+    send: protectedProcedure.mutation(async ({ ctx }) => {
+      const { sendMonthlyReport } = await import("./db");
+      const sent = await sendMonthlyReport(ctx.user.id);
+      return { success: sent, message: sent ? "Relatório enviado com sucesso!" : "Erro ao enviar relatório" };
+    }),
+    
+    toggleEmail: protectedProcedure.input(z.object({ enabled: z.boolean() })).mutation(async ({ ctx, input }) => {
+      const { getDb } = await import("./db");
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const { financialProfiles } = await import("../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+
+      await db
+        .update(financialProfiles)
+        .set({ monthlyReportEnabled: input.enabled ? 1 : 0 })
+        .where(eq(financialProfiles.userId, ctx.user.id));
+
+      return { success: true, message: input.enabled ? "Relatórios mensais ativados" : "Relatórios mensais desativados" };
     }),
   }),
 });

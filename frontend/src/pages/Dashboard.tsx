@@ -333,6 +333,20 @@ export default function Dashboard() {
               </CardHeader>
             </Link>
           </Card>
+
+          <Card className="hover:border-amber/50 transition-colors cursor-pointer border-amber/20">
+            <Link href="/relatorio-mensal">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-amber-600" />
+                  Relatorio Mensal
+                </CardTitle>
+                <CardDescription>
+                  Acompanhe seu progresso e estatisticas
+                </CardDescription>
+              </CardHeader>
+            </Link>
+          </Card>
         </div>
 
         {/* Gráfico de Evolução Temporal */}

@@ -39,6 +39,8 @@ export const financialProfiles = mysqlTable("financial_profiles", {
   lastResetDate: timestamp("last_reset_date").defaultNow().notNull(), // ultima data de reset mensal
   notifiedAt80Percent: timestamp("notified_at_80_percent"), // quando foi notificado em 80%
   notifiedAt95Percent: timestamp("notified_at_95_percent"), // quando foi notificado em 95%
+  lastMonthlyReportSent: timestamp("last_monthly_report_sent"), // última data que relatório mensal foi enviado
+  monthlyReportEnabled: int("monthly_report_enabled").default(1).notNull(), // usuário quer receber relatório? (0=não, 1=sim)
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
