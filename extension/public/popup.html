@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpGames - Bloqueador</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ HelpGames</h1>
+            <p class="subtitle">Bloqueador de Apostas</p>
+        </div>
+
+        <div class="status-section">
+            <div id="statusText" class="status">Extensão Ativa</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Bloqueios Hoje</span>
+                <span id="blocksToday" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Tempo Economizado</span>
+                <span id="timeSaved" class="stat-value">0m</span>
+            </div>
+        </div>
+
+        <div id="timerContainer" class="timer-container" style="display: none;">
+            <div class="timer-display">
+                <span id="timerValue">30:00</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="toggleBlockingBtn" class="btn btn-primary">Ativar Bloqueio</button>
+            <button id="crisisModeBtn" class="btn btn-danger">🚨 Modo Crise</button>
+        </div>
+
+        <div class="footer">
+            <a href="#" id="settingsLink" title="Configurações">⚙️</a>
+            <a href="#" id="helpLink" title="Ajuda">❓</a>
+            <a href="#" id="dashboardLink" title="Dashboard">📊</a>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

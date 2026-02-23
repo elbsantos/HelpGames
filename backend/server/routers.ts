@@ -271,6 +271,29 @@ export const appRouter = router({
       return getBlockageHistoryByType(ctx.user.id);
     }),
   }),
+
+  extension: router({
+    logBlockingEvent: protectedProcedure
+      .input(z.object({
+        eventType: z.enum(['activated', 'deactivated', 'crisis_mode']),
+        duration: z.number().min(0),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { recordBlockageHistory } = await import('./db');
+        await recordBlockageHistory(
+          ctx.user.id,
+          input.eventType === 'crisis_mode' ? 'both' : 'helpgames_30min',
+          Math.floor(input.duration / 60000),
+          input.eventType
+        );
+        return { success: true };
+      }),
+
+    getBlockingStats: protectedProcedure.query(async ({ ctx }) => {
+      const { getBlockageHistoryByType } = await import('./db');
+      return getBlockageHistoryByType(ctx.user.id);
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
