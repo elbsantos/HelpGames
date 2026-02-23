@@ -283,3 +283,14 @@
 ✅ Extensão de navegador pronta para deploy
 ✅ Testes completos passando
 ✅ Pronto para lançamento ao público!
+
+
+## BUGS ENCONTRADOS - CORREÇÃO URGENTE (COMPLETO)
+- [x] BUG 1: Logout - Botão já existe no dropdown do usuário (sidebar)
+- [x] BUG 2: Removido Betfilter de "Recursos de Autoajuda"
+- [x] BUG 3: Removida seção "Proteção Avançada com BetBlocker"
+- [x] BUG 4: Gamcare - link atualizado para versão em portugués
+- [x] BUG 5: Quiz - Botão "Voltar ao Dashboard" agora funciona
+- [x] BUG 6: "Em Crise?" - Substituído National Suicide Prevention por SOS Voz Amiga (Portugal)
+- [x] BUG 7: Removida seção de ferramentas de bloqueio (bloqueio automático integrado)
+- [x] BUG 8: Relatório Mensal - Adicionado botão "Voltar ao Dashboard"

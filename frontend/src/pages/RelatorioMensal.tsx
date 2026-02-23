@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useAuth } from "../_core/hooks/useAuth";
+import { useAuth } from "../\_core/hooks/useAuth";
 import { trpc } from "../lib/trpc";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import { Switch } from "../components/ui/switch";
 import { Mail, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { Link } from "wouter";
 
 export default function RelatorioMensal() {
   const { user } = useAuth();
@@ -37,6 +38,9 @@ export default function RelatorioMensal() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
+          <Link href="/dashboard">
+            <Button variant="outline" className="mb-4">← Voltar ao Dashboard</Button>
+          </Link>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Relatório Mensal</h1>
           <p className="text-slate-600">Gerencie seus relatórios de progresso e estatísticas</p>
         </div>

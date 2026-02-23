@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { AlertCircle, CheckCircle2, AlertTriangle, Heart } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { Link } from "wouter";
 
 interface Question {
   id: number;
@@ -263,7 +264,9 @@ export default function QuizAutoavaliacao() {
                 >
                   Refazer Quiz
                 </Button>
-                <Button className="flex-1">Voltar ao Dashboard</Button>
+                <Link href="/dashboard">
+                  <Button className="flex-1">Voltar ao Dashboard</Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

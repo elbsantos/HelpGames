@@ -50,24 +50,12 @@ const ORGANIZATIONS: Organization[] = [
     description: "Serviço de suporte britânico com acesso a terapeutas especializados",
     type: "therapy",
     phone: "+44 (0) 808 8020 133",
-    website: "https://www.gamcare.org.uk",
+    website: "https://www.gamcare.org.uk/pt",
     hours: "Segunda-sexta 8am-midnight, Sábado-domingo 10am-midnight",
     region: "Reino Unido",
     services: ["Helpline", "Terapia online", "Suporte presencial", "Recursos para família"],
     color: "text-purple-600",
     icon: <MessageCircle className="w-8 h-8 text-purple-600" />,
-  },
-  {
-    id: "betfilter",
-    name: "Betfilter",
-    description: "Bloqueador de sites de apostas - ferramenta tecnológica de proteção",
-    type: "tool",
-    website: "https://www.betfilter.org",
-    hours: "Disponível 24/7",
-    region: "Internacional",
-    services: ["Bloqueio de sites", "Bloqueio de apps", "Relatórios de uso", "Suporte técnico"],
-    color: "text-red-600",
-    icon: <Globe className="w-8 h-8 text-red-600" />,
   },
   {
     id: "gamblers-anonymous-br",
@@ -106,8 +94,8 @@ const TIPS = [
     description: "Compartilhe suas preocupações com pessoas de confiança que possam apoiá-lo",
   },
   {
-    title: "Use ferramentas de bloqueio",
-    description: "Instale extensões como Betfilter para bloquear sites de apostas automaticamente",
+    title: "Use a proteção integrada do HelpGames",
+    description: "Ative a extensão de navegador do HelpGames para bloquear automaticamente sites de apostas",
   },
   {
     title: "Participe de grupos de suporte",
@@ -128,7 +116,10 @@ export default function RecursosAjuda() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-4 mb-6">
+          <Link href="/dashboard">
+            <Button variant="outline" className="mb-4">← Voltar ao Dashboard</Button>
+          </Link>
           <h1 className="text-4xl font-bold">Recursos de Ajuda</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Você não está sozinho. Existem muitos recursos disponíveis para ajudá-lo a recuperar o controle
@@ -235,8 +226,8 @@ export default function RecursosAjuda() {
                 <p className="text-sm text-gray-600">Ligação gratuita, 24/7</p>
               </div>
               <div className="bg-white p-4 rounded-lg border border-red-200">
-                <p className="font-semibold text-red-600 mb-1">EUA - National Suicide Prevention</p>
-                <p className="text-2xl font-bold text-red-600">988</p>
+                <p className="font-semibold text-red-600 mb-1">Portugal - SOS Voz Amiga</p>
+                <p className="text-2xl font-bold text-red-600">21 354 45 45</p>
                 <p className="text-sm text-gray-600">Ligação gratuita, 24/7</p>
               </div>
             </div>
@@ -280,31 +271,8 @@ export default function RecursosAjuda() {
             </p>
             <p>
               <strong>✓ Múltiplas opções:</strong> Diferentes abordagens funcionam para diferentes pessoas - terapia,
-              grupos de suporte, ferramentas tecnológicas.
+              grupos de suporte, ferramentas tecnológicas integradas.
             </p>
-          </CardContent>
-        </Card>
-
-        {/* Blockers Section */}
-        <Card className="bg-indigo-50 border-2 border-indigo-200">
-          <CardHeader>
-            <CardTitle>Ferramentas Tecnológicas de Proteção</CardTitle>
-            <CardDescription>
-              Bloqueadores de sites que ajudam a reduzir o acesso a plataformas de apostas
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              Além do suporte emocional e profissional, ferramentas tecnológicas como Betfilter, Gamban e
-              GamCare Filter podem ajudar a bloquear automaticamente o acesso a sites de apostas.
-            </p>
-            <p>
-              <strong>Como funcionam:</strong> Bloqueadores instalam-se no seu navegador e impedem o acesso
-              a sites de apostas conhecidos, criando uma camada adicional de proteção.
-            </p>
-            <Button asChild className="w-full">
-              <a href="/bloqueadores-sites">Ver Guia de Instalação</a>
-            </Button>
           </CardContent>
         </Card>
       </div>
