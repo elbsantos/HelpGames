@@ -207,8 +207,8 @@ export default function RecursosAjuda() {
         </div>
 
         {/* Emergency Section */}
-        <Card className="bg-red-50 border-2 border-red-200">
-          <CardHeader>
+        <Card className="bg-red-50 border-2 border-red-200 border-2 border-primary/40 bg-gradient-to-br from-card to-card/50 hover:border-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 animate-slide-in-up">
+            <CardHeader>
             <CardTitle className="flex items-center gap-2 text-red-600">
               <Heart className="w-6 h-6" />
               Em Crise? Procure Ajuda Imediata
@@ -252,8 +252,8 @@ export default function RecursosAjuda() {
         </div>
 
         {/* Resources Summary */}
-        <Card className="bg-blue-50 border-2 border-blue-200">
-          <CardHeader>
+        <Card className="bg-blue-50 border-2 border-blue-200 border-2 border-primary/40 bg-gradient-to-br from-card to-card/50 hover:border-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 animate-slide-in-up">
+            <CardHeader>
             <CardTitle>Lembre-se</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">

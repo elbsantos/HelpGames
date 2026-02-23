@@ -43,88 +43,88 @@
 }
 
 :root {
-  /* Paleta elegante HelpGames - Verde esperança e Azul confiança */
-  --primary: oklch(0.55 0.15 145); /* Verde esperança (sucesso, crescimento) */
+  /* Paleta VIBRANTE HelpGames - Inspirada em Bets, mas com propósito de proteção */
+  --primary: oklch(0.65 0.25 142); /* Verde Esmeralda VIBRANTE - Recuperação, esperança */
   --primary-foreground: oklch(0.99 0 0);
-  --sidebar-primary: oklch(0.55 0.15 145);
+  --sidebar-primary: oklch(0.65 0.25 142);
   --sidebar-primary-foreground: oklch(0.99 0 0);
   
-  /* Gráficos com paleta harmoniosa */
-  --chart-1: oklch(0.55 0.15 145); /* Verde principal */
-  --chart-2: oklch(0.55 0.18 220); /* Azul confiança */
-  --chart-3: oklch(0.70 0.16 85); /* Amarelo motivação */
-  --chart-4: oklch(0.60 0.15 280); /* Roxo progresso */
-  --chart-5: oklch(0.58 0.22 25); /* Vermelho alerta */
+  /* Gráficos com paleta VIBRANTE e energética */
+  --chart-1: oklch(0.65 0.25 142); /* Verde Esmeralda */
+  --chart-2: oklch(0.50 0.20 250); /* Azul Profundo */
+  --chart-3: oklch(0.75 0.20 85); /* Ouro Vibrante */
+  --chart-4: oklch(0.60 0.22 280); /* Roxo Vibrante */
+  --chart-5: oklch(0.65 0.28 15); /* Vermelho Vibrante */
   
   --radius: 0.75rem; /* Bordas mais suaves */
   
-  /* Cores base - tons suaves e profissionais */
-  --background: oklch(0.98 0.005 220); /* Branco levemente azulado */
-  --foreground: oklch(0.30 0.02 220); /* Azul escuro profundo */
-  --card: oklch(1 0 0); /* Branco puro para cards */
-  --card-foreground: oklch(0.30 0.02 220);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.30 0.02 220);
+  /* Cores base - Gradiente escuro para foco */
+  --background: oklch(0.15 0.01 220); /* Cinza escuro profundo */
+  --foreground: oklch(0.98 0.01 0); /* Branco para contraste máximo */
+  --card: oklch(0.20 0.01 220); /* Cinza escuro para cards */
+  --card-foreground: oklch(0.98 0.01 0);
+  --popover: oklch(0.20 0.01 220);
+  --popover-foreground: oklch(0.98 0.01 0);
   
   /* Cores secundárias */
-  --secondary: oklch(0.96 0.01 220); /* Azul muito claro */
-  --secondary-foreground: oklch(0.30 0.02 220);
-  --muted: oklch(0.96 0.01 220);
-  --muted-foreground: oklch(0.50 0.02 220);
-  --accent: oklch(0.55 0.15 145); /* Verde para destaques */
-  --accent-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.65 0.25 142); /* Verde Esmeralda */
+  --secondary-foreground: oklch(0.99 0 0);
+  --muted: oklch(0.40 0.01 220);
+  --muted-foreground: oklch(0.70 0.01 0);
+  --accent: oklch(0.75 0.20 85); /* Ouro VIBRANTE para destaques */
+  --accent-foreground: oklch(0.12 0.01 0);
   
-  /* Cores de alerta */
-  --destructive: oklch(0.58 0.22 25); /* Vermelho suave */
+  /* Cores de alerta - VERMELHO VIBRANTE para urgência */
+  --destructive: oklch(0.65 0.28 15); /* Vermelho Vibrante */
   --destructive-foreground: oklch(0.99 0 0);
   
   /* Bordas e inputs */
-  --border: oklch(0.91 0.005 220);
-  --input: oklch(0.91 0.005 220);
-  --ring: oklch(0.55 0.15 145);
+  --border: oklch(0.30 0.02 220);
+  --input: oklch(0.25 0.02 220);
+  --ring: oklch(0.65 0.25 142);
   
   /* Sidebar */
-  --sidebar: oklch(0.99 0 0);
-  --sidebar-foreground: oklch(0.30 0.02 220);
-  --sidebar-accent: oklch(0.96 0.01 220);
-  --sidebar-accent-foreground: oklch(0.30 0.02 220);
-  --sidebar-border: oklch(0.91 0.005 220);
-  --sidebar-ring: oklch(0.55 0.15 145);
+  --sidebar: oklch(0.18 0.01 220); /* Cinza escuro */
+  --sidebar-foreground: oklch(0.98 0.01 0);
+  --sidebar-accent: oklch(0.65 0.25 142); /* Verde Esmeralda */
+  --sidebar-accent-foreground: oklch(0.99 0 0);
+  --sidebar-border: oklch(0.30 0.02 220);
+  --sidebar-ring: oklch(0.65 0.25 142);
 }
 
 .dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  --primary: oklch(0.65 0.25 142);
+  --primary-foreground: oklch(0.99 0 0);
+  --sidebar-primary: oklch(0.65 0.25 142);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --background: oklch(0.12 0.01 0);
+  --foreground: oklch(0.98 0.01 0);
+  --card: oklch(0.18 0.01 220);
+  --card-foreground: oklch(0.98 0.01 0);
+  --popover: oklch(0.18 0.01 220);
+  --popover-foreground: oklch(0.98 0.01 0);
+  --secondary: oklch(0.65 0.25 142);
+  --secondary-foreground: oklch(0.99 0 0);
+  --muted: oklch(0.40 0.01 220);
+  --muted-foreground: oklch(0.70 0.01 0);
+  --accent: oklch(0.75 0.20 85);
+  --accent-foreground: oklch(0.12 0.01 0);
+  --destructive: oklch(0.65 0.28 15);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.30 0.02 220);
+  --input: oklch(0.25 0.02 220);
+  --ring: oklch(0.65 0.25 142);
+  --chart-1: oklch(0.65 0.25 142);
+  --chart-2: oklch(0.50 0.20 250);
+  --chart-3: oklch(0.75 0.20 85);
+  --chart-4: oklch(0.60 0.22 280);
+  --chart-5: oklch(0.65 0.28 15);
+  --sidebar: oklch(0.15 0.01 220);
+  --sidebar-foreground: oklch(0.98 0.01 0);
+  --sidebar-accent: oklch(0.65 0.25 142);
+  --sidebar-accent-foreground: oklch(0.99 0 0);
+  --sidebar-border: oklch(0.30 0.02 220);
+  --sidebar-ring: oklch(0.65 0.25 142);
 }
 
 @layer base {
@@ -133,7 +133,7 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
@@ -148,11 +148,11 @@
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
+    @apply bg-accent rounded-full;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
+    @apply bg-accent/80;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -165,27 +165,24 @@
   input[type="radio"]:not(:disabled) {
     @apply cursor-pointer;
   }
+  
+  /* Headlines - Montserrat Bold para impacto */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
 }
 
 @layer components {
   /**
-   * Custom container utility that centers content and adds responsive padding.
-   *
-   * This overrides Tailwind's default container behavior to:
-   * - Auto-center content (mx-auto)
-   * - Add responsive horizontal padding
-   * - Set max-width for large screens
-   *
-   * Usage: <div className="container">...</div>
-   *
-   * For custom widths, use max-w-* utilities directly:
-   * <div className="max-w-6xl mx-auto px-4">...</div>
+   * Custom container utility que centraliza conteúdo e adiciona padding responsivo.
    */
   .container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
+    padding-left: 1rem;
     padding-right: 1rem;
   }
 
@@ -196,16 +193,73 @@
 
   @media (min-width: 640px) {
     .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
+      padding-left: 1.5rem;
       padding-right: 1.5rem;
     }
   }
 
   @media (min-width: 1024px) {
     .container {
-      padding-left: 2rem; /* 32px - desktop padding */
+      padding-left: 2rem;
       padding-right: 2rem;
-      max-width: 1280px; /* Standard content width */
+      max-width: 1280px;
     }
+  }
+  
+  /* Animações vibrantes */
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 rgba(101, 204, 131, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(101, 204, 131, 0);
+    }
+  }
+  
+  @keyframes slide-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes bounce-subtle {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s infinite;
+  }
+  
+  .animate-slide-in-up {
+    animation: slide-in-up 0.5s ease-out;
+  }
+  
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s infinite;
+  }
+  
+  /* Cards com efeito hover vibrante */
+  .card-vibrant {
+    @apply bg-card text-card-foreground rounded-lg border border-border transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 hover:border-primary/50;
+  }
+  
+  /* Botões com efeito vibrante */
+  .btn-vibrant {
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-primary/50 active:scale-95;
+  }
+  
+  .btn-vibrant-accent {
+    @apply bg-accent text-accent-foreground px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-accent/50 active:scale-95;
   }
 }

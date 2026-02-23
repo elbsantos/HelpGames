@@ -123,7 +123,7 @@ export default function ModoCrise() {
       <main className="container py-8 max-w-4xl">
         <div className="space-y-6">
           {/* Botão de Emergência */}
-          <Card className="border-2 border-destructive/50 bg-gradient-to-br from-destructive/10 to-destructive/5">
+          <Card className="border-2 border-destructive/50 bg-gradient-to-br from-destructive/10 to-destructive/5 border-2 border-primary/40 bg-gradient-to-br from-card to-card/50 hover:border-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 animate-slide-in-up">
             <CardHeader>
               <CardTitle className="text-2xl flex items-center gap-2">
                 <AlertCircle className="h-6 w-6 text-destructive" />
@@ -134,11 +134,11 @@ export default function ModoCrise() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button 
-                onClick={activateCrisisMode} 
-                size="lg" 
-                variant="destructive" 
-                className="w-full text-lg py-6"
+              <Button
+                onClick={activateCrisisMode}
+                size="lg"
+                variant="destructive"
+                className="w-full text-lg py-6 bg-destructive hover:bg-destructive/90 shadow-lg shadow-destructive/50"
               >
                 <AlertCircle className="mr-2 h-6 w-6" />
                 Ativar Modo Crise
@@ -195,7 +195,7 @@ export default function ModoCrise() {
           </Card>
 
           {/* Dicas */}
-          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/40 bg-gradient-to-br from-card to-card/50 hover:border-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 animate-slide-in-up">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Heart className="h-5 w-5 text-primary" />
@@ -319,8 +319,8 @@ export default function ModoCrise() {
             <BetBlockerCrisisMode />
 
             {/* Au00e7ões Alternativas */}
-            <Card className="bg-secondary/30">
-              <CardHeader>
+            <Card className="bg-secondary/30 border-2 border-primary/40 bg-gradient-to-br from-card to-card/50 hover:border-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 animate-slide-in-up">
+            <CardHeader>
                 <CardTitle className="text-lg">O que você pode fazer agora:</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">

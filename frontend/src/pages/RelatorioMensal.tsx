@@ -46,8 +46,8 @@ export default function RelatorioMensal() {
         </div>
 
         {/* Card de Envio Manual */}
-        <Card className="mb-6">
-          <CardHeader>
+        <Card className="mb-6 border-2 border-primary/40 bg-gradient-to-br from-card to-card/50 hover:border-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 animate-slide-in-up">
+            <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Mail className="w-5 h-5" />
               Enviar Relatório Agora
@@ -154,8 +154,8 @@ export default function RelatorioMensal() {
         </Card>
 
         {/* Informações Adicionais */}
-        <Card className="mt-6">
-          <CardHeader>
+        <Card className="mt-6 border-2 border-primary/40 bg-gradient-to-br from-card to-card/50 hover:border-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 animate-slide-in-up">
+            <CardHeader>
             <CardTitle className="text-base">Dicas para Aproveitar Melhor</CardTitle>
           </CardHeader>
           <CardContent>
