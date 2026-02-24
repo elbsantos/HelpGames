@@ -36,8 +36,21 @@ export function useAuth(options?: UseAuthOptions) {
       }
       throw error;
     } finally {
+      // Limpar TODOS os dados do usuário do cache tRPC
       utils.auth.me.setData(undefined, null);
       await utils.auth.me.invalidate();
+      
+      // Invalidar todas as queries de dados do usuário
+      await utils.statistics.invalidate();
+      await utils.goals.invalidate();
+      await utils.avoidedBets.invalidate();
+      await utils.financialProfile.invalidate();
+      await utils.betsBlockage.invalidate();
+      await utils.betblocker.invalidate();
+      await utils.extension.invalidate();
+      
+      // Limpar localStorage
+      localStorage.removeItem("manus-runtime-user-info");
     }
   }, [logoutMutation, utils]);
 

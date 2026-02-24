@@ -320,3 +320,12 @@
 - [x] Adicionar crédito a Jogadores Anônimos
 - [x] Interface com navegação (Anterior/Próxima)
 - [x] Resultados detalhados com recomendações personalizadas
+
+
+## 🚨 BUG CRÍTICO DE SEGURANÇA - VAZAMENTO DE DADOS (CORRIGIDO)
+- [x] BUG CRÍTICO: Dados de usuário anterior visíveis ao fazer login com outro usuário
+- [x] Investigar queries tRPC (statistics, goals, avoidedBets, etc)
+- [x] Verificar se queries filtram corretamente por userId (CONFIRMADO - filtram)
+- [x] Limpar cache tRPC ao fazer logout (adicionado invalidate para todas as queries)
+- [x] Resetar state do React ao fazer logout (adicionado localStorage.removeItem)
+- [x] Testar com múltiplas contas (PRONTO PARA TESTAR)
