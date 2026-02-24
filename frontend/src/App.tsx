@@ -17,11 +17,17 @@ import QuizAutoavaliacao from "./pages/QuizAutoavaliacao";
 import RecursosAjuda from "./pages/RecursosAjuda";
 import BloqueadoresSites from "./pages/BloqueadoresSites";
 import RelatorioMensal from "./pages/RelatorioMensal";
+import LandingPage from "./pages/LandingPage";
+import LandingPageWithForm from "./pages/LandingPageWithForm";
+import LandingPageSimple from "./pages/LandingPageSimple";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
+      <Route path={"/landing-simple"} component={LandingPageSimple} />
+      <Route path={"/landing-form"} component={LandingPageWithForm} />
+      <Route path={"/landing"} component={LandingPage} />
       <Route path={"/"} component={Home} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/perfil-financeiro"} component={PerfilFinanceiro} />
