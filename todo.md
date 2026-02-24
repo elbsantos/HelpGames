@@ -312,3 +312,11 @@
 ## BUGS ENCONTRADOS - REDESENHO UX (CORRIGIDO)
 - [x] BUG 9: Botões praticamente invisíveis - adicionadas bordas coloridas e efeitos hover
 - [x] BUG 10: Removida seção BetBlocker redundante (bloqueio automático consistente)
+
+
+## Quiz de Autoavaliação - Atualização com 20 Perguntas (COMPLETO)
+- [x] Atualizar QuizAutoavaliacao.tsx com 20 perguntas de Jogadores Anônimos
+- [x] Implementar lógica de contagem (7+ respostas = risco alto)
+- [x] Adicionar crédito a Jogadores Anônimos
+- [x] Interface com navegação (Anterior/Próxima)
+- [x] Resultados detalhados com recomendações personalizadas

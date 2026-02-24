@@ -1,171 +1,133 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { AlertCircle, CheckCircle2, AlertTriangle, Heart } from "lucide-react";
+import { AlertCircle, CheckCircle2, AlertTriangle, Heart, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Link } from "wouter";
+import { useState } from "react";
 
 interface Question {
   id: number;
   text: string;
-  options: string[];
-  scores: number[];
 }
 
 const QUIZ_QUESTIONS: Question[] = [
   {
     id: 1,
-    text: "Com que frequência você pensa em apostas?",
-    options: ["Raramente", "Às vezes", "Frequentemente", "Constantemente"],
-    scores: [0, 1, 2, 3],
+    text: "Você já perdeu horas de trabalho ou da escola devido ao jogo?",
   },
   {
     id: 2,
-    text: "Você já mentiu sobre quanto dinheiro gastou em apostas?",
-    options: ["Nunca", "Uma ou duas vezes", "Várias vezes", "Regularmente"],
-    scores: [0, 1, 2, 3],
+    text: "Alguma vez o jogo já causou infelicidade na sua vida familiar?",
   },
   {
     id: 3,
-    text: "Como você se sente quando não consegue apostar?",
-    options: ["Normal", "Um pouco ansioso", "Muito ansioso", "Extremamente ansioso"],
-    scores: [0, 1, 2, 3],
+    text: "O jogo afetou a sua reputação?",
   },
   {
     id: 4,
-    text: "Você já tentou parar ou reduzir apostas sem sucesso?",
-    options: ["Nunca tentei", "Tentei uma vez", "Tentei várias vezes", "Sempre falho"],
-    scores: [0, 1, 2, 3],
+    text: "Você já sentiu remorso após jogar?",
   },
   {
     id: 5,
-    text: "Você aposta com dinheiro que deveria usar para contas/necessidades?",
-    options: ["Nunca", "Raramente", "Às vezes", "Frequentemente"],
-    scores: [0, 1, 2, 3],
+    text: "Alguma vez você já jogou para obter dinheiro para pagar dívidas ou então resolver dificuldades financeiras?",
   },
   {
     id: 6,
-    text: "Alguém já reclamou sobre seu comportamento de apostas?",
-    options: ["Nunca", "Uma pessoa", "Algumas pessoas", "Muitas pessoas"],
-    scores: [0, 1, 2, 3],
+    text: "O jogo causou uma diminuição na sua ambição ou eficiência?",
   },
   {
     id: 7,
-    text: "Você aposta para escapar de problemas ou sentimentos negativos?",
-    options: ["Nunca", "Raramente", "Às vezes", "Frequentemente"],
-    scores: [0, 1, 2, 3],
+    text: "Após ter perdido você sentiu como se necessitasse voltar o mais cedo possível a recuperar as suas perdas?",
   },
   {
     id: 8,
-    text: "Você aumenta o valor das apostas para sentir o mesmo nível de emoção?",
-    options: ["Nunca", "Raramente", "Às vezes", "Frequentemente"],
-    scores: [0, 1, 2, 3],
+    text: "Após um ganho você sentiu uma forte vontade de ganhar mais?",
   },
   {
     id: 9,
-    text: "Você já pediu dinheiro emprestado para apostar?",
-    options: ["Nunca", "Uma vez", "Algumas vezes", "Várias vezes"],
-    scores: [0, 1, 2, 3],
+    text: "Você geralmente jogava até que seu último centavo acabasse?",
   },
   {
     id: 10,
-    text: "Qual é o seu nível geral de preocupação com suas apostas?",
-    options: ["Nenhuma", "Leve", "Moderada", "Severa"],
-    scores: [0, 1, 2, 3],
+    text: "Você relutava em usar o 'dinheiro do jogo' para as despesas normais?",
+  },
+  {
+    id: 11,
+    text: "Alguma vez você já vendeu alguma coisa para financiar seu jogo?",
+  },
+  {
+    id: 12,
+    text: "Você já pediu dinheiro emprestado para financiar seu jogo?",
+  },
+  {
+    id: 13,
+    text: "O jogo o tornou descuidado com seu bem-estar e o da sua família?",
+  },
+  {
+    id: 14,
+    text: "Alguma vez você jogou por mais tempo do que planejava?",
+  },
+  {
+    id: 15,
+    text: "Alguma vez você já jogou para fugir das preocupações ou problemas?",
+  },
+  {
+    id: 16,
+    text: "Alguma vez você já cometeu, ou pensou em cometer um ato ilegal para financiar o jogo?",
+  },
+  {
+    id: 17,
+    text: "O jogo fez com que você tivesse dificuldades para dormir?",
+  },
+  {
+    id: 18,
+    text: "As discussões, desapontamentos ou frustrações fizeram com que você tivesse vontade de jogar?",
+  },
+  {
+    id: 19,
+    text: "Alguma vez você já teve vontade de celebrar alguma boa sorte com algumas horas de jogo?",
+  },
+  {
+    id: 20,
+    text: "Alguma vez você já pensou em se autodestruir como resultado do seu jogo?",
   },
 ];
 
-interface RiskLevel {
-  level: "baixo" | "leve" | "moderado" | "severo";
-  title: string;
-  description: string;
-  color: string;
-  icon: React.ReactNode;
-  recommendations: string[];
-}
-
-const RISK_LEVELS: Record<string, RiskLevel> = {
-  baixo: {
-    level: "baixo",
-    title: "Risco Baixo",
-    description: "Seu comportamento de apostas parece estar sob controle.",
-    color: "text-green-600",
-    icon: <CheckCircle2 className="w-12 h-12 text-green-600" />,
-    recommendations: [
-      "Mantenha seus hábitos atuais de apostas responsáveis",
-      "Continue monitorando seu comportamento regularmente",
-      "Use as ferramentas de controle disponíveis como prevenção",
-    ],
-  },
-  leve: {
-    level: "leve",
-    title: "Risco Leve",
-    description: "Existem alguns sinais de alerta que você deve observar.",
-    color: "text-yellow-600",
-    icon: <AlertTriangle className="w-12 h-12 text-yellow-600" />,
-    recommendations: [
-      "Estabeleça limites claros de tempo e dinheiro para apostas",
-      "Use o bloqueio de 30 minutos quando sentir impulsos fortes",
-      "Considere falar com alguém de confiança sobre suas apostas",
-      "Monitore seu comportamento com mais frequência",
-    ],
-  },
-  moderado: {
-    level: "moderado",
-    title: "Risco Moderado",
-    description: "Há sinais significativos de comportamento problemático.",
-    color: "text-orange-600",
-    icon: <AlertCircle className="w-12 h-12 text-orange-600" />,
-    recommendations: [
-      "Use regularmente o bloqueio de bets para proteção",
-      "Procure ajuda profissional ou grupos de suporte",
-      "Implemente limites estritos de gastos e tempo",
-      "Considere autossexclusão em sites de apostas",
-      "Compartilhe suas preocupações com família ou amigos",
-    ],
-  },
-  severo: {
-    level: "severo",
-    title: "Risco Severo",
-    description: "Há sinais claros de dependência de apostas.",
-    color: "text-red-600",
-    icon: <Heart className="w-12 h-12 text-red-600" />,
-    recommendations: [
-      "🚨 Procure ajuda profissional IMEDIATAMENTE",
-      "Entre em contato com Gamblers Anonymous ou similar",
-      "Considere internação em programa de tratamento",
-      "Use autossexclusão em TODOS os sites de apostas",
-      "Peça ajuda para gerenciar suas finanças",
-      "Considere terapia cognitivo-comportamental especializada",
-    ],
-  },
-};
-
 export default function QuizAutoavaliacao() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [scores, setScores] = useState<number[]>([]);
+  const [answers, setAnswers] = useState<boolean[]>(new Array(QUIZ_QUESTIONS.length).fill(null));
   const [showResults, setShowResults] = useState(false);
 
-  if (!user) {
+  if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Acesso Restrito</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Você precisa estar autenticado para acessar este quiz.</p>
-          </CardContent>
-        </Card>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Carregando...</p>
+        </div>
       </div>
     );
   }
 
-  const handleAnswer = (score: number) => {
-    const newScores = [...scores, score];
-    setScores(newScores);
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="mb-4">Você precisa estar logado para fazer o quiz.</p>
+          <Link href="/">
+            <Button>Voltar ao Dashboard</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const handleAnswer = (answer: boolean) => {
+    const newAnswers = [...answers];
+    newAnswers[currentQuestion] = answer;
+    setAnswers(newAnswers);
 
     if (currentQuestion < QUIZ_QUESTIONS.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -174,99 +136,164 @@ export default function QuizAutoavaliacao() {
     }
   };
 
-  const totalScore = scores.reduce((a, b) => a + b, 0);
-  const maxScore = QUIZ_QUESTIONS.length * 3;
-  const percentage = (totalScore / maxScore) * 100;
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+    }
+  };
 
-  let riskLevel: RiskLevel;
-  if (percentage <= 20) {
-    riskLevel = RISK_LEVELS.baixo;
-  } else if (percentage <= 40) {
-    riskLevel = RISK_LEVELS.leve;
-  } else if (percentage <= 70) {
-    riskLevel = RISK_LEVELS.moderado;
-  } else {
-    riskLevel = RISK_LEVELS.severo;
-  }
+  const handleNext = () => {
+    if (answers[currentQuestion] !== null && currentQuestion < QUIZ_QUESTIONS.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    }
+  };
+
+  const yesCount = answers.filter((a) => a === true).length;
+  const riskLevel = yesCount >= 7 ? "alto" : yesCount >= 4 ? "moderado" : "baixo";
+  const progress = ((currentQuestion + 1) / QUIZ_QUESTIONS.length) * 100;
 
   if (showResults) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
+      <div className="min-h-screen bg-background p-4 md:p-8">
         <div className="max-w-2xl mx-auto">
-          <Card className="border-2">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl mb-4">Resultado do Quiz</CardTitle>
-              <CardDescription>Sua avaliação de risco de comportamento de apostas</CardDescription>
+          <Link href="/dashboard">
+            <Button variant="ghost" className="mb-6 border-2 border-primary/40 hover:border-primary">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar ao Dashboard
+            </Button>
+          </Link>
+
+          <Card className="border-2 border-primary/40 bg-card/50 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="text-2xl md:text-3xl font-bold text-primary">
+                Resultado do Quiz
+              </CardTitle>
+              <CardDescription>
+                Baseado no questionário de Jogadores Anônimos
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Score Visual */}
-              <div className="flex justify-center mb-6">
-                {riskLevel.icon}
+              {/* Resultado Visual */}
+              <div className="text-center">
+                <div className="text-5xl font-bold mb-2">
+                  {yesCount}
+                </div>
+                <p className="text-lg text-muted-foreground">
+                  de 20 respostas "Sim"
+                </p>
               </div>
 
-              {/* Risk Level */}
-              <div className="text-center">
-                <h2 className={`text-2xl font-bold ${riskLevel.color} mb-2`}>
-                  {riskLevel.title}
-                </h2>
-                <p className="text-gray-600 mb-4">{riskLevel.description}</p>
-
-                {/* Score Bar */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Score: {totalScore}/{maxScore}</span>
-                    <span>{Math.round(percentage)}%</span>
-                  </div>
-                  <Progress value={percentage} className="h-3" />
+              {/* Indicador de Risco */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  {riskLevel === "alto" && (
+                    <>
+                      <AlertTriangle className="w-6 h-6 text-destructive" />
+                      <span className="text-lg font-semibold text-destructive">
+                        Risco Alto de Vício em Jogo
+                      </span>
+                    </>
+                  )}
+                  {riskLevel === "moderado" && (
+                    <>
+                      <AlertCircle className="w-6 h-6 text-yellow-500" />
+                      <span className="text-lg font-semibold text-yellow-500">
+                        Risco Moderado
+                      </span>
+                    </>
+                  )}
+                  {riskLevel === "baixo" && (
+                    <>
+                      <CheckCircle2 className="w-6 h-6 text-primary" />
+                      <span className="text-lg font-semibold text-primary">
+                        Risco Baixo
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
 
-              {/* Recommendations */}
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <h3 className="font-semibold mb-3 flex items-center gap-2">
-                  <Heart className="w-5 h-5" />
-                  Recomendações para Você
-                </h3>
-                <ul className="space-y-2">
-                  {riskLevel.recommendations.map((rec, idx) => (
-                    <li key={idx} className="flex gap-2 text-sm">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>{rec}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {/* Mensagens Personalizadas */}
+              <Card className="bg-background/50 border-primary/20">
+                <CardContent className="pt-6">
+                  {riskLevel === "alto" && (
+                    <div className="space-y-3">
+                      <p className="font-semibold text-destructive">
+                        ⚠️ Você mostrou sinais significativos de vício em jogo.
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        A maioria dos jogadores compulsivos responde "Sim" a pelo menos 7 dessas perguntas. 
+                        Você respondeu "Sim" a {yesCount} perguntas.
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Recomendamos procurar ajuda profissional imediatamente.
+                      </p>
+                    </div>
+                  )}
+                  {riskLevel === "moderado" && (
+                    <div className="space-y-3">
+                      <p className="font-semibold text-yellow-600">
+                        ⚠️ Você mostrou alguns sinais de comportamento problemático com jogo.
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Respondeu "Sim" a {yesCount} perguntas. Recomendamos estar atento aos seus hábitos 
+                        e considerar buscar orientação profissional.
+                      </p>
+                    </div>
+                  )}
+                  {riskLevel === "baixo" && (
+                    <div className="space-y-3">
+                      <p className="font-semibold text-primary">
+                        ✓ Seus resultados sugerem um risco baixo de vício em jogo.
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Respondeu "Sim" a apenas {yesCount} perguntas. Continue monitorando seus hábitos 
+                        e use as ferramentas de proteção do HelpGames.
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
 
-              {/* Resources */}
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <h3 className="font-semibold mb-2 text-blue-900">Recursos de Ajuda</h3>
-                <p className="text-sm text-blue-800 mb-3">
-                  Se você está preocupado com seu comportamento de apostas, existem recursos disponíveis:
-                </p>
-                <ul className="text-sm space-y-1 text-blue-800">
-                  <li>📞 Gamblers Anonymous: Grupos de suporte gratuitos</li>
-                  <li>💬 NCPG National Problem Gambling Helpline: 1-800-522-4700</li>
-                  <li>🌐 Betfilter: Bloqueador de sites de apostas</li>
-                  <li>👨‍⚕️ Terapia Cognitivo-Comportamental especializada</li>
-                </ul>
-              </div>
+              {/* Recomendações */}
+              <Card className="bg-primary/10 border-primary/30">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Heart className="w-5 h-5 text-primary" />
+                    Próximos Passos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                  <p>✓ Ative o bloqueio de 30 minutos quando sentir vontade de apostar</p>
+                  <p>✓ Use o Modo Crise para situações de emergência</p>
+                  <p>✓ Consulte um profissional de saúde mental</p>
+                  <p>✓ Procure grupos de suporte como Jogadores Anônimos</p>
+                </CardContent>
+              </Card>
 
-              {/* Actions */}
-              <div className="flex gap-3 pt-4">
+              {/* Botões de Ação */}
+              <div className="flex gap-3">
+                <Link href="/dashboard" className="flex-1">
+                  <Button className="w-full border-2 border-primary/60 hover:border-primary">
+                    Voltar ao Dashboard
+                  </Button>
+                </Link>
                 <Button
                   variant="outline"
                   onClick={() => {
                     setCurrentQuestion(0);
-                    setScores([]);
+                    setAnswers(new Array(QUIZ_QUESTIONS.length).fill(null));
                     setShowResults(false);
                   }}
-                  className="flex-1"
+                  className="border-2 border-primary/40 hover:border-primary"
                 >
                   Refazer Quiz
                 </Button>
-                <Link href="/dashboard">
-                  <Button className="flex-1">Voltar ao Dashboard</Button>
-                </Link>
+              </div>
+
+              {/* Crédito */}
+              <div className="text-xs text-muted-foreground text-center pt-4 border-t border-border">
+                Baseado no questionário de <strong>Jogadores Anônimos</strong> - Organização sem fins lucrativos
               </div>
             </CardContent>
           </Card>
@@ -275,60 +302,110 @@ export default function QuizAutoavaliacao() {
     );
   }
 
-  const question = QUIZ_QUESTIONS[currentQuestion];
-  const progress = ((currentQuestion + 1) / QUIZ_QUESTIONS.length) * 100;
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
+    <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
-        <Card className="border-2">
+        {/* Header */}
+        <div className="mb-8">
+          <Link href="/dashboard">
+            <Button variant="ghost" className="mb-6 border-2 border-primary/40 hover:border-primary">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar ao Dashboard
+            </Button>
+          </Link>
+
+          <div className="space-y-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-primary">
+              Quiz de Autoavaliação
+            </h1>
+            <p className="text-muted-foreground">
+              Baseado no questionário de Jogadores Anônimos
+            </p>
+          </div>
+        </div>
+
+        {/* Progresso */}
+        <Card className="mb-6 border-2 border-primary/30 bg-card/50">
+          <CardContent className="pt-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-semibold">
+                Pergunta {currentQuestion + 1} de {QUIZ_QUESTIONS.length}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {Math.round(progress)}%
+              </span>
+            </div>
+            <Progress value={progress} className="h-2" />
+          </CardContent>
+        </Card>
+
+        {/* Pergunta */}
+        <Card className="border-2 border-primary/40 bg-card/50 backdrop-blur mb-6">
           <CardHeader>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <CardTitle>Quiz de Autoavaliação</CardTitle>
-                <span className="text-sm font-medium text-gray-600">
-                  {currentQuestion + 1}/{QUIZ_QUESTIONS.length}
-                </span>
-              </div>
-              <Progress value={progress} className="h-2" />
-            </div>
+            <CardTitle className="text-xl md:text-2xl">
+              {QUIZ_QUESTIONS[currentQuestion].text}
+            </CardTitle>
           </CardHeader>
-
-          <CardContent className="space-y-6">
-            {/* Question */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4">{question.text}</h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Selecione a opção que melhor descreve sua situação
-              </p>
-            </div>
-
-            {/* Options */}
-            <div className="space-y-3">
-              {question.options.map((option, idx) => (
-                <Button
-                  key={idx}
-                  variant="outline"
-                  className="w-full justify-start h-auto p-4 text-left hover:bg-slate-100"
-                  onClick={() => handleAnswer(question.scores[idx])}
-                >
-                  <span className="flex-1">{option}</span>
-                  <span className="text-xs text-gray-500">
-                    {question.scores[idx] === 0 ? "✓ Baixo risco" : `${question.scores[idx]} pts`}
-                  </span>
-                </Button>
-              ))}
-            </div>
-
-            {/* Info */}
-            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200 text-sm text-blue-800">
-              <p>
-                Este quiz é baseado em critérios de avaliação de comportamento de apostas. Suas respostas são
-                confidenciais e usadas apenas para gerar recomendações personalizadas.
-              </p>
+          <CardContent className="space-y-4">
+            <div className="flex gap-3">
+              <Button
+                onClick={() => handleAnswer(true)}
+                className={`flex-1 border-2 py-6 text-lg font-semibold transition-all ${
+                  answers[currentQuestion] === true
+                    ? "bg-destructive border-destructive hover:bg-destructive/90"
+                    : "bg-background border-destructive/40 hover:border-destructive text-foreground"
+                }`}
+              >
+                Sim
+              </Button>
+              <Button
+                onClick={() => handleAnswer(false)}
+                className={`flex-1 border-2 py-6 text-lg font-semibold transition-all ${
+                  answers[currentQuestion] === false
+                    ? "bg-primary border-primary hover:bg-primary/90"
+                    : "bg-background border-primary/40 hover:border-primary text-foreground"
+                }`}
+              >
+                Não
+              </Button>
             </div>
           </CardContent>
         </Card>
+
+        {/* Navegação */}
+        <div className="flex gap-3">
+          <Button
+            onClick={handlePrevious}
+            disabled={currentQuestion === 0}
+            variant="outline"
+            className="border-2 border-primary/40 hover:border-primary disabled:opacity-50"
+          >
+            Anterior
+          </Button>
+          <Button
+            onClick={handleNext}
+            disabled={answers[currentQuestion] === null || currentQuestion === QUIZ_QUESTIONS.length - 1}
+            className="flex-1 border-2 border-primary/60 hover:border-primary"
+          >
+            Próxima
+          </Button>
+          {currentQuestion === QUIZ_QUESTIONS.length - 1 && answers[currentQuestion] !== null && (
+            <Button
+              onClick={() => setShowResults(true)}
+              className="flex-1 bg-primary border-2 border-primary/60 hover:border-primary"
+            >
+              Ver Resultados
+            </Button>
+          )}
+        </div>
+
+        {/* Informação */}
+        <div className="mt-8 p-4 bg-primary/10 border border-primary/20 rounded-lg text-sm text-muted-foreground">
+          <p>
+            <strong>Nota:</strong> Este quiz é baseado no questionário de Jogadores Anônimos. 
+            A maioria dos jogadores compulsivos responde "Sim" a pelo menos 7 dessas perguntas.
+          </p>
+        </div>
       </div>
     </div>
   );
