@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { FadeInSection } from "@/components/FadeInSection";
 import { 
   ArrowRight, 
   Shield, 
@@ -94,6 +95,7 @@ export default function LandingPageSimple() {
       </header>
 
       {/* Hero */}
+      <FadeInSection direction="up" duration={700}>
       <section className="container py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h1 className="text-5xl md:text-7xl font-bold text-slate-900 leading-tight">
@@ -134,8 +136,10 @@ export default function LandingPageSimple() {
           </div>
         </div>
       </section>
+      </FadeInSection>
 
       {/* Problema */}
+      <FadeInSection direction="up" duration={700}>
       <section className="py-20 bg-gradient-to-r from-red-50 to-orange-50">
         <div className="container max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold text-slate-900 mb-12">
@@ -158,8 +162,10 @@ export default function LandingPageSimple() {
           </div>
         </div>
       </section>
+      </FadeInSection>
 
       {/* Solução */}
+      <FadeInSection direction="up" duration={700}>
       <section id="como-funciona" className="container py-20">
         <h2 className="text-4xl font-bold text-center text-slate-900 mb-16">
           HelpGames: Tudo o Que Você Precisa
@@ -191,8 +197,10 @@ export default function LandingPageSimple() {
           </Card>
         </div>
       </section>
+      </FadeInSection>
 
       {/* Formulário */}
+      <FadeInSection direction="up" duration={700}>
       <section className="py-20 bg-gradient-to-br from-emerald-50 to-blue-50">
         <div className="container max-w-2xl">
           <div className="bg-white rounded-2xl p-8 shadow-lg border-2 border-emerald-200">
@@ -223,8 +231,10 @@ export default function LandingPageSimple() {
           </div>
         </div>
       </section>
+      </FadeInSection>
 
       {/* Comparação */}
+      <FadeInSection direction="up" duration={700}>
       <section className="py-20 bg-slate-900 text-white">
         <div className="container max-w-4xl">
           <h2 className="text-4xl font-bold text-center mb-12">Por Que Escolher HelpGames?</h2>
@@ -264,8 +274,10 @@ export default function LandingPageSimple() {
           </div>
         </div>
       </section>
+      </FadeInSection>
 
       {/* Testimoniais */}
+      <FadeInSection direction="up" duration={700}>
       <section className="py-20">
         <div className="container max-w-4xl">
           <h2 className="text-4xl font-bold text-center text-slate-900 mb-12">
@@ -283,8 +295,10 @@ export default function LandingPageSimple() {
           </div>
         </div>
       </section>
+      </FadeInSection>
 
       {/* FAQ */}
+      <FadeInSection direction="up" duration={700}>
       <section className="py-20 bg-slate-50">
         <div className="container max-w-3xl">
           <h2 className="text-4xl font-bold text-center text-slate-900 mb-12">
@@ -315,8 +329,10 @@ export default function LandingPageSimple() {
           </div>
         </div>
       </section>
+      </FadeInSection>
 
       {/* CTA Final */}
+      <FadeInSection direction="up" duration={700}>
       <section className="py-20 bg-gradient-to-r from-emerald-600 to-blue-600">
         <div className="container max-w-3xl text-center space-y-6">
           <h2 className="text-4xl font-bold text-white">
@@ -332,6 +348,7 @@ export default function LandingPageSimple() {
           </Button>
         </div>
       </section>
+      </FadeInSection>
 
       {/* Footer */}
       <footer className="bg-slate-900 text-slate-400 py-12">
