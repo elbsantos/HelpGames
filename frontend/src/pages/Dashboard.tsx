@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { TemporalEvolutionChart } from "@/components/TemporalEvolutionChart";
 import { usePushNotification } from "@/hooks/usePushNotification";
-import { BetBlockerIntegration } from "@/components/BetBlockerIntegration";
+
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -249,8 +249,7 @@ export default function Dashboard() {
           </Card>
         )}
 
-        {/* Integração com BetBlocker */}
-        <BetBlockerIntegration />
+
 
         {/* Ações Rápidas */}
         <div className="grid gap-6 md:grid-cols-3">

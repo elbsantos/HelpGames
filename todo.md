@@ -307,3 +307,8 @@
 - [x] Adicionar animações (pulse-glow, slide-in-up, bounce-subtle)
 - [x] Adicionar efeitos hover vibrantes
 - [x] Corrigir erros de TypeScript
+
+
+## BUGS ENCONTRADOS - REDESENHO UX (CORRIGIDO)
+- [x] BUG 9: Botões praticamente invisíveis - adicionadas bordas coloridas e efeitos hover
+- [x] BUG 10: Removida seção BetBlocker redundante (bloqueio automático consistente)
