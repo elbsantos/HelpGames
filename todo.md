@@ -337,3 +337,11 @@
 - [x] Botão "Sair da Conta" em vermelho (destrutivo)
 - [x] Testar logout com múltiplas contas
 - [x] Validar que dados não vazam entre contas (CORRIGIDO)
+
+
+## 🚨 BUGS CRÍTICOS EM PRODUÇÃO
+- [ ] Erro de permissão ao publicar ("danified")
+- [ ] Hotfix de limpeza de cache NÃO foi publicado
+- [ ] Dados da conta anterior ainda aparecem em produção
+- [ ] Logout não está funcionando em produção
+- [ ] Validar que useAuth.ts foi publicado corretamente
