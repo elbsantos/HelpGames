@@ -220,13 +220,20 @@ function DashboardLayoutContent({
                   </div>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem className="text-xs text-muted-foreground py-1.5">
+                  Conectado como
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-sm font-medium py-2">
+                  {user?.email}
+                </DropdownMenuItem>
+                <div className="my-1 h-px bg-border" />
                 <DropdownMenuItem
                   onClick={logout}
-                  className="cursor-pointer text-destructive focus:text-destructive"
+                  className="cursor-pointer text-destructive focus:text-destructive py-2"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sign out</span>
+                  <span>Sair da Conta</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

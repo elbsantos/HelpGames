@@ -329,3 +329,11 @@
 - [x] Limpar cache tRPC ao fazer logout (adicionado invalidate para todas as queries)
 - [x] Resetar state do React ao fazer logout (adicionado localStorage.removeItem)
 - [x] Testar com múltiplas contas (PRONTO PARA TESTAR)
+
+
+## Botão de Logout/Trocar de Conta (COMPLETO)
+- [x] Adicionar botão de logout visível no dropdown do usuário
+- [x] Mostrar email do usuário conectado
+- [x] Botão "Sair da Conta" em vermelho (destrutivo)
+- [x] Testar logout com múltiplas contas
+- [x] Validar que dados não vazam entre contas (CORRIGIDO)
