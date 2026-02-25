@@ -20,47 +20,9 @@ interface Organization {
 
 const ORGANIZATIONS: Organization[] = [
   {
-    id: "gamblers-anonymous",
-    name: "Gamblers Anonymous",
-    description: "Organização internacional de suporte com grupos de recuperação em 12 passos",
-    type: "support",
-    website: "https://www.gamblersanonymous.org",
-    hours: "Reuniões diárias em diferentes horários",
-    region: "Internacional",
-    services: ["Grupos de suporte", "Mentoria", "Recursos educativos"],
-    color: "text-blue-600",
-    icon: <Heart className="w-8 h-8 text-blue-600" />,
-  },
-  {
-    id: "ncpg",
-    name: "National Council on Problem Gambling (NCPG)",
-    description: "Helpline gratuita e confidencial com conselheiros treinados",
-    type: "helpline",
-    phone: "1-800-522-4700",
-    website: "https://www.ncpg.org",
-    hours: "24 horas, 7 dias por semana",
-    region: "Estados Unidos",
-    services: ["Helpline 24/7", "Chat online", "Recursos educativos", "Referências de tratamento"],
-    color: "text-green-600",
-    icon: <Phone className="w-8 h-8 text-green-600" />,
-  },
-  {
-    id: "gamcare",
-    name: "GamCare",
-    description: "Serviço de suporte britânico com acesso a terapeutas especializados",
-    type: "therapy",
-    phone: "+44 (0) 808 8020 133",
-    website: "https://www.gamcare.org.uk/pt",
-    hours: "Segunda-sexta 8am-midnight, Sábado-domingo 10am-midnight",
-    region: "Reino Unido",
-    services: ["Helpline", "Terapia online", "Suporte presencial", "Recursos para família"],
-    color: "text-purple-600",
-    icon: <MessageCircle className="w-8 h-8 text-purple-600" />,
-  },
-  {
     id: "gamblers-anonymous-br",
     name: "Jogadores Anônimos Brasil",
-    description: "Filial brasileira com grupos de suporte em português",
+    description: "Filial brasileira com grupos de suporte em português e mentoria de recuperação",
     type: "support",
     website: "https://www.jogadoresanonimos.org.br",
     hours: "Reuniões em diferentes horários",
@@ -72,15 +34,28 @@ const ORGANIZATIONS: Organization[] = [
   {
     id: "cvv",
     name: "Centro de Valorização da Vida (CVV)",
-    description: "Suporte emocional e prevenção de suicídio - útil em crises",
+    description: "Suporte emocional e prevenção de suicídio - útil em crises relacionadas a apostas",
     type: "helpline",
     phone: "188 (ligação gratuita)",
     website: "https://www.cvv.org.br",
     hours: "24 horas, 7 dias por semana",
-    region: "Brasil",
+    region: "Brasil - SUS",
     services: ["Atendimento telefônico", "Chat online", "Email", "Suporte emocional"],
     color: "text-indigo-600",
     icon: <Phone className="w-8 h-8 text-indigo-600" />,
+  },
+  {
+    id: "sos-voz-amiga",
+    name: "SOS Voz Amiga",
+    description: "Serviço de apoio emocional português com atendimento especializado em crises",
+    type: "helpline",
+    phone: "21 354 45 45",
+    website: "https://www.sosvozamiga.org",
+    hours: "24 horas, 7 dias por semana",
+    region: "Portugal",
+    services: ["Atendimento telefônico", "Apoio emocional", "Suporte em crises"],
+    color: "text-green-600",
+    icon: <Phone className="w-8 h-8 text-green-600" />,
   },
 ];
 
@@ -207,8 +182,8 @@ export default function RecursosAjuda() {
         </div>
 
         {/* Emergency Section */}
-        <Card className="bg-red-50 border-2 border-red-200 border-2 border-primary/40 bg-gradient-to-br from-card to-card/50 hover:border-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 animate-slide-in-up">
-            <CardHeader>
+        <Card className="bg-red-50 border-2 border-red-200">
+          <CardHeader>
             <CardTitle className="flex items-center gap-2 text-red-600">
               <Heart className="w-6 h-6" />
               Em Crise? Procure Ajuda Imediata
@@ -221,7 +196,7 @@ export default function RecursosAjuda() {
             </p>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="bg-white p-4 rounded-lg border border-red-200">
-                <p className="font-semibold text-red-600 mb-1">Brasil - CVV</p>
+                <p className="font-semibold text-red-600 mb-1">Brasil - CVV (SUS)</p>
                 <p className="text-2xl font-bold text-red-600">188</p>
                 <p className="text-sm text-gray-600">Ligação gratuita, 24/7</p>
               </div>
@@ -252,8 +227,8 @@ export default function RecursosAjuda() {
         </div>
 
         {/* Resources Summary */}
-        <Card className="bg-blue-50 border-2 border-blue-200 border-2 border-primary/40 bg-gradient-to-br from-card to-card/50 hover:border-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 animate-slide-in-up">
-            <CardHeader>
+        <Card className="bg-blue-50 border-2 border-blue-200">
+          <CardHeader>
             <CardTitle>Lembre-se</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
