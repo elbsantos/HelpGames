@@ -109,11 +109,26 @@ export default function DashboardLayout({
       <SidebarProvider style={{ "--sidebar-width": `${sidebarWidth}px` } as CSSProperties}>
         <Sidebar collapsible="icon">
           <SidebarHeader>
-            <div className="flex items-center gap-2 px-2 py-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <PanelLeft className="h-4 w-4" />
+            <div className="flex items-center justify-between gap-2 px-2 py-2">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                  <PanelLeft className="h-4 w-4" />
+                </div>
+                <span className="font-semibold">HelpGames</span>
               </div>
-              <span className="font-semibold">HelpGames</span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <span className="text-lg">⋯</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={logout} className="text-red-600 cursor-pointer focus:text-red-600 focus:bg-red-50">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sair da Conta</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </SidebarHeader>
 

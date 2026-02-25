@@ -66,8 +66,8 @@ export default function HistoricoBloqueios() {
               <CardTitle className="text-sm font-medium text-slate-600">Total de Bloqueios</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-slate-900">{blockageStats?.totalBlockages || 0}</div>
-              <p className="text-xs text-slate-500 mt-1">Períodos ativados</p>
+              <div className="text-3xl font-bold text-slate-900">{blockageStats?.totalBlockages ?? 0}</div>
+              <p className="text-xs text-slate-500 mt-1">{blockageStats?.totalBlockages ?? 0} períodos ativados</p>
             </CardContent>
           </Card>
 
