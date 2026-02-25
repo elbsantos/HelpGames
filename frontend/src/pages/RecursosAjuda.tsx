@@ -21,26 +21,39 @@ interface Organization {
 const ORGANIZATIONS: Organization[] = [
   {
     id: "gamblers-anonymous-br",
-    name: "Jogadores Anônimos Brasil",
-    description: "Filial brasileira com grupos de suporte em português e mentoria de recuperação",
+    name: "Associação Nacional de Jogadores Anônimos",
+    description: "Programa de 12 passos para recuperação de vício em jogo com grupos de suporte em português",
     type: "support",
     website: "https://www.jogadoresanonimos.org.br",
     hours: "Reuniões em diferentes horários",
     region: "Brasil",
-    services: ["Grupos de suporte", "Mentoria", "Recursos em português"],
+    services: ["Grupos de suporte", "Mentoria", "Programa de 12 passos"],
     color: "text-yellow-600",
     icon: <Heart className="w-8 h-8 text-yellow-600" />,
   },
   {
+    id: "sus-brasil",
+    name: "SUS - Serviço de Atenção a Transtornos por Uso de Substâncias",
+    description: "Tratamento especializado para transtornos de jogo e dependência através do SUS brasileiro",
+    type: "therapy",
+    phone: "136 (Disque Saúde)",
+    website: "https://www.saude.gov.br",
+    hours: "24 horas, 7 dias por semana",
+    region: "Brasil - SUS",
+    services: ["Atendimento médico especializado", "Terapia individual", "Terapia em grupo", "Medicação"],
+    color: "text-blue-600",
+    icon: <Phone className="w-8 h-8 text-blue-600" />,
+  },
+  {
     id: "cvv",
     name: "Centro de Valorização da Vida (CVV)",
-    description: "Suporte emocional e prevenção de suicídio - útil em crises relacionadas a apostas",
+    description: "Apoio emocional e prevenção de suicídio - essencial em crises relacionadas a apostas",
     type: "helpline",
     phone: "188 (ligação gratuita)",
     website: "https://www.cvv.org.br",
     hours: "24 horas, 7 dias por semana",
-    region: "Brasil - SUS",
-    services: ["Atendimento telefônico", "Chat online", "Email", "Suporte emocional"],
+    region: "Brasil",
+    services: ["Atendimento telefônico", "Chat online", "Email", "Apoio emocional"],
     color: "text-indigo-600",
     icon: <Phone className="w-8 h-8 text-indigo-600" />,
   },
@@ -74,7 +87,7 @@ const TIPS = [
   },
   {
     title: "Participe de grupos de suporte",
-    description: "Grupos como Gamblers Anonymous oferecem apoio de pessoas com experiências similares",
+    description: "Grupos como Jogadores Anônimos oferecem apoio de pessoas com experiências similares",
   },
   {
     title: "Estabeleça limites financeiros",
@@ -92,18 +105,14 @@ export default function RecursosAjuda() {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4 mb-6">
-          <Link href="/dashboard">
-            <Button variant="outline" className="mb-4">← Voltar ao Dashboard</Button>
-          </Link>
           <h1 className="text-4xl font-bold">Recursos de Ajuda</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Você não está sozinho. Existem muitos recursos disponíveis para ajudá-lo a recuperar o controle
-            sobre suas apostas. Abaixo estão organizações confiáveis e ferramentas que podem fazer diferença.
+            Você não está sozinho. Existem muitos recursos disponíveis para ajudá-lo a recuperar o controle sobre suas apostas. Abaixo estão organizações confiáveis e ferramentas que podem fazer diferença.
           </p>
         </div>
 
         {/* Organizations Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
           {ORGANIZATIONS.map((org) => (
             <Card key={org.id} className="border-2 hover:shadow-lg transition-shadow flex flex-col">
               <CardHeader>
@@ -250,6 +259,15 @@ export default function RecursosAjuda() {
             </p>
           </CardContent>
         </Card>
+
+        {/* Footer com botão de voltar */}
+        <div className="flex justify-center pt-6 border-t">
+          <Link href="/dashboard">
+            <Button variant="outline" size="lg">
+              ← Voltar ao Dashboard
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );
