@@ -354,3 +354,15 @@
 - [ ] Implementar controle de acesso Freemium vs Premium
 - [ ] Criar página de gestão de subscrição (upgrade/cancelar)
 - [ ] Testar fluxo completo de pagamento
+
+## Redesenho da Landing Page (COMPLETO)
+- [x] Fundo escuro (#0a0a0a) com tema verde esmeralda
+- [x] Novo título hero: "Recupere o controlo do seu dinheiro antes que a próxima aposta aconteça."
+- [x] Novo subtítulo com bloqueio inteligente + educação financeira
+- [x] Selector Portugal/Brasil com preços correctos
+- [x] Secção de preços integrada na landing page
+- [x] Testemunhos com poupanças em EUR e BRL
+- [x] FAQ interactivo
+- [x] Recursos de emergência (CVV, SUS, SOS Voz Amiga)
+- [x] Navbar sticky com botão CTA
+- [x] Formulário de captura de leads
