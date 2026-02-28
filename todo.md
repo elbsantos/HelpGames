@@ -366,3 +366,9 @@
 - [x] Recursos de emergência (CVV, SUS, SOS Voz Amiga)
 - [x] Navbar sticky com botão CTA
 - [x] Formulário de captura de leads
+
+## Correcções Urgentes (28/02/2026)
+- [x] Landing page: botão CTA mostra "Ir ao Dashboard" para utilizadores logados, mas deve mostrar "Criar Conta Grátis" para visitantes não logados
+- [x] Landing page: link do header para a aplicação deve levar ao login/registo OAuth para novos utilizadores
+- [x] Bug de segurança: dados de conta anterior visíveis ao fazer login com outra conta (meta, perfil financeiro, etc.)
+- [x] Logout deve limpar completamente cache tRPC e localStorage antes de trocar de utilizador

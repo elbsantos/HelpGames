@@ -5,11 +5,11 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import {
   Shield, Target, DollarSign, Brain, Heart,
   CheckCircle, Star, ChevronDown, ChevronUp,
-  ArrowRight, Lock, Phone, Users
+  ArrowRight, Lock, Phone, LogOut
 } from "lucide-react";
 
 export default function LandingPageSimple() {
-  const { user } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -62,19 +62,30 @@ export default function LandingPageSimple() {
           </div>
           <div className="flex items-center gap-3">
             <a href="#precos" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Preços</a>
-            <a href="#recursos" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Recursos</a>
-            {user ? (
-              <Link href="/dashboard">
-                <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-4 py-2 rounded-lg text-sm transition-colors">
-                  Ir ao Dashboard
-                </button>
-              </Link>
-            ) : (
-              <a href={getLoginUrl()}>
-                <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-4 py-2 rounded-lg text-sm transition-colors">
-                  Começar Grátis
-                </button>
-              </a>
+            <a href="#como-funciona" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Recursos</a>
+            {!loading && (
+              user ? (
+                <div className="flex items-center gap-2">
+                  <Link href="/dashboard">
+                    <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-4 py-2 rounded-lg text-sm transition-colors">
+                      Dashboard
+                    </button>
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="text-white/40 hover:text-white/70 transition-colors p-2 rounded-lg hover:bg-white/5"
+                    title="Sair da conta"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <a href={getLoginUrl()}>
+                  <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-4 py-2 rounded-lg text-sm transition-colors">
+                    Criar Conta Grátis
+                  </button>
+                </a>
+              )
             )}
           </div>
         </div>
@@ -104,7 +115,9 @@ export default function LandingPageSimple() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-14">
-            {user ? (
+            {loading ? (
+              <div className="h-14 w-64 bg-white/10 rounded-xl animate-pulse" />
+            ) : user ? (
               <Link href="/dashboard">
                 <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-8 py-4 rounded-xl text-lg flex items-center gap-2 justify-center transition-all hover:scale-105 shadow-lg shadow-emerald-500/20">
                   Ir ao Dashboard <ArrowRight className="h-5 w-5" />
@@ -113,7 +126,7 @@ export default function LandingPageSimple() {
             ) : (
               <a href={getLoginUrl()}>
                 <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-8 py-4 rounded-xl text-lg flex items-center gap-2 justify-center transition-all hover:scale-105 shadow-lg shadow-emerald-500/20">
-                  Começar Gratuitamente <ArrowRight className="h-5 w-5" />
+                  Criar Conta Grátis <ArrowRight className="h-5 w-5" />
                 </button>
               </a>
             )}
@@ -166,7 +179,7 @@ export default function LandingPageSimple() {
       </section>
 
       {/* Solução */}
-      <section id="recursos" className="py-20 border-t border-white/5">
+      <section id="como-funciona" className="py-20 border-t border-white/5">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
@@ -194,7 +207,7 @@ export default function LandingPageSimple() {
       </section>
 
       {/* Como funciona */}
-      <section id="como-funciona" className="py-20 border-t border-white/5">
+      <section className="py-20 border-t border-white/5">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
@@ -203,7 +216,7 @@ export default function LandingPageSimple() {
           </div>
           <div className="space-y-4">
             {[
-              { step: "01", title: "Crie a sua conta gratuita", desc: "Registe-se em segundos. Sem cartão de crédito, sem compromisso." },
+              { step: "01", title: "Crie a sua conta gratuita", desc: "Registe-se em segundos com a sua conta Google. Sem cartão de crédito, sem compromisso." },
               { step: "02", title: "Instale a extensão de bloqueio", desc: "Em menos de 1 minuto, a extensão bloqueia automaticamente todos os sites de apostas." },
               { step: "03", title: "Defina as suas metas financeiras", desc: "Veja o dinheiro que está a poupar crescer em tempo real e celebre cada vitória." },
             ].map((s, i) => (
@@ -215,6 +228,15 @@ export default function LandingPageSimple() {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="text-center mt-10">
+            {!loading && !user && (
+              <a href={getLoginUrl()}>
+                <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-8 py-4 rounded-xl text-lg inline-flex items-center gap-2 transition-all hover:scale-105 shadow-lg shadow-emerald-500/20">
+                  Começar Agora — É Grátis <ArrowRight className="h-5 w-5" />
+                </button>
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -267,7 +289,7 @@ export default function LandingPageSimple() {
               ) : (
                 <a href={getLoginUrl()}>
                   <button className="w-full border border-white/20 text-white py-3 rounded-xl font-semibold hover:bg-white/5 transition-colors">
-                    Começar Grátis
+                    Criar Conta Grátis
                   </button>
                 </a>
               )}
@@ -311,7 +333,7 @@ export default function LandingPageSimple() {
               ) : (
                 <a href={getLoginUrl()}>
                   <button className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-3 rounded-xl transition-colors">
-                    Começar Premium
+                    Criar Conta e Começar
                   </button>
                 </a>
               )}
@@ -394,7 +416,13 @@ export default function LandingPageSimple() {
             <p className="text-white/50 mb-8">
               Junte-se a mais de 1.200 pessoas que já deram o primeiro passo. Grátis, sem cartão.
             </p>
-            {submitted ? (
+            {user ? (
+              <Link href="/dashboard">
+                <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-8 py-4 rounded-xl text-lg inline-flex items-center gap-2 mx-auto transition-all hover:scale-105">
+                  Ir ao Dashboard <ArrowRight className="h-5 w-5" />
+                </button>
+              </Link>
+            ) : submitted ? (
               <div className="bg-emerald-500/20 border border-emerald-500/40 rounded-xl p-4 text-emerald-400 font-semibold">
                 ✓ Obrigado! Entraremos em contacto em breve.
               </div>
@@ -416,7 +444,7 @@ export default function LandingPageSimple() {
                 </button>
               </form>
             )}
-            <p className="text-white/20 text-xs mt-4">Sem spam. Cancele quando quiser.</p>
+            {!user && <p className="text-white/20 text-xs mt-4">Sem spam. Cancele quando quiser.</p>}
           </div>
         </div>
       </section>
@@ -456,7 +484,10 @@ export default function LandingPageSimple() {
           <div className="flex gap-6 text-sm text-white/30">
             <a href="#precos" className="hover:text-white transition-colors">Preços</a>
             <a href="/recursos-ajuda" className="hover:text-white transition-colors">Ajuda</a>
-            <a href={getLoginUrl()} className="hover:text-white transition-colors">Entrar</a>
+            {user
+              ? <Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
+              : <a href={getLoginUrl()} className="hover:text-white transition-colors">Entrar</a>
+            }
           </div>
           <p className="text-white/20 text-xs">© 2025 HelpGames. Todos os direitos reservados.</p>
         </div>

@@ -1,17 +1,21 @@
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { TRPCClientError } from "@trpc/client";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 type UseAuthOptions = {
   redirectOnUnauthenticated?: boolean;
   redirectPath?: string;
 };
 
+// Chave usada para guardar o ID do último utilizador autenticado
+const LAST_USER_KEY = "helpgames_last_user_id";
+
 export function useAuth(options?: UseAuthOptions) {
   const { redirectOnUnauthenticated = false, redirectPath = getLoginUrl() } =
     options ?? {};
   const utils = trpc.useUtils();
+  const prevUserIdRef = useRef<number | null | undefined>(undefined);
 
   const meQuery = trpc.auth.me.useQuery(undefined, {
     retry: false,
@@ -24,6 +28,20 @@ export function useAuth(options?: UseAuthOptions) {
     },
   });
 
+  // Função central de limpeza de cache — chamada no logout E na troca de utilizador
+  const clearAllUserCache = useCallback(async () => {
+    // Limpar o utilizador do cache imediatamente
+    utils.auth.me.setData(undefined, null);
+
+    // Invalidar (e limpar) TODAS as queries de dados do utilizador
+    await utils.invalidate();
+
+    // Limpar localStorage completamente (exceto preferências de UI)
+    const sidebarWidth = localStorage.getItem("sidebar-width");
+    localStorage.clear();
+    if (sidebarWidth) localStorage.setItem("sidebar-width", sidebarWidth);
+  }, [utils]);
+
   const logout = useCallback(async () => {
     try {
       await logoutMutation.mutateAsync();
@@ -32,33 +50,48 @@ export function useAuth(options?: UseAuthOptions) {
         error instanceof TRPCClientError &&
         error.data?.code === "UNAUTHORIZED"
       ) {
-        return;
+        // Já deslogado — limpar mesmo assim
+      } else {
+        throw error;
       }
-      throw error;
     } finally {
-      // Limpar TODOS os dados do usuário do cache tRPC
-      utils.auth.me.setData(undefined, null);
-      await utils.auth.me.invalidate();
-      
-      // Invalidar todas as queries de dados do usuário
-      await utils.statistics.invalidate();
-      await utils.goals.invalidate();
-      await utils.avoidedBets.invalidate();
-      await utils.financialProfile.invalidate();
-      await utils.betsBlockage.invalidate();
-      await utils.betblocker.invalidate();
-      await utils.extension.invalidate();
-      
-      // Limpar localStorage
-      localStorage.removeItem("manus-runtime-user-info");
+      await clearAllUserCache();
+      // Guardar que não há utilizador
+      localStorage.removeItem(LAST_USER_KEY);
     }
-  }, [logoutMutation, utils]);
+  }, [logoutMutation, clearAllUserCache]);
+
+  // Detectar troca de utilizador: se o ID mudou, limpar cache da conta anterior
+  useEffect(() => {
+    const currentUserId = meQuery.data?.id ?? null;
+
+    // Ignorar o estado inicial (undefined = ainda a carregar)
+    if (prevUserIdRef.current === undefined) {
+      prevUserIdRef.current = currentUserId;
+      if (currentUserId !== null) {
+        localStorage.setItem(LAST_USER_KEY, String(currentUserId));
+      }
+      return;
+    }
+
+    // Se o utilizador mudou (troca de conta)
+    if (prevUserIdRef.current !== currentUserId) {
+      const lastSavedId = localStorage.getItem(LAST_USER_KEY);
+
+      if (lastSavedId && currentUserId !== null && lastSavedId !== String(currentUserId)) {
+        // Utilizador diferente — limpar todos os dados em cache
+        clearAllUserCache().then(() => {
+          localStorage.setItem(LAST_USER_KEY, String(currentUserId));
+        });
+      } else if (currentUserId !== null) {
+        localStorage.setItem(LAST_USER_KEY, String(currentUserId));
+      }
+
+      prevUserIdRef.current = currentUserId;
+    }
+  }, [meQuery.data?.id, clearAllUserCache]);
 
   const state = useMemo(() => {
-    localStorage.setItem(
-      "manus-runtime-user-info",
-      JSON.stringify(meQuery.data)
-    );
     return {
       user: meQuery.data ?? null,
       loading: meQuery.isLoading || logoutMutation.isPending,
@@ -80,7 +113,7 @@ export function useAuth(options?: UseAuthOptions) {
     if (typeof window === "undefined") return;
     if (window.location.pathname === redirectPath) return;
 
-    window.location.href = redirectPath
+    window.location.href = redirectPath;
   }, [
     redirectOnUnauthenticated,
     redirectPath,
