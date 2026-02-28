@@ -122,7 +122,7 @@ export default function DashboardLayout({
                     <span className="text-lg">⋯</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-48 z-50">
                   <DropdownMenuItem onClick={logout} className="text-red-600 cursor-pointer focus:text-red-600 focus:bg-red-50">
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sair da Conta</span>
@@ -161,7 +161,7 @@ export default function DashboardLayout({
                       <span className="truncate">{user?.name}</span>
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side="top" className="w-56">
+                  <DropdownMenuContent side="top" className="w-56 z-50">
                     <DropdownMenuItem disabled>
                       <span className="text-xs text-gray-500">{user?.email}</span>
                     </DropdownMenuItem>
@@ -210,7 +210,7 @@ export default function DashboardLayout({
                   <span className="hidden sm:inline text-sm">{authUser?.name}</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-56 z-50">
                 <DropdownMenuItem disabled>
                   <span className="text-xs text-gray-500">{authUser?.email}</span>
                 </DropdownMenuItem>
