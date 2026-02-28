@@ -4,7 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { AlertCircle, Calendar, DollarSign, Lock, Target, TrendingUp, Heart } from "lucide-react";
+import { AlertCircle, Calendar, DollarSign, Lock, LogOut, Star, Target, TrendingUp, Heart } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -13,7 +20,7 @@ import { usePushNotification } from "@/hooks/usePushNotification";
 
 
 export default function Dashboard() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, logout } = useAuth();
   const { sendNotification } = usePushNotification();
   const [blockageTimer, setBlockageTimer] = useState<number>(0);
   
@@ -141,6 +148,41 @@ export default function Dashboard() {
               <Link href="/modo-crise">
                 <Button variant="destructive">Modo Crise</Button>
               </Link>
+              <Link href="/precos">
+                <Button variant="outline" size="sm" className="gap-1 text-xs">
+                  <Star className="h-3 w-3" />
+                  Planos
+                </Button>
+              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="text-xs">
+                        {user?.name?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 z-[100]">
+                  <DropdownMenuItem disabled>
+                    <span className="text-xs text-muted-foreground">{user?.email || user?.name}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href="/precos" className="cursor-pointer">
+                      <Star className="mr-2 h-4 w-4 text-yellow-500" />
+                      <span>Ver Planos</span>
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="text-red-600 cursor-pointer focus:text-red-600 focus:bg-red-50"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sair da Conta</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </nav>
           </div>
         </div>

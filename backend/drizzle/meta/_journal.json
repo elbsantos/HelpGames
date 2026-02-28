@@ -50,6 +50,13 @@
       "when": 1771758973111,
       "tag": "0006_misty_moon_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1772309102614,
+      "tag": "0007_friendly_purifiers",
+      "breakpoints": true
     }
   ]
 }

@@ -345,3 +345,12 @@
 - [ ] Dados da conta anterior ainda aparecem em produção
 - [ ] Logout não está funcionando em produção
 - [ ] Validar que useAuth.ts foi publicado corretamente
+
+## Sistema Freemium + Premium com Stripe (NOVA FASE)
+- [ ] Configurar Stripe com produtos e preços (PT e BR)
+- [ ] Atualizar schema: adicionar campos de subscrição ao utilizador
+- [ ] Implementar backend: webhooks Stripe e procedures de subscrição
+- [ ] Criar página de preços com detecção de país (PT/BR)
+- [ ] Implementar controle de acesso Freemium vs Premium
+- [ ] Criar página de gestão de subscrição (upgrade/cancelar)
+- [ ] Testar fluxo completo de pagamento

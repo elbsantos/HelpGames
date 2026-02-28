@@ -20,12 +20,25 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Star, Users } from "lucide-react";
+import { Badge } from "./ui/badge";
+import { trpc } from "@/lib/trpc";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
+
+function PlanBadge() {
+  const { data } = trpc.subscription.getCurrent.useQuery();
+  if (!data || data.plan === 'free') return null;
+  return (
+    <Badge variant="default" className="hidden sm:flex gap-1 text-xs bg-yellow-500 text-black hover:bg-yellow-400">
+      <Star className="h-3 w-3" />
+      Premium
+    </Badge>
+  );
+}
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Page 1", path: "/" },
@@ -199,6 +212,13 @@ export default function DashboardLayout({
           
           {/* User menu dropdown no header */}
           <div className="flex items-center gap-2">
+            <PlanBadge />
+            <a href="/precos">
+              <Button variant="outline" size="sm" className="hidden sm:flex gap-1 text-xs">
+                <Star className="h-3 w-3" />
+                Planos
+              </Button>
+            </a>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2">
@@ -210,9 +230,15 @@ export default function DashboardLayout({
                   <span className="hidden sm:inline text-sm">{authUser?.name}</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 z-50">
+              <DropdownMenuContent align="end" className="w-56 z-[100]">
                 <DropdownMenuItem disabled>
                   <span className="text-xs text-gray-500">{authUser?.email}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/precos" className="cursor-pointer">
+                    <Star className="mr-2 h-4 w-4 text-yellow-500" />
+                    <span>Ver Planos</span>
+                  </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={logout} 

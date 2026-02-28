@@ -20,6 +20,13 @@ export const users = mysqlTable("users", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
+  // Stripe / Subscrição
+  stripeCustomerId: varchar("stripe_customer_id", { length: 128 }),
+  stripeSubscriptionId: varchar("stripe_subscription_id", { length: 128 }),
+  plan: mysqlEnum("plan", ["free", "premium"]).default("free").notNull(),
+  planCountry: varchar("plan_country", { length: 2 }), // 'PT' ou 'BR'
+  planInterval: mysqlEnum("plan_interval", ["monthly", "annual"]),
+  planExpiresAt: timestamp("plan_expires_at"),
 });
 
 export type User = typeof users.$inferSelect;

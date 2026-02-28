@@ -3,6 +3,8 @@ import { COOKIE_NAME } from "../shared/const";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
+import Stripe from "stripe";
+import { STRIPE_PRICES, type Country, type BillingInterval } from "./products";
 import { TRPCError } from "@trpc/server";
 
 export const appRouter = router({
@@ -292,6 +294,101 @@ export const appRouter = router({
     getBlockingStats: protectedProcedure.query(async ({ ctx }) => {
       const { getBlockageHistoryByType } = await import('./db');
       return getBlockageHistoryByType(ctx.user.id);
+    }),
+  }),
+
+  // Subscrição / Planos
+  subscription: router({
+    // Obter plano atual do utilizador
+    getCurrent: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import('./db');
+      const { users } = await import('../drizzle/schema');
+      const { eq } = await import('drizzle-orm');
+      const db = await getDb();
+      if (!db) return { plan: 'free', planCountry: null, planInterval: null, planExpiresAt: null };
+      const [user] = await db.select({
+        plan: users.plan,
+        planCountry: users.planCountry,
+        planInterval: users.planInterval,
+        planExpiresAt: users.planExpiresAt,
+      }).from(users).where(eq(users.id, ctx.user.id));
+      return user ?? { plan: 'free', planCountry: null, planInterval: null, planExpiresAt: null };
+    }),
+
+    // Criar sessão de checkout Stripe
+    createCheckout: protectedProcedure
+      .input(z.object({
+        country: z.enum(['PT', 'BR']),
+        interval: z.enum(['monthly', 'annual']),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-02-25.clover' });
+        const priceConfig = STRIPE_PRICES[input.country as Country][input.interval as BillingInterval];
+        const origin = ctx.req.headers.origin || 'http://localhost:3000';
+
+        // Criar ou obter customer Stripe
+        const { getDb } = await import('./db');
+        const { users } = await import('../drizzle/schema');
+        const { eq } = await import('drizzle-orm');
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Base de dados indisponível' });
+        const [user] = await db.select().from(users).where(eq(users.id, ctx.user.id));
+
+        let customerId = user?.stripeCustomerId;
+        if (!customerId) {
+          const customer = await stripe.customers.create({
+            email: ctx.user.email ?? undefined,
+            name: ctx.user.name ?? undefined,
+            metadata: { userId: ctx.user.id.toString() },
+          });
+          customerId = customer.id;
+          await db.update(users).set({ stripeCustomerId: customerId }).where(eq(users.id, ctx.user.id));
+        }
+
+        // Criar preço dinâmico
+        const price = await stripe.prices.create({
+          currency: priceConfig.currency,
+          unit_amount: priceConfig.amount,
+          recurring: { interval: priceConfig.interval },
+          product_data: {
+            name: `HelpGames Premium - ${input.country === 'PT' ? 'Portugal' : 'Brasil'} (${input.interval === 'monthly' ? 'Mensal' : 'Anual'})`,
+          },
+        });
+
+        const session = await stripe.checkout.sessions.create({
+          customer: customerId,
+          payment_method_types: ['card'],
+          mode: 'subscription',
+          line_items: [{ price: price.id, quantity: 1 }],
+          allow_promotion_codes: true,
+          client_reference_id: ctx.user.id.toString(),
+          metadata: {
+            user_id: ctx.user.id.toString(),
+            customer_email: ctx.user.email ?? '',
+            customer_name: ctx.user.name ?? '',
+            country: input.country,
+            interval: input.interval,
+          },
+          success_url: `${origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${origin}/precos`,
+        });
+
+        return { url: session.url };
+      }),
+
+    // Cancelar subscrição
+    cancel: protectedProcedure.mutation(async ({ ctx }) => {
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-02-25.clover' });
+      const { getDb } = await import('./db');
+      const { users } = await import('../drizzle/schema');
+      const { eq } = await import('drizzle-orm');
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Base de dados indisponível' });
+      const [user] = await db.select().from(users).where(eq(users.id, ctx.user.id));
+      if (!user?.stripeSubscriptionId) throw new TRPCError({ code: 'NOT_FOUND', message: 'Sem subscrição ativa' });
+      await stripe.subscriptions.cancel(user.stripeSubscriptionId);
+      await db.update(users).set({ plan: 'free', stripeSubscriptionId: null, planExpiresAt: null }).where(eq(users.id, ctx.user.id));
+      return { success: true };
     }),
   }),
 });
