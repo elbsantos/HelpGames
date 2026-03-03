@@ -7,6 +7,60 @@ import Stripe from "stripe";
 import { STRIPE_PRICES, type Country, type BillingInterval } from "./products";
 import { TRPCError } from "@trpc/server";
 
+// Lista de fallback de domínios de apostas (usada quando a BD está indisponível)
+const FALLBACK_DOMAINS = [
+  "bet365.com","betano.com.br","betano.com","betfair.com",
+  "betsul.com.br","betsul.com","betmotion.com","betmotion.com.br",
+  "betclic.com.br","betclic.com","rivalo.com.br","rivalo.com",
+  "dafabet.com","parimatch.com.br","parimatch.com",
+  "sportingbet.com","sportingbet.com.br",
+  "betpix365.com","betpix.com","betpix.bet",
+  "esportiva.bet","superbet.com.br","superbet.com",
+  "vaidebet.com","vaidebet.bet","estrela.bet","estrelabet.com",
+  "novibet.com.br","novibet.com","betsson.com","betsson.com.br",
+  "unibet.com","unibet.com.br","1xbet.com","1xbet.com.br",
+  "22bet.com","22bet.com.br","melbet.com","melbet.com.br",
+  "mostbet.com","mostbet.com.br",
+  "pin-up.bet","pinup.bet","pinup.com.br",
+  "blaze.com","blaze.bet.br","brazino777.com",
+  "cassino.com","cassino.bet","pixbet.com","pixbet.bet",
+  "betboo.com","betboo.com.br","betway.com","betway.com.br",
+  "bet7k.com","bet7k.bet","betnacional.com","betnacional.bet",
+  "betesporte.com","betesporte.bet","segurobet.com","segurobet.bet",
+  "apostaganha.com","apostaganha.bet","br4bet.com","br4bet.bet",
+  "realsbet.com","realsbet.bet","sportsbet.io","sportsbet.com.br",
+  "mrjackbet.com","galera.bet","galerabet.com",
+  "f12.bet","f12bet.com","h2bet.com","h2bet.bet",
+  "kto.com","kto.bet","leovegas.com","leovegas.com.br",
+  "betcris.com","betcris.com.br","codere.com.br","codere.bet",
+  "bwin.com","bwin.com.br","williamhill.com","ladbrokes.com",
+  "coral.co.uk","paddypower.com","skybet.com","betvictor.com",
+  "888sport.com","888sport.com.br","marathonbet.com","pinnacle.com",
+  "betking.com","betwild.com","bethard.com","nordicbet.com",
+  "casumo.com","casumo.com.br",
+  "888casino.com","888casino.com.br","888poker.com",
+  "pokerstars.com","pokerstars.net","pokerstars.com.br",
+  "partypoker.com","ggpoker.com",
+  "betclic.pt","bet.pt","solverde.pt","solverde.com",
+  "casino.pt","placard.pt","placard.com",
+  "betway.pt","bwin.pt","unibet.pt","sportingbet.pt",
+  "betano.pt","moosh.pt","casino-estoril.pt","casino-lisboa.pt",
+  "estorilsol.pt","luckia.pt","888casino.pt","leovegas.pt",
+  "casumo.pt","bet365.pt","betsson.pt","nordicbet.pt",
+  "betfair.pt","williamhill.pt","coral.pt","ladbrokes.pt",
+  "stake.com","stake.us","rollbit.com","roobet.com",
+  "duelbits.com","bc.game","cloudbet.com","nitrogen.sports",
+  "betcoin.ag","1xbit.com","fortunejack.com","bitstarz.com",
+  "gg.bet","ggbet.com","loot.bet","thunderpick.com",
+  "betspawn.com","rivalry.com","unikrn.com",
+  "draftkings.com","fanduel.com","prizepicks.com",
+  "betmgm.com","pointsbet.com","foxbet.com",
+  "slottica.com","jetspin.com","jackpotcity.com","spinpalace.com",
+  "platincasino.com","casinoroom.com","playmillion.com",
+  "rizk.com","mrgreen.com","videoslots.com","casinoeuro.com",
+  "bovada.lv","betonline.ag","mybookie.ag","sportsbetting.ag",
+];
+
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
@@ -391,6 +445,47 @@ export const appRouter = router({
       return { success: true };
     }),
   }),
-});
 
+  // Bloqueio de Sites - API pública para a extensão
+  blockList: router({
+    // Endpoint público: extensão obtém lista de domínios bloqueados
+    getDomains: publicProcedure.query(async () => {
+      const { getDb } = await import('./db');
+      const { gambling_websites } = await import('../drizzle/schema');
+      const { eq } = await import('drizzle-orm');
+      const db = await getDb();
+      if (!db) {
+        // Fallback: lista embutida de domínios principais
+        return { domains: FALLBACK_DOMAINS, total: FALLBACK_DOMAINS.length, source: 'fallback' };
+      }
+      const sites = await db.select({ domain: gambling_websites.domain })
+        .from(gambling_websites)
+        .where(eq(gambling_websites.is_active, 1))
+        .limit(5000);
+      const domains = sites.map(s => s.domain);
+      // Se a BD estiver vazia, devolver fallback
+      if (domains.length === 0) {
+        return { domains: FALLBACK_DOMAINS, total: FALLBACK_DOMAINS.length, source: 'fallback' };
+      }
+      return { domains, total: domains.length, source: 'database' };
+    }),
+    // Admin: adicionar domínio à lista
+    addDomain: protectedProcedure
+      .input(z.object({ dominio: z.string().min(3), nome_site: z.string().optional(), categoria: z.string().optional() }))
+      .mutation(async ({ input }) => {
+        const { getDb } = await import('./db');
+        const { gambling_websites } = await import('../drizzle/schema');
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        await db.insert(gambling_websites).values({
+          domain: input.dominio.toLowerCase().replace(/^www\./, ''),
+          site_name: input.nome_site ?? null,
+          category: input.categoria ?? null,
+          country: null,
+          is_active: 1,
+        }).onDuplicateKeyUpdate({ set: { is_active: 1 } });
+        return { success: true };
+      }),
+  }),
+});
 export type AppRouter = typeof appRouter;

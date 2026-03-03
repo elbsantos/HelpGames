@@ -1,51 +1,184 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HelpGames - Bloqueador</title>
-    <link rel="stylesheet" href="popup.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HelpGames - Bloqueador</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 320px;
+      min-height: 400px;
+      background: #0a0a0a;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+    }
+    .header {
+      background: linear-gradient(135deg, #064e3b, #065f46);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #10b981/20;
+    }
+    .logo {
+      width: 36px; height: 36px;
+      background: #10b981;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 13px; color: #000;
+    }
+    .header-text h1 { font-size: 15px; font-weight: 700; }
+    .header-text p { font-size: 11px; color: #6ee7b7; margin-top: 1px; }
+
+    .status-section {
+      padding: 16px;
+      border-bottom: 1px solid #1f2937;
+    }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .status-badge.active { background: #064e3b; color: #10b981; border: 1px solid #065f46; }
+    .status-badge.inactive { background: #1f2937; color: #9ca3af; border: 1px solid #374151; }
+    .status-badge.crisis { background: #7f1d1d; color: #fca5a5; border: 1px solid #991b1b; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot.active { background: #10b981; animation: pulse 2s infinite; }
+    .dot.inactive { background: #6b7280; }
+    .dot.crisis { background: #f87171; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .timer {
+      font-size: 32px; font-weight: 800; color: #10b981;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -1px;
+    }
+    .timer.crisis { color: #f87171; }
+    .timer-label { font-size: 11px; color: #6b7280; margin-top: 2px; }
+
+    .stats-row {
+      display: flex; gap: 8px; margin-top: 12px;
+    }
+    .stat-card {
+      flex: 1; background: #111827; border: 1px solid #1f2937;
+      border-radius: 8px; padding: 8px 10px; text-align: center;
+    }
+    .stat-value { font-size: 16px; font-weight: 700; color: #10b981; }
+    .stat-label { font-size: 10px; color: #6b7280; margin-top: 2px; }
+
+    .actions { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .btn {
+      width: 100%; padding: 12px;
+      border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary { background: #10b981; color: #000; }
+    .btn-primary:hover { background: #059669; }
+    .btn-danger { background: #dc2626; color: #fff; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-crisis { background: linear-gradient(135deg, #7f1d1d, #991b1b); color: #fca5a5; border: 1px solid #991b1b; }
+    .btn-crisis:hover { background: linear-gradient(135deg, #991b1b, #b91c1c); }
+    .btn-outline { background: transparent; color: #9ca3af; border: 1px solid #374151; }
+    .btn-outline:hover { border-color: #10b981; color: #10b981; }
+
+    .duration-selector {
+      display: flex; gap: 6px; margin-bottom: 8px;
+    }
+    .dur-btn {
+      flex: 1; padding: 8px 4px;
+      background: #1f2937; border: 1px solid #374151;
+      border-radius: 8px; color: #9ca3af;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s; text-align: center;
+    }
+    .dur-btn:hover, .dur-btn.selected { background: #064e3b; border-color: #10b981; color: #10b981; }
+
+    .attempts-section {
+      padding: 0 16px 12px;
+      border-top: 1px solid #1f2937;
+    }
+    .attempts-title {
+      font-size: 11px; color: #6b7280; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      padding: 10px 0 6px;
+    }
+    .attempt-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 0; border-bottom: 1px solid #111827;
+    }
+    .attempt-domain { font-size: 12px; color: #d1d5db; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .attempt-time { font-size: 10px; color: #6b7280; }
+    .no-attempts { font-size: 12px; color: #4b5563; text-align: center; padding: 12px 0; }
+
+    .footer {
+      padding: 10px 16px;
+      border-top: 1px solid #1f2937;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer a { font-size: 11px; color: #6b7280; text-decoration: none; }
+    .footer a:hover { color: #10b981; }
+    .sites-count { font-size: 11px; color: #4b5563; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🛡️ HelpGames</h1>
-            <p class="subtitle">Bloqueador de Apostas</p>
-        </div>
-
-        <div class="status-section">
-            <div id="statusText" class="status">Extensão Ativa</div>
-        </div>
-
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-label">Bloqueios Hoje</span>
-                <span id="blocksToday" class="stat-value">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Tempo Economizado</span>
-                <span id="timeSaved" class="stat-value">0m</span>
-            </div>
-        </div>
-
-        <div id="timerContainer" class="timer-container" style="display: none;">
-            <div class="timer-display">
-                <span id="timerValue">30:00</span>
-            </div>
-        </div>
-
-        <div class="actions">
-            <button id="toggleBlockingBtn" class="btn btn-primary">Ativar Bloqueio</button>
-            <button id="crisisModeBtn" class="btn btn-danger">🚨 Modo Crise</button>
-        </div>
-
-        <div class="footer">
-            <a href="#" id="settingsLink" title="Configurações">⚙️</a>
-            <a href="#" id="helpLink" title="Ajuda">❓</a>
-            <a href="#" id="dashboardLink" title="Dashboard">📊</a>
-        </div>
+  <div class="header">
+    <div class="logo">HG</div>
+    <div class="header-text">
+      <h1>HelpGames</h1>
+      <p>Bloqueador de Apostas</p>
     </div>
+  </div>
 
-    <script src="popup.js"></script>
+  <div class="status-section">
+    <div id="statusBadge" class="status-badge inactive">
+      <div id="statusDot" class="dot inactive"></div>
+      <span id="statusText">Bloqueio Inactivo</span>
+    </div>
+    <div id="timerDisplay" style="display:none">
+      <div id="timerValue" class="timer">30:00</div>
+      <div class="timer-label">tempo restante de bloqueio</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div id="sitesCount" class="stat-value">200+</div>
+        <div class="stat-label">Sites bloqueados</div>
+      </div>
+      <div class="stat-card">
+        <div id="attemptsCount" class="stat-value">0</div>
+        <div class="stat-label">Tentativas hoje</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <div id="durationSelector" class="duration-selector">
+      <div class="dur-btn selected" data-minutes="30">30 min</div>
+      <div class="dur-btn" data-minutes="60">1 hora</div>
+      <div class="dur-btn" data-minutes="120">2 horas</div>
+      <div class="dur-btn" data-minutes="480">8 horas</div>
+    </div>
+    <button id="mainBtn" class="btn btn-primary">🛡️ Activar Bloqueio</button>
+    <button id="crisisBtn" class="btn btn-crisis">🚨 Modo Crise (1 hora)</button>
+  </div>
+
+  <div class="attempts-section">
+    <div class="attempts-title">Últimas tentativas bloqueadas</div>
+    <div id="attemptsList">
+      <div class="no-attempts">Nenhuma tentativa registada</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://helpgames-8anvx7yr.manus.space/dashboard" target="_blank">Ver Dashboard</a>
+    <span id="sitesCountFooter" class="sites-count">200+ sites</span>
+  </div>
+
+  <script src="popup.js"></script>
 </body>
 </html>

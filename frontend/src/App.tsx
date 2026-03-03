@@ -15,6 +15,7 @@ import SitesApostas from "./pages/SitesApostas";
 import QuizAutoavaliacao from "./pages/QuizAutoavaliacao";
 import RecursosAjuda from "./pages/RecursosAjuda";
 import BloqueadoresSites from "./pages/BloqueadoresSites";
+import ExtensaoBloqueio from "./pages/ExtensaoBloqueio";
 import RelatorioMensal from "./pages/RelatorioMensal";
 import Precos from "./pages/Precos";
 import LandingPageSimple from "./pages/LandingPageSimple";
@@ -36,6 +37,7 @@ function Router() {
       <Route path={"/quiz-autoavaliacao"} component={QuizAutoavaliacao} />
       <Route path={"/recursos-ajuda"} component={RecursosAjuda} />
       <Route path={"/bloqueadores-sites"} component={BloqueadoresSites} />
+      <Route path={"/extensao-bloqueio"} component={ExtensaoBloqueio} />
       <Route path={"/relatorio-mensal"} component={RelatorioMensal} />
       <Route path={"/precos"} component={Precos} />
       <Route path={"/subscription/success"} component={() => {

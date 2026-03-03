@@ -305,7 +305,7 @@ export async function searchGamblingWebsites(search: string, limit = 20) {
   if (!db) return [];
   
   return db.select().from(gambling_websites)
-    .where(like(gambling_websites.nome_site, `%${search}%`))
+    .where(like(gambling_websites.site_name, `%${search}%`))
     .limit(limit);
 }
 

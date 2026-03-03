@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Star, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Star, TrendingUp, Target, AlertTriangle, History, Globe, BookOpen, HelpCircle, Shield, BarChart3, DollarSign } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { trpc } from "@/lib/trpc";
 import { CSSProperties, useEffect, useRef, useState } from "react";
@@ -41,8 +41,18 @@ function PlanBadge() {
 }
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: TrendingUp, label: "Perfil Financeiro", path: "/perfil-financeiro" },
+  { icon: Target, label: "Metas", path: "/metas" },
+  { icon: AlertTriangle, label: "Registar Aposta Evitada", path: "/registrar-aposta" },
+  { icon: Shield, label: "Extensão de Bloqueio", path: "/extensao-bloqueio" },
+  { icon: History, label: "Histórico de Bloqueios", path: "/historico-bloqueios" },
+  { icon: Globe, label: "Sites de Apostas", path: "/sites-apostas" },
+  { icon: AlertTriangle, label: "Modo Crise", path: "/modo-crise" },
+  { icon: BookOpen, label: "Quiz de Autoavaliação", path: "/quiz-autoavaliacao" },
+  { icon: HelpCircle, label: "Recursos de Ajuda", path: "/recursos-ajuda" },
+  { icon: BarChart3, label: "Relatório Mensal", path: "/relatorio-mensal" },
+  { icon: DollarSign, label: "Planos e Preços", path: "/precos" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

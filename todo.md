@@ -372,3 +372,13 @@
 - [x] Landing page: link do header para a aplicação deve levar ao login/registo OAuth para novos utilizadores
 - [x] Bug de segurança: dados de conta anterior visíveis ao fazer login com outra conta (meta, perfil financeiro, etc.)
 - [x] Logout deve limpar completamente cache tRPC e localStorage antes de trocar de utilizador
+
+## Bloqueio Efectivo de Sites de Apostas (COMPLETO)
+- [x] Corrigir background.js da extensão (MV3 com webNavigation + webRequest)
+- [x] Lista de 164 domínios reais de apostas PT+BR na BD e na extensão
+- [x] Endpoint público /api/trpc/blockList.getDomains para sincronização
+- [x] Popular base de dados gambling_websites com domínios reais
+- [x] Corrigir schema Drizzle para usar nomes de colunas reais da BD
+- [x] Página de download e instalação da extensão no dashboard (/extensao-bloqueio)
+- [x] Menu do dashboard actualizado com link para Extensão de Bloqueio
+- [x] ZIP da extensão disponível para download via CDN

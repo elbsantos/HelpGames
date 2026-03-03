@@ -1,24 +1,33 @@
 {
   "manifest_version": 3,
   "name": "HelpGames - Bloqueador de Apostas",
-  "version": "1.0.0",
-  "description": "Bloqueador inteligente de sites de apostas com integração HelpGames",
+  "version": "2.0.0",
+  "description": "Bloqueia automaticamente +200 sites de apostas. Integrado com HelpGames para acompanhar o seu progresso.",
   "permissions": [
     "webRequest",
+    "webRequestBlocking",
     "tabs",
     "storage",
     "scripting",
-    "webNavigation"
+    "webNavigation",
+    "alarms",
+    "notifications"
   ],
   "host_permissions": [
     "<all_urls>"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "HelpGames - Bloqueador de Apostas"
+    "default_title": "HelpGames - Bloqueador de Apostas",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
   },
   "content_scripts": [
     {
@@ -29,13 +38,13 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["blocked.html"],
+      "resources": ["blocked.html", "icon48.png"],
       "matches": ["<all_urls>"]
     }
   ],
   "icons": {
-    "16": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect fill='%23059669' width='16' height='16' rx='3'/><text x='8' y='12' text-anchor='middle' font-size='10' fill='white' font-weight='bold'>HG</text></svg>",
-    "48": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect fill='%23059669' width='48' height='48' rx='6'/><text x='24' y='32' text-anchor='middle' font-size='24' fill='white' font-weight='bold'>HG</text></svg>",
-    "128": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><rect fill='%23059669' width='128' height='128' rx='12'/><text x='64' y='80' text-anchor='middle' font-size='60' fill='white' font-weight='bold'>HG</text></svg>"
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   }
 }

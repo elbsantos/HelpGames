@@ -129,12 +129,12 @@ export type InsertCrisisMessage = typeof crisisMessages.$inferInsert;
  */
 export const gambling_websites = mysqlTable("gambling_websites", {
   id: int("id").autoincrement().primaryKey(),
-  dominio: varchar("dominio", { length: 255 }).notNull().unique(),
-  nome_site: varchar("nome_site", { length: 255 }),
-  categoria: varchar("categoria", { length: 50 }),
-  pais: varchar("pais", { length: 50 }),
-  ativo: int("ativo").default(1).notNull(),
-  data_adicao: timestamp("data_adicao").defaultNow().notNull(),
+  domain: varchar("domain", { length: 255 }).notNull().unique(),
+  site_name: varchar("site_name", { length: 255 }),
+  category: varchar("category", { length: 50 }),
+  country: varchar("country", { length: 50 }),
+  is_active: int("is_active").default(1).notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
 export type GamblingWebsite = typeof gambling_websites.$inferSelect;

@@ -1,0 +1,31 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'gambling_websites' ORDER BY ORDINAL_POSITION;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user hdyLMsoyEsXdGrx.root --database 8Anvx7YrSTGCQYVCEabf8q --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'gambling_websites' ORDER BY ORDINAL_POSITION;",
+  "rows": [
+    {
+      "COLUMN_NAME": "id"
+    },
+    {
+      "COLUMN_NAME": "domain"
+    },
+    {
+      "COLUMN_NAME": "site_name"
+    },
+    {
+      "COLUMN_NAME": "category"
+    },
+    {
+      "COLUMN_NAME": "country"
+    },
+    {
+      "COLUMN_NAME": "is_active"
+    },
+    {
+      "COLUMN_NAME": "created_at"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\nid\ndomain\nsite_name\ncategory\ncountry\nis_active\ncreated_at\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}

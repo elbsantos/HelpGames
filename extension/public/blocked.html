@@ -1,194 +1,71 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Bloqueado - HelpGames</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 500px;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            color: #059669;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .url {
-            background: #f3f4f6;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            color: #666;
-            margin: 20px 0;
-            word-break: break-all;
-        }
-
-        .timer {
-            font-size: 48px;
-            font-weight: bold;
-            color: #dc2626;
-            font-family: 'Courier New', monospace;
-            margin: 20px 0;
-        }
-
-        .message {
-            color: #4b5563;
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 20px 0;
-        }
-
-        .resources {
-            background: #f0fdf4;
-            border-left: 4px solid #059669;
-            padding: 15px;
-            margin: 20px 0;
-            text-align: left;
-            border-radius: 6px;
-        }
-
-        .resources h3 {
-            color: #059669;
-            margin-bottom: 10px;
-        }
-
-        .resources a {
-            display: block;
-            color: #059669;
-            text-decoration: none;
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .resources a:hover {
-            text-decoration: underline;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: #059669;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #047857;
-        }
-
-        .btn-secondary {
-            background: #e5e7eb;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background: #d1d5db;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Bloqueado - HelpGames</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { min-height: 100vh; background: #0a0a0a; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .container { max-width: 480px; width: 100%; text-align: center; }
+    .shield { width: 80px; height: 80px; background: linear-gradient(135deg, #064e3b, #065f46); border: 2px solid #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 24px; box-shadow: 0 0 40px rgba(16,185,129,0.3); }
+    .logo-text { font-size: 13px; font-weight: 700; color: #10b981; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    h1 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .domain { font-size: 15px; color: #6b7280; margin-bottom: 24px; padding: 8px 16px; background: #111827; border-radius: 8px; display: inline-block; }
+    .message { font-size: 15px; color: #9ca3af; line-height: 1.6; margin-bottom: 32px; }
+    .message strong { color: #10b981; }
+    .motivation { background: rgba(6,78,59,0.12); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 20px; margin-bottom: 28px; }
+    .motivation-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .motivation-text { font-size: 16px; color: #d1fae5; font-style: italic; line-height: 1.5; }
+    .actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .btn { padding: 14px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; text-decoration: none; display: block; }
+    .btn-primary { background: #10b981; color: #000; }
+    .btn-primary:hover { background: #059669; }
+    .btn-outline { background: transparent; color: #9ca3af; border: 1px solid #374151; }
+    .btn-outline:hover { border-color: #10b981; color: #10b981; }
+    .btn-back { background: rgba(127,29,29,0.12); color: #fca5a5; border: 1px solid #7f1d1d; font-size: 12px; padding: 10px; }
+    .timer-info { font-size: 13px; color: #4b5563; margin-bottom: 20px; }
+    .timer-info span { color: #10b981; font-weight: 600; }
+    .help-section { border-top: 1px solid #1f2937; padding-top: 20px; }
+    .help-title { font-size: 12px; color: #4b5563; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .help-links { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .help-link { padding: 8px 14px; background: #111827; border: 1px solid #1f2937; border-radius: 8px; color: #9ca3af; font-size: 12px; text-decoration: none; transition: all 0.15s; }
+    .help-link:hover { border-color: #10b981; color: #10b981; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="icon">🛡️</div>
-        <h1>Site Bloqueado</h1>
-        
-        <div class="url" id="urlDisplay"></div>
-
-        <div class="message">
-            Você ativou o bloqueio de sites de apostas. Esta é uma proteção para sua saúde financeira e bem-estar.
-        </div>
-
-        <div class="timer" id="timerDisplay">30:00</div>
-
-        <div class="resources">
-            <h3>Recursos de Ajuda</h3>
-            <a href="https://www.ncpg.org/" target="_blank">🌐 National Council on Problem Gambling</a>
-            <a href="https://www.gamblersanonymous.org/" target="_blank">👥 Gamblers Anonymous</a>
-            <a href="https://www.helpgames.com.br/recursos" target="_blank">📚 HelpGames - Recursos</a>
-            <a href="https://www.helpgames.com.br/modo-crise" target="_blank">🆘 Modo Crise - Suporte Imediato</a>
-        </div>
-
-        <div class="actions">
-            <button class="btn btn-primary" id="dashboardBtn">📊 Dashboard</button>
-            <button class="btn btn-secondary" id="helpBtn">❓ Ajuda</button>
-        </div>
+  <div class="container">
+    <div class="shield">&#x1F6E1;&#xFE0F;</div>
+    <div class="logo-text">HelpGames</div>
+    <h1>Site Bloqueado</h1>
+    <div class="domain" id="blockedDomain">site de apostas</div>
+    <p class="message">O bloqueio est&#225; a <strong>proteger voc&#234;</strong>.<br>Este momento de pausa pode fazer toda a diferen&#231;a.</p>
+    <div class="motivation">
+      <div class="motivation-label">&#x1F4AC; Lembre-se</div>
+      <div class="motivation-text" id="motivationText">"Cada vez que resiste a uma aposta, est&#225; a recuperar o controlo da sua vida."</div>
     </div>
-
-    <script>
-        // Extrair URL da query string
-        const urlParams = new URLSearchParams(window.location.search);
-        const blockedUrl = urlParams.get('url');
-        
-        if (blockedUrl) {
-            document.getElementById('urlDisplay').textContent = blockedUrl;
-        }
-
-        // Timer
-        let timeRemaining = 30 * 60; // 30 minutos em segundos
-        
-        function updateTimer() {
-            const minutes = Math.floor(timeRemaining / 60);
-            const seconds = timeRemaining % 60;
-            document.getElementById('timerDisplay').textContent = 
-                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            
-            if (timeRemaining > 0) {
-                timeRemaining--;
-                setTimeout(updateTimer, 1000);
-            }
-        }
-        
-        updateTimer();
-
-        // Botões
-        document.getElementById('dashboardBtn').addEventListener('click', () => {
-            window.location.href = 'https://helpgames.com.br/dashboard';
-        });
-
-        document.getElementById('helpBtn').addEventListener('click', () => {
-            window.location.href = 'https://helpgames.com.br/modo-crise';
-        });
-    </script>
+    <div class="timer-info" id="timerInfo"></div>
+    <div class="actions">
+      <a href="https://helpgames-8anvx7yr.manus.space/dashboard" target="_blank" class="btn btn-primary">&#x1F4CA; Ver o meu progresso no Dashboard</a>
+      <a href="https://helpgames-8anvx7yr.manus.space/modo-crise" target="_blank" class="btn btn-outline">&#x1F198; Preciso de ajuda agora</a>
+      <button class="btn btn-back" id="goBackBtn">&#x2190; Voltar &#224; p&#225;gina anterior</button>
+    </div>
+    <div class="help-section">
+      <div class="help-title">Linhas de apoio</div>
+      <div class="help-links">
+        <a href="tel:188" class="help-link">&#x1F4DE; CVV: 188</a>
+        <a href="https://www.jogadoresanonimos.org.br" target="_blank" class="help-link">&#x1F91D; JA Brasil</a>
+        <a href="tel:800202013" class="help-link">&#x1F4DE; SOS Voz Amiga</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    var M = ["Cada vez que resiste a uma aposta, est\u00e1 a recuperar o controlo da sua vida.","O dinheiro que n\u00e3o apostou hoje pode pagar uma conta amanh\u00e3.","Pedir ajuda \u00e9 o acto mais corajoso que existe.","Voc\u00ea j\u00e1 provou que consegue resistir. Continue.","O impulso vai passar. Aguente mais 10 minutos.","Voc\u00ea merece uma vida livre do v\u00edcio.","Cada dia sem apostar \u00e9 uma vit\u00f3ria real."];
+    var params = new URLSearchParams(window.location.search);
+    document.getElementById("blockedDomain").textContent = params.get("domain") || "site de apostas";
+    document.getElementById("motivationText").textContent = "\u201c" + M[Math.floor(Math.random()*M.length)] + "\u201d";
+    try { chrome.runtime.sendMessage({type:"GET_STATE"},function(s){if(s&&s.isBlocking&&s.remaining>0){var m=Math.ceil(s.remaining/60000);document.getElementById("timerInfo").innerHTML="Bloqueio activo por mais <span>"+m+" minuto"+(m!==1?"s":"")+"</span>";}}); } catch(e){}
+    document.getElementById("goBackBtn").addEventListener("click",function(){history.back();});
+  </script>
 </body>
 </html>
