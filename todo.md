@@ -382,3 +382,10 @@
 - [x] Página de download e instalação da extensão no dashboard (/extensao-bloqueio)
 - [x] Menu do dashboard actualizado com link para Extensão de Bloqueio
 - [x] ZIP da extensão disponível para download via CDN
+
+## Redesenho Completo da Landing Page (Marketing) - COMPLETO
+- [x] Landing page focada em visitantes novos: CTA "Criar Conta Grátis" sempre visível no hero
+- [x] Header: botão "Entrar" para utilizadores não logados, "Dashboard" para logados
+- [x] Remover lógica user/loading do hero principal (não depender do estado de auth)
+- [x] Tabela comparativa HelpGames vs Betfilter/BetBlocker
+- [x] Secções: Hero, Problema, Diferenciais, Como Funciona, Testemunhos, Preços, FAQ, CTA Final
