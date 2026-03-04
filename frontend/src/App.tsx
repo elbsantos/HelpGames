@@ -19,6 +19,7 @@ import ExtensaoBloqueio from "./pages/ExtensaoBloqueio";
 import RelatorioMensal from "./pages/RelatorioMensal";
 import Precos from "./pages/Precos";
 import LandingPageSimple from "./pages/LandingPageSimple";
+import ConfiguracoesConta from "./pages/ConfiguracoesConta";
 
 function Router() {
   return (
@@ -40,6 +41,7 @@ function Router() {
       <Route path={"/extensao-bloqueio"} component={ExtensaoBloqueio} />
       <Route path={"/relatorio-mensal"} component={RelatorioMensal} />
       <Route path={"/precos"} component={Precos} />
+      <Route path={"/configuracoes-conta"} component={ConfiguracoesConta} />
       <Route path={"/subscription/success"} component={() => {
         return <div className="flex items-center justify-center min-h-screen bg-[#0a0a0a]"><div className="text-center"><h1 className="text-3xl font-bold text-emerald-500 mb-4">✅ Pagamento Confirmado!</h1><p className="text-white/50 mb-6">O seu plano Premium foi ativado com sucesso.</p><a href="/dashboard" className="underline text-emerald-400">Ir para o Dashboard</a></div></div>;
       }} />

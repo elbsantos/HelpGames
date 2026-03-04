@@ -393,3 +393,8 @@
 ## Bugs encontrados nos testes (04/03/2026)
 - [x] Bug: após criar conta na landing page, não redireciona automaticamente para o dashboard — corrigido: OAuth callback agora lê returnPath do state e redireciona para /dashboard
 - [x] Bug: formulário de pagamento Stripe — comportamento correcto, sandbox precisa ser activado pelo utilizador em dashboard.stripe.com/claim_sandbox
+
+## Gestão de Conta e Assinatura
+- [x] Botão cancelar assinatura Premium (volta para plano gratuito via Stripe)
+- [x] Botão excluir conta (apaga todos os dados do utilizador e cancela assinatura)
+- [x] Confirmação com diálogo antes de cancelar/excluir (excluir requer digitar EXCLUIR)

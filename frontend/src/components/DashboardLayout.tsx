@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Star, TrendingUp, Target, AlertTriangle, History, Globe, BookOpen, HelpCircle, Shield, BarChart3, DollarSign } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Star, TrendingUp, Target, AlertTriangle, History, Globe, BookOpen, HelpCircle, Shield, BarChart3, DollarSign, Settings } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { trpc } from "@/lib/trpc";
 import { CSSProperties, useEffect, useRef, useState } from "react";
@@ -53,6 +53,7 @@ const menuItems = [
   { icon: HelpCircle, label: "Recursos de Ajuda", path: "/recursos-ajuda" },
   { icon: BarChart3, label: "Relatório Mensal", path: "/relatorio-mensal" },
   { icon: DollarSign, label: "Planos e Preços", path: "/precos" },
+  { icon: Settings, label: "Configurações da Conta", path: "/configuracoes-conta" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

@@ -487,5 +487,54 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+
+  // Gestão de conta
+  account: router({
+    // Cancelar assinatura e voltar para plano gratuito
+    cancelSubscription: protectedProcedure.mutation(async ({ ctx }) => {
+      const { getDb } = await import('./db');
+      const { users } = await import('../drizzle/schema');
+      const { eq } = await import('drizzle-orm');
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Base de dados indisponível' });
+      const [user] = await db.select().from(users).where(eq(users.id, ctx.user.id));
+      if (!user?.stripeSubscriptionId) throw new TRPCError({ code: 'NOT_FOUND', message: 'Sem assinatura ativa' });
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-02-25.clover' });
+      await stripe.subscriptions.cancel(user.stripeSubscriptionId);
+      await db.update(users).set({ plan: 'free', stripeSubscriptionId: null, planExpiresAt: null }).where(eq(users.id, ctx.user.id));
+      return { success: true };
+    }),
+
+    // Excluir conta: apaga todos os dados e cancela assinatura
+    deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
+      const { getDb } = await import('./db');
+      const { users, avoidedBets, goals, crisisMessages, access_attempts, user_hobbies, betsBlockages, betblockerActivations, blockageHistory, financialProfiles, leisureAllocation, premium_subscriptions } = await import('../drizzle/schema');
+      const { eq } = await import('drizzle-orm');
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Base de dados indisponível' });
+
+      // Cancelar assinatura Stripe se existir
+      const [user] = await db.select().from(users).where(eq(users.id, ctx.user.id));
+      if (user?.stripeSubscriptionId) {
+        try {
+          const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-02-25.clover' });
+          await stripe.subscriptions.cancel(user.stripeSubscriptionId);
+        } catch (e) {
+          console.error('[DeleteAccount] Failed to cancel Stripe subscription', e);
+        }
+      }
+
+      // Apagar todos os dados do utilizador em cascata
+      const uid = ctx.user.id;
+      for (const table of [avoidedBets, goals, crisisMessages, access_attempts, user_hobbies, betsBlockages, betblockerActivations, blockageHistory, financialProfiles, leisureAllocation, premium_subscriptions]) {
+        try { await (db.delete(table) as any).where(eq((table as any).userId, uid)); } catch {}
+      }
+
+      // Apagar o utilizador
+      await db.delete(users).where(eq(users.id, uid));
+
+      return { success: true };
+    }),
+  }),
 });
 export type AppRouter = typeof appRouter;
