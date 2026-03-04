@@ -412,3 +412,6 @@
 
 ## Recursos sobre Apostas
 - [x] Remover cards Betfilter e Gamcare da página de recursos
+
+## Bug: Perfil Financeiro
+- [x] Bug: ao alterar e salvar o perfil financeiro, os novos valores não são persistidos — corrigido: cache tRPC invalidado após save + cálculo leisureBudget corrigido para regra 50/30/20

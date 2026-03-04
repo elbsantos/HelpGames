@@ -19,8 +19,16 @@ export default function PerfilFinanceiro() {
     enabled: !!user,
   });
   
+  const utils = trpc.useUtils();
   const upsertProfile = trpc.financialProfile.upsert.useMutation({
-    onSuccess: () => {
+    onSuccess: (updatedProfile) => {
+      // Invalidar o cache para forçar recarregamento dos dados actualizados
+      utils.financialProfile.get.invalidate();
+      // Actualizar os campos locais imediatamente com os valores retornados
+      if (updatedProfile) {
+        setMonthlyIncome((updatedProfile.monthlyIncome / 100).toFixed(2));
+        setFixedExpenses((updatedProfile.fixedExpenses / 100).toFixed(2));
+      }
       toast.success("Perfil financeiro atualizado com sucesso!");
       setLocation("/dashboard");
     },
