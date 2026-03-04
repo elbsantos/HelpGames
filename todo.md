@@ -409,3 +409,6 @@
 
 ## Perfil Financeiro
 - [x] Corrigir distribuição de renda: mostrar 50% / 30% / 20% (Necessidades / Lazer / Poupança)
+
+## Recursos sobre Apostas
+- [x] Remover cards Betfilter e Gamcare da página de recursos

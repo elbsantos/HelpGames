@@ -149,16 +149,6 @@ const HELP_RESOURCES = [
     link: "https://www.jogadoresanonimos.org.br",
   },
   {
-    name: "GamCare",
-    description: "Suporte e informações sobre vício em jogo",
-    link: "https://www.gamcare.org.uk",
-  },
-  {
-    name: "Betfilter",
-    description: "Ferramenta para bloquear sites de apostas",
-    link: "https://www.betfilter.org.uk",
-  },
-  {
     name: "CVV - Centro de Valorização da Vida",
     description: "Apoio emocional e prevenção do suicídio",
     link: "https://www.cvv.org.br",
@@ -291,7 +281,7 @@ export default function SitesApostas() {
               <strong>1. Defina limites claros:</strong> Decida quanto pode gastar por mês e cumpra esse limite.
             </p>
             <p className="text-sm">
-              <strong>2. Use ferramentas de bloqueio:</strong> Bloqueie sites de apostas usando ferramentas como Betfilter.
+              <strong>2. Use ferramentas de bloqueio:</strong> Bloqueie sites de apostas usando a extensão HelpGames disponível no seu dashboard.
             </p>
             <p className="text-sm">
               <strong>3. Procure apoio:</strong> Converse com amigos, família ou profissionais de saúde mental.
