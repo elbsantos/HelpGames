@@ -240,7 +240,6 @@ export default function Precos() {
         {/* Garantia */}
         <div className="text-center mt-10 text-sm text-muted-foreground">
           <p>💳 Pagamento seguro via Stripe · Cancele quando quiser · Sem compromisso</p>
-          <p className="mt-1">Para testar: use o cartão <strong>4242 4242 4242 4242</strong> com qualquer data futura e CVV</p>
         </div>
 
         {/* Comparação de funcionalidades */}

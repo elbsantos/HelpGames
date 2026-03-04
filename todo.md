@@ -398,3 +398,7 @@
 - [x] Botão cancelar assinatura Premium (volta para plano gratuito via Stripe)
 - [x] Botão excluir conta (apaga todos os dados do utilizador e cancela assinatura)
 - [x] Confirmação com diálogo antes de cancelar/excluir (excluir requer digitar EXCLUIR)
+
+## Correcções UI (04/03/2026 - tarde)
+- [x] Remover linha de teste do cartão Stripe da landing page
+- [x] Adicionar link para Configurações da Conta no dropdown do utilizador no dashboard

@@ -251,6 +251,12 @@ export default function DashboardLayout({
                     <span>Ver Planos</span>
                   </a>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/configuracoes-conta" className="cursor-pointer">
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Configurações da Conta</span>
+                  </a>
+                </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={logout} 
                   className="text-red-600 cursor-pointer focus:text-red-600 focus:bg-red-50"
