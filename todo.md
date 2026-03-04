@@ -389,3 +389,7 @@
 - [x] Remover lógica user/loading do hero principal (não depender do estado de auth)
 - [x] Tabela comparativa HelpGames vs Betfilter/BetBlocker
 - [x] Secções: Hero, Problema, Diferenciais, Como Funciona, Testemunhos, Preços, FAQ, CTA Final
+
+## Bugs encontrados nos testes (04/03/2026)
+- [x] Bug: após criar conta na landing page, não redireciona automaticamente para o dashboard — corrigido: OAuth callback agora lê returnPath do state e redireciona para /dashboard
+- [x] Bug: formulário de pagamento Stripe — comportamento correcto, sandbox precisa ser activado pelo utilizador em dashboard.stripe.com/claim_sandbox
