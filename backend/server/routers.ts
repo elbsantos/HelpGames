@@ -284,6 +284,10 @@ export const appRouter = router({
   
   // Relatório Mensal
   monthlyReport: router({
+    getReport: protectedProcedure.query(async ({ ctx }) => {
+      const { generateMonthlyReport } = await import("./db");
+      return generateMonthlyReport(ctx.user.id);
+    }),
     send: protectedProcedure.mutation(async ({ ctx }) => {
       const { sendMonthlyReport } = await import("./db");
       const sent = await sendMonthlyReport(ctx.user.id);

@@ -402,3 +402,7 @@
 ## Correcções UI (04/03/2026 - tarde)
 - [x] Remover linha de teste do cartão Stripe da landing page
 - [x] Adicionar link para Configurações da Conta no dropdown do utilizador no dashboard
+
+## Relatório Mensal
+- [x] Corrigir renderização do HTML no relatório (estava a mostrar código HTML em bruto)
+- [x] Redesenhar relatório com componentes React modernos e cards de estatísticas
