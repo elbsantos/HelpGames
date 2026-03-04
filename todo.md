@@ -406,3 +406,6 @@
 ## Relatório Mensal
 - [x] Corrigir renderização do HTML no relatório (estava a mostrar código HTML em bruto)
 - [x] Redesenhar relatório com componentes React modernos e cards de estatísticas
+
+## Perfil Financeiro
+- [x] Corrigir distribuição de renda: mostrar 50% / 30% / 20% (Necessidades / Lazer / Poupança)

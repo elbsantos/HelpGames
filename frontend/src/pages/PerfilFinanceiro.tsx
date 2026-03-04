@@ -100,17 +100,15 @@ export default function PerfilFinanceiro() {
   const incomeInCents = Math.round(parseFloat(monthlyIncome || "0") * 100);
   const expensesInCents = Math.round(parseFloat(fixedExpenses || "0") * 100);
   
-  // Necessidades são as despesas reais preenchidas pelo usuário
-  const necessitiesBudget = expensesInCents;
+  // Regra 50/30/20
+  const necessitiesBudget = Math.floor(incomeInCents * 0.5);
   
-  // Calcular o saldo restante após despesas
+  // Calcular o saldo restante após despesas (para aviso de saúde financeira)
   const remainingBudget = Math.max(0, incomeInCents - expensesInCents);
   
-  // Proporção 3:2 (lazer:poupança) do saldo restante
-  // Lazer = 60% do saldo (3/5)
-  // Poupança = 40% do saldo (2/5)
-  const leisureBudget = Math.floor(remainingBudget * 0.6);
-  const savingsBudget = remainingBudget - leisureBudget; // Resto para fechar em 100%
+  // Lazer = 30% da renda, Poupança = 20% da renda
+  const leisureBudget = Math.floor(incomeInCents * 0.3);
+  const savingsBudget = incomeInCents - necessitiesBudget - leisureBudget; // 20%
 
   // Verificar saúde financeira
   const expensesPercentage = incomeInCents > 0 ? (expensesInCents / incomeInCents) * 100 : 0;
@@ -167,42 +165,42 @@ export default function PerfilFinanceiro() {
                 Distribuição Inteligente de Renda
               </CardTitle>
               <CardDescription className="text-base">
-                Seu saldo após despesas é distribuído em proporção 3:2 entre lazer e poupança:
+                  Regra 50/30/20: a forma mais simples de organizar suas finanças:
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-lg bg-chart-1/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-chart-1">100%</span>
+                  <span className="text-2xl font-bold text-chart-1">50%</span>
                 </div>
                 <div>
                   <p className="font-semibold">Necessidades Básicas</p>
                   <p className="text-sm text-muted-foreground">
-                    Suas despesas fixas reais (moradia, alimentação, transporte, contas)
+                    50% da sua renda (moradia, alimentação, transporte, contas)
                   </p>
                 </div>
               </div>
               
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-lg bg-chart-3/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-chart-3">60%</span>
+                  <span className="text-2xl font-bold text-chart-3">30%</span>
                 </div>
                 <div>
                   <p className="font-semibold">Lazer e Desejos</p>
                   <p className="text-sm text-muted-foreground">
-                    60% do seu saldo restante (entretenimento, hobbies, restaurantes)
+                    30% da sua renda (entretenimento, hobbies, restaurantes)
                   </p>
                 </div>
               </div>
               
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-lg bg-chart-2/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-chart-2">40%</span>
+                  <span className="text-2xl font-bold text-chart-2">20%</span>
                 </div>
                 <div>
                   <p className="font-semibold">Poupança e Investimentos</p>
                   <p className="text-sm text-muted-foreground">
-                    40% do seu saldo restante (reserva de emergência, investimentos, objetivos)
+                    20% da sua renda (reserva de emergência, investimentos, objetivos)
                   </p>
                 </div>
               </div>
@@ -293,11 +291,11 @@ export default function PerfilFinanceiro() {
                           <span className="font-semibold">{formatCurrency(necessitiesBudget)}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Lazer (60% do saldo)</span>
+                          <span className="text-sm text-muted-foreground">Lazer (30% da renda)</span>
                           <span className="font-semibold text-primary">{formatCurrency(leisureBudget)}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Poupança (40% do saldo)</span>
+                          <span className="text-sm text-muted-foreground">Poupança (20% da renda)</span>
                           <span className="font-semibold">{formatCurrency(savingsBudget)}</span>
                         </div>
                         <div className="pt-3 border-t">
@@ -317,7 +315,7 @@ export default function PerfilFinanceiro() {
                       <CardHeader>
                         <CardTitle className="text-lg">Como Você Quer Distribuir Seus {formatCurrency(leisureBudget)} de Lazer?</CardTitle>
                         <CardDescription>
-                          Customize como dividir seus 60% do saldo entre apostas, cinema, hobbies, viagens e outros
+                          Customize como dividir seus 30% de lazer entre apostas, cinema, hobbies, viagens e outros
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-6">
