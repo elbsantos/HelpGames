@@ -415,3 +415,7 @@
 
 ## Bug: Perfil Financeiro
 - [x] Bug: ao alterar e salvar o perfil financeiro, os novos valores não são persistidos — corrigido: cache tRPC invalidado após save + cálculo leisureBudget corrigido para regra 50/30/20
+
+## Bugs Reportados (05/03/2026)
+- [x] Bug mobile: menu do dashboard cortado no celular — implementar menu hamburger responsivo com Sheet/Drawer
+- [x] Bug cálculo financeiro: distribuição de renda deve usar saldo disponível (renda - despesas fixas) para lazer e poupança, não percentagem da renda total

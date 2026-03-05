@@ -108,19 +108,27 @@ export default function PerfilFinanceiro() {
   const incomeInCents = Math.round(parseFloat(monthlyIncome || "0") * 100);
   const expensesInCents = Math.round(parseFloat(fixedExpenses || "0") * 100);
   
-  // Regra 50/30/20
-  const necessitiesBudget = Math.floor(incomeInCents * 0.5);
+  // Saldo disponível após pagar as despesas fixas reais
+  const availableBalance = Math.max(0, incomeInCents - expensesInCents);
   
-  // Calcular o saldo restante após despesas (para aviso de saúde financeira)
-  const remainingBudget = Math.max(0, incomeInCents - expensesInCents);
+  // As despesas fixas reais são as Necessidades (o que o utilizador informou)
+  const necessitiesBudget = expensesInCents;
   
-  // Lazer = 30% da renda, Poupança = 20% da renda
-  const leisureBudget = Math.floor(incomeInCents * 0.3);
-  const savingsBudget = incomeInCents - necessitiesBudget - leisureBudget; // 20%
+  // Do saldo disponível (1.000 no exemplo), distribuir 60% para lazer e 40% para poupança
+  // Isso equivale a: Lazer = 30% da renda ideal, Poupança = 20% da renda ideal
+  // Mas na prática usamos o saldo real disponível
+  // Proporção: 3:2 (lazer:poupança) do saldo disponível
+  const leisureBudget = Math.floor(availableBalance * 0.6);   // 60% do saldo disponível = Lazer
+  const savingsBudget = availableBalance - leisureBudget;      // 40% do saldo disponível = Poupança
+
+  // Percentuais reais em relação à renda
+  const necessitiesPercent = incomeInCents > 0 ? Math.round((necessitiesBudget / incomeInCents) * 100) : 0;
+  const leisurePercent = incomeInCents > 0 ? Math.round((leisureBudget / incomeInCents) * 100) : 0;
+  const savingsPercent = incomeInCents > 0 ? Math.round((savingsBudget / incomeInCents) * 100) : 0;
 
   // Verificar saúde financeira
   const expensesPercentage = incomeInCents > 0 ? (expensesInCents / incomeInCents) * 100 : 0;
-  const hasFinancialHealthWarning = expensesPercentage > 50;
+  const hasFinancialHealthWarning = expensesPercentage > 70; // aviso quando despesas > 70% da renda
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
@@ -165,50 +173,50 @@ export default function PerfilFinanceiro() {
             </p>
           </div>
 
-          {/* Explicação da Regra 50-30-20 */}
+          {/* Explicação da Regra */}
           <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Info className="h-5 w-5 text-primary" />
-                Distribuição Inteligente de Renda
+                Como funciona a distribuição
               </CardTitle>
               <CardDescription className="text-base">
-                  Regra 50/30/20: a forma mais simples de organizar suas finanças:
+                Primeiro pagamos as despesas fixas reais. O que sobra é dividido entre lazer e poupança.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-lg bg-chart-1/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-chart-1">50%</span>
+                  <span className="text-lg font-bold text-chart-1">1º</span>
                 </div>
                 <div>
-                  <p className="font-semibold">Necessidades Básicas</p>
+                  <p className="font-semibold">Necessidades Básicas (Despesas Fixas)</p>
                   <p className="text-sm text-muted-foreground">
-                    50% da sua renda (moradia, alimentação, transporte, contas)
+                    O valor real das suas despesas fixas mensais (aluguel, contas, alimentação, transporte)
                   </p>
                 </div>
               </div>
               
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-lg bg-chart-3/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-chart-3">30%</span>
+                  <span className="text-lg font-bold text-chart-3">2º</span>
                 </div>
                 <div>
-                  <p className="font-semibold">Lazer e Desejos</p>
+                  <p className="font-semibold">Lazer e Desejos (60% do saldo)</p>
                   <p className="text-sm text-muted-foreground">
-                    30% da sua renda (entretenimento, hobbies, restaurantes)
+                    60% do que sobra após as despesas fixas (entretenimento, hobbies, restaurantes)
                   </p>
                 </div>
               </div>
               
               <div className="flex items-start gap-3">
                 <div className="w-16 h-16 rounded-lg bg-chart-2/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-bold text-chart-2">20%</span>
+                  <span className="text-lg font-bold text-chart-2">3º</span>
                 </div>
                 <div>
-                  <p className="font-semibold">Poupança e Investimentos</p>
+                  <p className="font-semibold">Poupança e Investimentos (40% do saldo)</p>
                   <p className="text-sm text-muted-foreground">
-                    20% da sua renda (reserva de emergência, investimentos, objetivos)
+                    40% do que sobra após as despesas fixas (reserva de emergência, investimentos)
                   </p>
                 </div>
               </div>
@@ -281,7 +289,7 @@ export default function PerfilFinanceiro() {
                               </p>
                               <p className="text-sm text-yellow-800 dark:text-yellow-200 mt-1">
                                 Suas despesas fixas representam {expensesPercentage.toFixed(1)}% da sua renda. 
-                                O recomendado é manter em até 50%. Considere reduzir despesas ou aumentar renda para melhorar sua situação.
+                                O recomendado é manter abaixo de 70%. Considere reduzir despesas ou aumentar renda para melhorar sua situação.
                               </p>
                             </div>
                           </div>
@@ -289,135 +297,184 @@ export default function PerfilFinanceiro() {
                       </Card>
                     )}
 
+                    {/* Resumo da distribuição */}
                     <Card className="bg-secondary/50">
                       <CardHeader>
-                        <CardTitle className="text-lg">Distribuição de Sua Renda</CardTitle>
+                        <CardTitle className="text-lg">Distribuição Real da Sua Renda</CardTitle>
+                        <CardDescription>
+                          Baseado nos seus valores reais (Renda: {formatCurrency(incomeInCents)} | Despesas: {formatCurrency(expensesInCents)})
+                        </CardDescription>
                       </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Necessidades (Despesas Fixas)</span>
-                          <span className="font-semibold">{formatCurrency(necessitiesBudget)}</span>
+                      <CardContent className="space-y-4">
+                        {/* Barra visual */}
+                        <div className="w-full h-4 rounded-full overflow-hidden flex">
+                          <div
+                            className="bg-chart-1 transition-all duration-300"
+                            style={{ width: `${necessitiesPercent}%` }}
+                            title={`Necessidades: ${necessitiesPercent}%`}
+                          />
+                          <div
+                            className="bg-chart-3 transition-all duration-300"
+                            style={{ width: `${leisurePercent}%` }}
+                            title={`Lazer: ${leisurePercent}%`}
+                          />
+                          <div
+                            className="bg-chart-2 transition-all duration-300"
+                            style={{ width: `${savingsPercent}%` }}
+                            title={`Poupança: ${savingsPercent}%`}
+                          />
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Lazer (30% da renda)</span>
-                          <span className="font-semibold text-primary">{formatCurrency(leisureBudget)}</span>
+                        <div className="flex gap-4 text-xs text-muted-foreground flex-wrap">
+                          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-chart-1 inline-block" /> Necessidades</span>
+                          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-chart-3 inline-block" /> Lazer</span>
+                          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-chart-2 inline-block" /> Poupança</span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Poupança (20% da renda)</span>
-                          <span className="font-semibold">{formatCurrency(savingsBudget)}</span>
+
+                        <div className="space-y-3 pt-2">
+                          <div className="flex justify-between items-center py-2 border-b">
+                            <div>
+                              <span className="text-sm font-medium">Necessidades (Despesas Fixas)</span>
+                              <p className="text-xs text-muted-foreground">{necessitiesPercent}% da renda</p>
+                            </div>
+                            <span className="font-semibold text-chart-1">{formatCurrency(necessitiesBudget)}</span>
+                          </div>
+                          <div className="flex justify-between items-center py-2 border-b">
+                            <div>
+                              <span className="text-sm font-medium">Saldo Disponível</span>
+                              <p className="text-xs text-muted-foreground">Renda − Despesas Fixas</p>
+                            </div>
+                            <span className="font-semibold text-primary">{formatCurrency(availableBalance)}</span>
+                          </div>
+                          <div className="flex justify-between items-center py-2 border-b">
+                            <div>
+                              <span className="text-sm font-medium">Lazer (60% do saldo)</span>
+                              <p className="text-xs text-muted-foreground">{leisurePercent}% da renda total</p>
+                            </div>
+                            <span className="font-semibold text-chart-3">{formatCurrency(leisureBudget)}</span>
+                          </div>
+                          <div className="flex justify-between items-center py-2">
+                            <div>
+                              <span className="text-sm font-medium">Poupança (40% do saldo)</span>
+                              <p className="text-xs text-muted-foreground">{savingsPercent}% da renda total</p>
+                            </div>
+                            <span className="font-semibold text-chart-2">{formatCurrency(savingsBudget)}</span>
+                          </div>
                         </div>
-                        <div className="pt-3 border-t">
+
+                        <div className="pt-3 border-t bg-muted/30 rounded-lg p-3">
                           <div className="flex justify-between items-center">
                             <span className="font-semibold">Total</span>
                             <span className="text-xl font-bold text-primary">{formatCurrency(incomeInCents)}</span>
                           </div>
                           <p className="text-xs text-muted-foreground mt-1">
-                            Necessidades + Lazer + Poupança = 100% da sua renda
+                            {formatCurrency(necessitiesBudget)} (necessidades) + {formatCurrency(leisureBudget)} (lazer) + {formatCurrency(savingsBudget)} (poupança) = {formatCurrency(incomeInCents)}
                           </p>
                         </div>
                       </CardContent>
                     </Card>
 
                     {/* Alocação de Lazer em Subcategorias */}
-                    <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
-                      <CardHeader>
-                        <CardTitle className="text-lg">Como Você Quer Distribuir Seus {formatCurrency(leisureBudget)} de Lazer?</CardTitle>
-                        <CardDescription>
-                          Customize como dividir seus 30% de lazer entre apostas, cinema, hobbies, viagens e outros
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <Label>Apostas Online: {bettingPercentage}%</Label>
-                            <span className="font-semibold text-destructive">{formatCurrency(Math.floor(leisureBudget * (bettingPercentage / 100)))}</span>
+                    {availableBalance > 0 && (
+                      <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+                        <CardHeader>
+                          <CardTitle className="text-lg">Como Você Quer Distribuir Seus {formatCurrency(leisureBudget)} de Lazer?</CardTitle>
+                          <CardDescription>
+                            Customize como dividir seu lazer entre apostas, cinema, hobbies, viagens e outros
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <Label>Apostas Online: {bettingPercentage}%</Label>
+                              <span className="font-semibold text-destructive">{formatCurrency(Math.floor(leisureBudget * (bettingPercentage / 100)))}</span>
+                            </div>
+                            <Slider
+                              value={[bettingPercentage]}
+                              onValueChange={(value) => setBettingPercentage(value[0])}
+                              min={0}
+                              max={100}
+                              step={5}
+                              className="w-full"
+                            />
+                            <p className="text-xs text-muted-foreground">
+                              Limite mensal para apostas online (recomendado: 0% — você está aqui para parar!)
+                            </p>
                           </div>
-                          <Slider
-                            value={[bettingPercentage]}
-                            onValueChange={(value) => setBettingPercentage(value[0])}
-                            min={0}
-                            max={100}
-                            step={5}
-                            className="w-full"
-                          />
-                          <p className="text-xs text-muted-foreground">
-                            Limite mensal para apostas online (máximo 10% dos 60% de lazer é recomendado)
-                          </p>
-                        </div>
 
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <Label>Cinema/Séries: {cinemaPercentage}%</Label>
-                            <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (cinemaPercentage / 100)))}</span>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <Label>Cinema/Séries: {cinemaPercentage}%</Label>
+                              <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (cinemaPercentage / 100)))}</span>
+                            </div>
+                            <Slider
+                              value={[cinemaPercentage]}
+                              onValueChange={(value) => setCinemaPercentage(value[0])}
+                              min={0}
+                              max={100}
+                              step={5}
+                              className="w-full"
+                            />
                           </div>
-                          <Slider
-                            value={[cinemaPercentage]}
-                            onValueChange={(value) => setCinemaPercentage(value[0])}
-                            min={0}
-                            max={100}
-                            step={5}
-                            className="w-full"
-                          />
-                        </div>
 
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <Label>Hobbies/Atividades: {hobbiesPercentage}%</Label>
-                            <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (hobbiesPercentage / 100)))}</span>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <Label>Hobbies/Atividades: {hobbiesPercentage}%</Label>
+                              <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (hobbiesPercentage / 100)))}</span>
+                            </div>
+                            <Slider
+                              value={[hobbiesPercentage]}
+                              onValueChange={(value) => setHobbiesPercentage(value[0])}
+                              min={0}
+                              max={100}
+                              step={5}
+                              className="w-full"
+                            />
                           </div>
-                          <Slider
-                            value={[hobbiesPercentage]}
-                            onValueChange={(value) => setHobbiesPercentage(value[0])}
-                            min={0}
-                            max={100}
-                            step={5}
-                            className="w-full"
-                          />
-                        </div>
 
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <Label>Viagens/Passeios: {travelPercentage}%</Label>
-                            <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (travelPercentage / 100)))}</span>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <Label>Viagens/Passeios: {travelPercentage}%</Label>
+                              <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (travelPercentage / 100)))}</span>
+                            </div>
+                            <Slider
+                              value={[travelPercentage]}
+                              onValueChange={(value) => setTravelPercentage(value[0])}
+                              min={0}
+                              max={100}
+                              step={5}
+                              className="w-full"
+                            />
                           </div>
-                          <Slider
-                            value={[travelPercentage]}
-                            onValueChange={(value) => setTravelPercentage(value[0])}
-                            min={0}
-                            max={100}
-                            step={5}
-                            className="w-full"
-                          />
-                        </div>
 
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <Label>Outros: {otherPercentage}%</Label>
-                            <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (otherPercentage / 100)))}</span>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <Label>Outros: {otherPercentage}%</Label>
+                              <span className="font-semibold">{formatCurrency(Math.floor(leisureBudget * (otherPercentage / 100)))}</span>
+                            </div>
+                            <Slider
+                              value={[otherPercentage]}
+                              onValueChange={(value) => setOtherPercentage(value[0])}
+                              min={0}
+                              max={100}
+                              step={5}
+                              className="w-full"
+                            />
                           </div>
-                          <Slider
-                            value={[otherPercentage]}
-                            onValueChange={(value) => setOtherPercentage(value[0])}
-                            min={0}
-                            max={100}
-                            step={5}
-                            className="w-full"
-                          />
-                        </div>
 
-                        <div className="pt-3 border-t">
-                          <div className="flex justify-between items-center">
-                            <span className="font-semibold">Total de Lazer Alocado</span>
-                            <span className="text-lg font-bold text-primary">
-                              {formatCurrency(Math.floor(leisureBudget * ((bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage) / 100)))}
-                            </span>
+                          <div className="pt-3 border-t">
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold">Total de Lazer Alocado</span>
+                              <span className="text-lg font-bold text-primary">
+                                {formatCurrency(Math.floor(leisureBudget * ((bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage) / 100)))}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Soma dos percentuais: {bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage}%
+                            </p>
                           </div>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Soma dos percentuais: {bettingPercentage + cinemaPercentage + hobbiesPercentage + travelPercentage + otherPercentage}%
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    )}
                   </>
                 )}
 

@@ -109,8 +109,10 @@ export async function upsertFinancialProfile(userId: number, data: { monthlyInco
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  // Regra 50/30/20: lazer = 30% da renda mensal
-  const leisureBudget = Math.floor(data.monthlyIncome * 0.3);
+  // Cálculo correcto: saldo disponível = renda - despesas fixas reais
+  // Do saldo disponível: 60% para lazer, 40% para poupança
+  const availableBalance = Math.max(0, data.monthlyIncome - data.fixedExpenses);
+  const leisureBudget = Math.floor(availableBalance * 0.6);
   
   const values: InsertFinancialProfile = {
     userId,
