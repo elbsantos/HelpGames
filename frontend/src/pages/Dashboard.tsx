@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { AlertCircle, Calendar, DollarSign, Lock, LogOut, Star, Target, TrendingUp, Heart } from "lucide-react";
+import { AlertCircle, Calendar, DollarSign, Lock, LogOut, Star, Target, TrendingUp, Heart, Download } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -391,6 +391,34 @@ export default function Dashboard() {
                 </CardDescription>
               </CardHeader>
             </Link>
+          </Card>
+
+          <Card className="border-2 border-green-500/40 bg-gradient-to-br from-green-500/5 to-green-600/5 hover:border-green-500/60 transition-colors">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Lock className="h-5 w-5 text-green-600" />
+                Instalar Bloqueador
+              </CardTitle>
+              <CardDescription>
+                Bloqueie 2500+ sites de apostas automaticamente
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button 
+                onClick={() => {
+                  const extensionUrl = 'https://helpgames.pt/blocker';
+                  window.open(extensionUrl, '_blank');
+                  toast.success('Redirecionado para a página de instalação');
+                }}
+                className="w-full gap-2 bg-green-600 hover:bg-green-700"
+              >
+                <Lock className="h-4 w-4" />
+                Instalar Extensão
+              </Button>
+              <p className="text-xs text-muted-foreground mt-3 text-center">
+                Compatível com Chrome, Firefox, Safari e Edge
+              </p>
+            </CardContent>
           </Card>
         </div>
 
